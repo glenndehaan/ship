@@ -65,11 +65,11 @@ module.exports = {
 
                 return {
                     ...service,
-                    tasks
+                    __tasks: tasks
                 }
             });
 
-            resolve(services);
+            resolve(await Promise.all(services));
         });
     },
 
