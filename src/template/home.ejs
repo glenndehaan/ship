@@ -64,6 +64,7 @@
                                 <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                                     <th class="px-4 py-3">Service Name</th>
                                     <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3">Image</th>
                                     <th class="px-4 py-3">Created</th>
                                     <th class="px-4 py-3">Updated</th>
                                     <th class="px-4 py-3">Actions</th>
@@ -77,12 +78,15 @@
                                         </td>
                                         <td class="px-4 py-3 text-xs">
                                             <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-                                                <%= service.UpdateStatus.State %>
+                                                <%= service.ServiceStatus.RunningTasks %> / <%= service.ServiceStatus.DesiredTasks %>
                                             </span>
 
                                             <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
-                                                <%= service.UpdateStatus.State %>
+                                                <%= service.ServiceStatus.RunningTasks %> / <%= service.ServiceStatus.DesiredTasks %>
                                             </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-xs">
+                                            <%= service.Spec.TaskTemplate.ContainerSpec.Image %>
                                         </td>
                                         <td class="px-4 py-3 text-xs">
                                             <%= service.CreatedAt %>
