@@ -53,7 +53,8 @@ module.exports = {
                 process.exit(1);
             });
 
-            services.map(async (service) => {
+            for(let item = 0; item < services.length; item++) {
+                const service = services[item];
                 const tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
                     console.error(e);
                     process.exit(1);
@@ -63,13 +64,10 @@ module.exports = {
                 console.log('service.Spec.Name', service.Spec.Name);
                 console.log('tasks', tasks);
 
-                return {
-                    ...service,
-                    __tasks: tasks
-                }
-            });
+                services[item].__tasks = tasks;
+            }
 
-            resolve(await Promise.all(services));
+            resolve(services);
         });
     },
 
