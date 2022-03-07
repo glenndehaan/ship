@@ -56,7 +56,7 @@ module.exports = {
             services.map(async (service) => {
                 return {
                     ...service,
-                    __tasks: await docker.listTasks({filters: {service: service.Spec.Name}}).catch((e) => {
+                    __tasks: await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
                         console.error(e);
                         process.exit(1);
                     })
