@@ -141,5 +141,9 @@
                 </div>
             </div>
         </main>
+        <script>
+            window.__ship_docker_services = <%- JSON.stringify(docker_services) %>;
+            window.__ship_docker_tasks = <%- JSON.stringify(docker_tasks) %>;
+        </script>
     </body>
 </html>
