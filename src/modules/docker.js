@@ -54,12 +54,18 @@ module.exports = {
             });
 
             services.map(async (service) => {
+                const tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
+                    console.error(e);
+                    process.exit(1);
+                });
+
+                console.log('opts', {filters: {service: [service.Spec.Name]}});
+                console.log('service.Spec.Name', service.Spec.Name);
+                console.log('tasks', tasks);
+
                 return {
                     ...service,
-                    __tasks: await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
-                        console.error(e);
-                        process.exit(1);
-                    })
+                    tasks
                 }
             });
 
