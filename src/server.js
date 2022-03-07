@@ -81,7 +81,8 @@ app.get('/', async (req, res) => {
         logo,
         logo_url,
         email_placeholder,
-        docker_services: await docker.getServices()
+        docker_services: await docker.getServices(),
+        docker_tasks: await docker.getTasks()
     });
 });
 

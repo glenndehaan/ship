@@ -34,12 +34,21 @@ module.exports = {
      * @returns {Promise<unknown>}
      */
     getServices: () => {
-        return new Promise(async (resolve) => {
-            const services = await docker.listServices({status: true}).catch((e) => {
-                console.error(e);
-                process.exit(1);
-            });
-            resolve(services);
+        return docker.listServices({status: true}).catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
+    },
+
+    /**
+     * Get all docker tasks
+     *
+     * @returns {*}
+     */
+    getTasks: () => {
+        return docker.listTasks({}).catch((e) => {
+            console.error(e);
+            process.exit(1);
         });
     }
 };
