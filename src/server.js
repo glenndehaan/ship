@@ -3,7 +3,11 @@
  */
 const express = require('express');
 const multer = require('multer');
-const Docker = require('dockerode');
+
+/**
+ * Import own modules
+ */
+const docker = require('./modules/docker');
 
 /**
  * Create express app
@@ -11,15 +15,6 @@ const Docker = require('dockerode');
  * @type {*|Express}
  */
 const app = express();
-
-/**
- * Create docker connection
- *
- * @type {Docker}
- */
-const docker = new Docker({
-    socketPath: '/var/run/docker.sock'
-});
 
 /**
  * Check if we are using the dev version
@@ -78,14 +73,15 @@ app.use(express.static(`${__dirname}/public`));
 /**
  * Configure routers
  */
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         app_title,
         logo,
         logo_url,
-        email_placeholder
+        email_placeholder,
+        docker_services: await docker.getServices()
     });
 });
 
@@ -107,31 +103,12 @@ app.disable('x-powered-by');
  */
 app.listen(3000, '0.0.0.0', async () => {
     log.info(`[WEB] App is running on: 0.0.0.0:3000`);
-});
 
-/**
- * Log docker info
- */
-docker.info({}, (err, info) => {
-    if(err) {
-        console.error(err);
-        process.exit(1);
-        return;
-    }
+    const dockerInfo = await docker.info();
+    log.info(`[DOCKER] Connected! ID: ${dockerInfo.ID}, Hostname: ${dockerInfo.Name}`);
 
-    log.info(`[DOCKER] Connected! ID: ${info.ID}, Hostname: ${info.Name}`);
-})
-
-docker.listServices({}, (err, services) => {
-    if(err) {
-        console.error(err);
-        process.exit(1);
-        return;
-    }
-
-    // console.log('containers', containers);
-
-    services.forEach((serviceInfo) => {
+    const dockerServices = await docker.getServices();
+    dockerServices.forEach((serviceInfo) => {
         console.log('serviceInfo', serviceInfo);
     });
 });
