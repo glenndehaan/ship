@@ -47,16 +47,16 @@ module.exports = {
             });
         }
 
-        return new Promise((resolve) => {
-            const services = docker.listServices({status: true}).catch((e) => {
+        return new Promise(async (resolve) => {
+            const services = await docker.listServices({status: true}).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            services.map((service) => {
+            services.map(async (service) => {
                 return {
                     ...service,
-                    __tasks: docker.listTasks({filters: {service: service.Spec.Name}}).catch((e) => {
+                    __tasks: await docker.listTasks({filters: {service: service.Spec.Name}}).catch((e) => {
                         console.error(e);
                         process.exit(1);
                     })
