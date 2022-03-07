@@ -107,6 +107,41 @@
                                         </a>
                                     </td>
                                 </tr>
+                                <tr class="text-gray-700 dark:text-gray-400">
+                                    <td class="px-12" colspan="6">
+                                        <table class="w-full whitespace-no-wrap">
+                                            <thead>
+                                                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                                                    <th class="px-4 py-3">Status</th>
+                                                    <th class="px-4 py-3">ID</th>
+                                                    <th class="px-4 py-3">Slot</th>
+                                                    <th class="px-4 py-3">Created</th>
+                                                    <th class="px-4 py-3">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                                                <tr class="text-gray-700 dark:text-gray-400">
+                                                    <td class="px-4 py-3 text-xs">
+                                                        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                                            running
+                                                        </span>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-xs">
+                                                        ffffffffffffffffffff
+                                                    </td>
+                                                    <td class="px-4 py-3 text-xs">
+                                                        1
+                                                    </td>
+                                                    <td class="px-4 py-3 text-xs">
+                                                        <%= new Date(0).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-sm flex space-x-4">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
                                 <% docker_services.forEach((service) => { %>
                                     <tr class="text-gray-700 dark:text-gray-400">
                                         <td class="px-4 py-3">
@@ -132,6 +167,41 @@
                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                 </svg>
                                             </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="text-gray-700 dark:text-gray-400">
+                                        <td class="px-12" colspan="6">
+                                            <table class="w-full whitespace-no-wrap">
+                                                <thead>
+                                                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                                                        <th class="px-4 py-3">Status</th>
+                                                        <th class="px-4 py-3">ID</th>
+                                                        <th class="px-4 py-3">Slot</th>
+                                                        <th class="px-4 py-3">Created</th>
+                                                        <th class="px-4 py-3">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                                                    <tr class="text-gray-700 dark:text-gray-400">
+                                                        <td class="px-4 py-3 text-xs">
+                                                            <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                                                running
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-4 py-3 text-xs">
+                                                            ffffffffffffffffffff
+                                                        </td>
+                                                        <td class="px-4 py-3 text-xs">
+                                                            1
+                                                        </td>
+                                                        <td class="px-4 py-3 text-xs">
+                                                            <%= new Date(0).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                        </td>
+                                                        <td class="px-4 py-3 text-sm flex space-x-4">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </td>
                                     </tr>
                                 <% }); %>

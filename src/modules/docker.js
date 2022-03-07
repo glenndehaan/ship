@@ -47,9 +47,23 @@ module.exports = {
             });
         }
 
-        return docker.listServices({status: true}).catch((e) => {
-            console.error(e);
-            process.exit(1);
+        return new Promise((resolve) => {
+            const services = docker.listServices({status: true}).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            services.map((service) => {
+                return {
+                    ...service,
+                    __tasks: docker.listTasks({filters: {service: service.Spec.Name}}).catch((e) => {
+                        console.error(e);
+                        process.exit(1);
+                    })
+                }
+            });
+
+            resolve(services);
         });
     },
 
