@@ -55,16 +55,11 @@ module.exports = {
 
             for(let item = 0; item < services.length; item++) {
                 const service = services[item];
-                const tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
+
+                services[item].__tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
                     console.error(e);
                     process.exit(1);
                 });
-
-                console.log('opts', {filters: {service: [service.Spec.Name]}});
-                console.log('service.Spec.Name', service.Spec.Name);
-                console.log('tasks', tasks);
-
-                services[item].__tasks = tasks;
             }
 
             resolve(services);

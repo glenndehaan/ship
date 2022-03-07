@@ -182,24 +182,26 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                                                    <tr class="text-gray-700 dark:text-gray-400">
-                                                        <td class="px-4 py-3 text-xs">
-                                                            <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
-                                                                running
-                                                            </span>
-                                                        </td>
-                                                        <td class="px-4 py-3 text-xs">
-                                                            ffffffffffffffffffff
-                                                        </td>
-                                                        <td class="px-4 py-3 text-xs">
-                                                            1
-                                                        </td>
-                                                        <td class="px-4 py-3 text-xs">
-                                                            <%= new Date(0).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
-                                                        </td>
-                                                        <td class="px-4 py-3 text-sm flex space-x-4">
-                                                        </td>
-                                                    </tr>
+                                                    <% service.__tasks.forEach((task) => { %>
+                                                        <tr class="text-gray-700 dark:text-gray-400">
+                                                            <td class="px-4 py-3 text-xs">
+                                                                <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                                                    <%= task.Status.State %>
+                                                                </span>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-xs">
+                                                                <%= task.ID %>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-xs">
+                                                                <%= task.Slot %>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-xs">
+                                                                <%= new Date(task.CreatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-sm flex space-x-4">
+                                                            </td>
+                                                        </tr>
+                                                    <% }); %>
                                                 </tbody>
                                             </table>
                                         </td>
