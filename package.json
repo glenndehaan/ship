@@ -1,0 +1,25 @@
+{
+  "name": "ship",
+  "version": "1.0.0",
+  "description": "Ship",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "nodemon --watch . --exec 'node ./src/server.js'",
+    "tailwind": "tailwindcss -i ./src/css/style.css -o ./src/public/dist/style.css --watch",
+    "build": "tailwindcss -i ./src/css/style.css -o ./src/public/dist/style.css --minify"
+  },
+  "author": "Glenn de Haan",
+  "license": "MIT",
+  "dependencies": {
+    "dockerode": "^3.3.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "multer": "^1.4.4",
+    "simple-node-logger": "^21.8.12",
+    "tailwindcss": "^3.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

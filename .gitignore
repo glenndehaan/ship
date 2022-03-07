@@ -1,0 +1,12 @@
+# PhpStorm
+.idea
+
+# General files
+*~
+*.DS_STORE
+
+# Dependencies
+node_modules
+
+# Build output
+src/public/dist
