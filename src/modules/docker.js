@@ -13,6 +13,13 @@ const docker = new Docker({
 });
 
 /**
+ * Do we use mock data
+ *
+ * @type {boolean}
+ */
+const mock = false;
+
+/**
  * Exports the docker module functions
  */
 module.exports = {
@@ -34,6 +41,12 @@ module.exports = {
      * @returns {Promise<unknown>}
      */
     getServices: () => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve([]);
+            });
+        }
+
         return docker.listServices({status: true}).catch((e) => {
             console.error(e);
             process.exit(1);
@@ -46,6 +59,12 @@ module.exports = {
      * @returns {*}
      */
     getTasks: () => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve([]);
+            });
+        }
+
         return docker.listTasks({}).catch((e) => {
             console.error(e);
             process.exit(1);
