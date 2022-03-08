@@ -20,6 +20,38 @@ const docker = new Docker({
 const mock = false;
 
 /**
+ * Mock data
+ *
+ * @type {{__tasks: [{Status: {State: string}, CreatedAt: number, Slot: number, ID: string}], ServiceStatus: {RunningTasks: number, DesiredTasks: number}, CreatedAt: number, Spec: {TaskTemplate: {ContainerSpec: {Image: string}}, Name: string}, UpdatedAt: number}}
+ */
+const mockData = {
+    CreatedAt: 0,
+    UpdatedAt: 0,
+    Spec: {
+        Name: 'test_test',
+        TaskTemplate: {
+            ContainerSpec: {
+                Image: 'example/example:latest'
+            }
+        }
+    },
+    ServiceStatus: {
+        RunningTasks: 0,
+        DesiredTasks: 0
+    },
+    __tasks: [
+        {
+            ID: '00000000000000000',
+            Slot: 1,
+            CreatedAt: 0,
+            Status: {
+                State: 'running'
+            }
+        }
+    ]
+}
+
+/**
  * Exports the docker module functions
  */
 module.exports = {
@@ -43,7 +75,7 @@ module.exports = {
     getServices: () => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([]);
+                resolve([mockData]);
             });
         }
 
