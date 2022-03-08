@@ -12,7 +12,7 @@
         <link href="/dist/style.css" rel="stylesheet">
     </head>
     <body class="bg-gray-50 dark:bg-gray-900">
-        <main class="h-full overflow-y-auto">
+        <main class="h-full overflow-y-auto mb-12">
             <% if(edit) { %>
                 <div class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-75 sm:items-center sm:justify-center">
                     <div class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
@@ -193,9 +193,9 @@
                                                         <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-300 dark:bg-gray-700">
                                                             <th class="px-4 py-3">Status</th>
                                                             <th class="px-4 py-3">ID</th>
+                                                            <th class="px-4 py-3">Image</th>
                                                             <th class="px-4 py-3">Slot</th>
                                                             <th class="px-4 py-3">Created</th>
-                                                            <th class="px-4 py-3">Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -210,12 +210,13 @@
                                                                     <%= task.ID %>
                                                                 </td>
                                                                 <td class="px-4 py-3 text-xs">
+                                                                    <%= task.Spec.ContainerSpec.Image.split('@')[0] %>
+                                                                </td>
+                                                                <td class="px-4 py-3 text-xs">
                                                                     <%= task.Slot %>
                                                                 </td>
                                                                 <td class="px-4 py-3 text-xs">
                                                                     <%= new Date(task.CreatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
-                                                                </td>
-                                                                <td class="px-4 py-3 text-sm flex space-x-4">
                                                                 </td>
                                                             </tr>
                                                         <% }); %>

@@ -55,6 +55,11 @@ const mockData = {
             CreatedAt: 0,
             Status: {
                 State: 'running'
+            },
+            Spec: {
+                ContainerSpec: {
+                    Image: 'alpine:latest'
+                }
             }
         }
     ]
