@@ -1,6 +1,7 @@
 /**
  * Import base packages
  */
+const os = require('os');
 const express = require('express');
 const multer = require('multer');
 
@@ -38,6 +39,7 @@ log.setLevel(dev ? 'trace' : 'info');
  * Define global variables
  */
 const app_title = process.env.APP_TITLE || 'Ship';
+const debug_docker = process.env.DEBUG_DOCKER || false;
 
 /**
  * Trust proxy
@@ -76,6 +78,8 @@ app.get('/', async (req, res) => {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         app_title,
+        debug_docker,
+        hostname: os.hostname(),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -97,6 +101,8 @@ app.get('/update/:service', async (req, res) => {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         app_title,
+        debug_docker,
+        hostname: os.hostname(),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: true,
