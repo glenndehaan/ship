@@ -61,9 +61,9 @@ const mockData = {
 }
 
 /**
- * Exports the docker module functions
+ * Docker module functions
  */
-module.exports = {
+const dockerModule = {
     /**
      * Return docker info
      *
@@ -164,32 +164,42 @@ module.exports = {
     /**
      * Updates a service image version
      *
-     * @param id
      * @param name
-     * @param service_version
      * @param image
      * @param version
      * @returns {Promise<unknown>}
      */
-    updateService: (id, name, service_version, image, version) => {
+    updateService: (name, image, version) => {
         return new Promise(async (resolve) => {
-            console.log('id', id);
             console.log('name', name);
-            console.log('service_version', service_version);
             console.log('image', image);
             console.log('version', version);
 
             console.log('image-version', `${image}:${version}`);
 
-            const result = await docker.getService(id).update({}, {
+            const service = await dockerModule.getService(name);
+            console.log('service', service);
+
+            if(typeof service.Spec === "undefined") {
+                resolve();
+                return;
+            }
+
+            const opts = {
+                ...service.Spec,
                 Name: name,
-                version: parseInt(service_version),
+                version: parseInt(service.Version.Index),
                 TaskTemplate: {
                     ContainerSpec: {
                         Image: `${image}:${version}`
                     }
                 }
-            });
+            };
+
+            console.log('OLD Opts', service.Spec);
+            console.log('NEW Opts', opts);
+
+            const result = await docker.getService(service.ID).update({}, opts);
 
             console.log('result', result);
 
@@ -197,3 +207,8 @@ module.exports = {
         });
     }
 };
+
+/**
+ * Exports the docker module functions
+ */
+module.exports = dockerModule;
