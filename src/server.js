@@ -37,9 +37,6 @@ log.setLevel(dev ? 'trace' : 'info');
  * Define global variables
  */
 const app_title = process.env.APP_TITLE || 'Ship';
-const logo = process.env.LOGO || '/images/logo_edit.png';
-const logo_url = process.env.LOGO_URL || 'https://glenndehaan.com';
-const email_placeholder = process.env.EMAIL_PLACEHOLDER || 'user@example.com';
 
 /**
  * Trust proxy
@@ -78,9 +75,6 @@ app.get('/', async (req, res) => {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         app_title,
-        logo,
-        logo_url,
-        email_placeholder,
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -94,9 +88,6 @@ app.get('/update/:service', async (req, res) => {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         app_title,
-        logo,
-        logo_url,
-        email_placeholder,
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: true,
