@@ -108,7 +108,6 @@ app.get('/update/:service', async (req, res) => {
 
 app.post('/update', async (req, res) => {
     await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
-    console.log('req.body', req.body);
     res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
 });
 
@@ -133,9 +132,4 @@ app.listen(3000, '0.0.0.0', async () => {
 
     const dockerInfo = await docker.info();
     log.info(`[DOCKER] Connected! ID: ${dockerInfo.ID}, Hostname: ${dockerInfo.Name}`);
-
-    const dockerServices = await docker.getServices();
-    dockerServices.forEach((serviceInfo) => {
-        console.log('serviceInfo', serviceInfo);
-    });
 });
