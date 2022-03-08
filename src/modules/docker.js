@@ -165,14 +165,16 @@ module.exports = {
      * Updates a service image version
      *
      * @param id
+     * @param name
      * @param service_version
      * @param image
      * @param version
      * @returns {Promise<unknown>}
      */
-    updateService: (id, service_version, image, version) => {
+    updateService: (id, name, service_version, image, version) => {
         return new Promise(async (resolve) => {
             console.log('id', id);
+            console.log('name', name);
             console.log('service_version', service_version);
             console.log('image', image);
             console.log('version', version);
@@ -180,7 +182,8 @@ module.exports = {
             console.log('image-version', `${image}:${version}`);
 
             const result = await docker.getService(id).update({}, {
-                version: service_version,
+                Name: name,
+                version: parseInt(service_version),
                 TaskTemplate: {
                     ContainerSpec: {
                         Image: `${image}:${version}`
