@@ -4,6 +4,11 @@
 const Docker = require('dockerode');
 
 /**
+ * Check if we are using the dev version
+ */
+const dev = process.env.NODE_ENV !== 'production';
+
+/**
  * Create docker connection
  *
  * @type {Docker}
@@ -17,7 +22,7 @@ const docker = new Docker({
  *
  * @type {boolean}
  */
-const mock = false;
+const mock = dev;
 
 /**
  * Mock data
@@ -112,7 +117,7 @@ module.exports = {
         }
 
         return new Promise(async (resolve) => {
-            const services = await docker.listServices({filters: {service: [name]}, status: true}).catch((e) => {
+            const services = await docker.listServices({filters: {name: [name]}, status: true}).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
