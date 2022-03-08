@@ -176,12 +176,6 @@ const dockerModule = {
      */
     updateService: (name, image, version) => {
         return new Promise(async (resolve) => {
-            console.log('name', name);
-            console.log('image', image);
-            console.log('version', version);
-
-            console.log('image-version', `${image}:${version}`);
-
             const service = await dockerModule.getService(name);
             console.log('service', service);
 
@@ -190,16 +184,10 @@ const dockerModule = {
                 return;
             }
 
-            const opts = {
-                ...service.Spec,
-                Name: name,
-                version: parseInt(service.Version.Index),
-                TaskTemplate: {
-                    ContainerSpec: {
-                        Image: `${image}:${version}`
-                    }
-                }
-            };
+            const opts = service.Spec;
+            opts.version = parseInt(service.Version.Index);
+            opts.TaskTemplate.ContainerSpec.Image = `${image}:${version}`;
+            opts.Labels['com.docker.stack.image'] = `${image}:${version}`;
 
             console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);

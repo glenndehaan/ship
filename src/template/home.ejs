@@ -164,7 +164,7 @@
                                             <%= service.Spec.Name %>
                                         </td>
                                         <td class="px-4 py-3 text-xs">
-                                            <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                            <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= service.ServiceStatus.RunningTasks === service.ServiceStatus.DesiredTasks && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= service.ServiceStatus.RunningTasks !== service.ServiceStatus.DesiredTasks && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
                                                 <%= service.ServiceStatus.RunningTasks %> / <%= service.ServiceStatus.DesiredTasks %>
                                             </span>
                                         </td>
@@ -202,7 +202,7 @@
                                                         <% service.__tasks.forEach((task) => { %>
                                                             <tr class="text-gray-700 dark:text-gray-400">
                                                                 <td class="px-4 py-3 text-xs">
-                                                                    <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                                                    <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= (task.Status.State === 'running' || task.Status.State === 'complete') && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= (task.Status.State === 'new' || task.Status.State === 'allocated' || task.Status.State === 'pending' || task.Status.State === 'assigned' || task.Status.State === 'accepted' || task.Status.State === 'preparing' || task.Status.State === 'ready' || task.Status.State === 'starting') && 'text-blue-800 bg-blue-200 dark:text-blue-50 dark:bg-blue-600' %> <%= (task.Status.State === 'shutdown' || task.Status.State === 'failed' || task.Status.State === 'rejected' || task.Status.State === 'remove' || task.Status.State === 'orphaned') && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
                                                                         <%= task.Status.State %>
                                                                     </span>
                                                                 </td>
