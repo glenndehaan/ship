@@ -48,10 +48,9 @@
                                     </span>
                                     <div class="relative inline-block w-full">
                                         <select class="shadow appearance-none border rounded w-full py-2 px-3 pr-7 text-gray-700 mt-1 bg-white leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                            <option value="v1.0.0">v1.0.0</option>
-                                            <option value="v0.9.9">v0.9.9</option>
-                                            <option value="v0.8.1">v0.8.1</option>
-                                            <option value="v0.8.0">v0.8.0</option>
+                                            <% edit_service_image_tags.forEach((tag) => { %>
+                                                <option value="<%= tag %>"><%= tag %></option>
+                                            <% }); %>
                                         </select>
                                         <div class="text-gray-700 dark:text-gray-400 absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 20 20">

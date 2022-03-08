@@ -8,6 +8,7 @@ const multer = require('multer');
  * Import own modules
  */
 const docker = require('./modules/docker');
+const registry = require('./modules/registry');
 
 /**
  * Create express app
@@ -84,6 +85,14 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/update/:service', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.send('Not Found!');
+        return;
+    }
+
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
@@ -91,8 +100,9 @@ app.get('/update/:service', async (req, res) => {
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: true,
-        edit_service: await docker.getService(req.params.service),
-        edit_service_name: req.params.service
+        edit_service: service,
+        edit_service_name: req.params.service,
+        edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0])
     });
 });
 

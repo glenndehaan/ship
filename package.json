@@ -12,6 +12,7 @@
   "author": "Glenn de Haan",
   "license": "MIT",
   "dependencies": {
+    "docker-registry-client": "^3.3.1",
     "dockerode": "^3.3.1",
     "ejs": "^3.1.6",
     "express": "^4.17.1",

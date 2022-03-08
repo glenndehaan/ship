@@ -36,7 +36,7 @@ const mockData = {
         Name: 'test_test',
         TaskTemplate: {
             ContainerSpec: {
-                Image: 'example/example:latest'
+                Image: 'alpine:latest'
             }
         }
     },
