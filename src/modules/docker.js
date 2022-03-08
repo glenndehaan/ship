@@ -99,6 +99,42 @@ module.exports = {
     },
 
     /**
+     * Get a docker service
+     *
+     * @param name
+     * @returns {Promise<unknown>}
+     */
+    getService: (name) => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve(mockData);
+            });
+        }
+
+        return new Promise(async (resolve) => {
+            const services = await docker.listServices({filters: {service: [name]}, status: true}).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            const service = services.find((service) => {
+                return service.Spec.Name === name;
+            });
+
+            if(typeof service !== "undefined") {
+                service.__tasks = await docker.listTasks({filters: {service: [name]}}).catch((e) => {
+                    console.error(e);
+                    process.exit(1);
+                });
+
+                resolve(service);
+            }
+
+            resolve({});
+        });
+    },
+
+    /**
      * Get all docker tasks
      *
      * @returns {*}

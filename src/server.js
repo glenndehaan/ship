@@ -82,7 +82,26 @@ app.get('/', async (req, res) => {
         logo_url,
         email_placeholder,
         docker_services: await docker.getServices(),
-        docker_tasks: await docker.getTasks()
+        docker_tasks: await docker.getTasks(),
+        edit: false,
+        edit_service: {},
+        edit_service_name: null
+    });
+});
+
+app.get('/update/:service', async (req, res) => {
+    res.render('home', {
+        info: typeof req.query.message === 'string' && req.query.message !== '',
+        info_text: req.query.message || '',
+        app_title,
+        logo,
+        logo_url,
+        email_placeholder,
+        docker_services: await docker.getServices(),
+        docker_tasks: await docker.getTasks(),
+        edit: true,
+        edit_service: await docker.getService(req.params.service),
+        edit_service_name: req.params.service
     });
 });
 
