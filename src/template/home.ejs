@@ -16,61 +16,63 @@
             <% if(edit) { %>
                 <div class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-75 sm:items-center sm:justify-center">
                     <div class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
-                        <div class="mt-1 mb-5">
-                            <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-                                Edit Service: <%= edit_service_name %>
-                            </p>
-                            <p class="text-sm text-gray-700 dark:text-gray-400">
-                                <span>
-                                    Use the wizard below to update an existing service. After applying your changes Docker Swarm will gradually spawn new container to replace the old ones.
-                                </span>
-                                <label class="block mt-4 text-sm">
-                                    <span class="text-gray-700 dark:text-gray-400">
-                                        Service
+                        <form action="/update" method="post" enctype="multipart/form-data">
+                            <div class="mt-1 mb-5">
+                                <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
+                                    Edit Service: <%= edit_service_name %>
+                                </p>
+                                <p class="text-sm text-gray-700 dark:text-gray-400">
+                                    <span>
+                                        Use the wizard below to update an existing service. After applying your changes Docker Swarm will gradually spawn new container to replace the old ones.
                                     </span>
-                                    <input type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:disabled:bg-transparent" value="<%= edit_service_name %>" disabled />
-                                </label>
-                                <label class="block mt-4 text-sm">
-                                    <span class="text-gray-700 dark:text-gray-400">
-                                        Image
-                                    </span>
-                                    <input type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:disabled:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0] %>" disabled />
-                                </label>
-                                <label class="block mt-4 text-sm">
-                                    <span class="text-gray-700 dark:text-gray-400">
-                                        Current Image Version
-                                    </span>
-                                    <input type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:disabled:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.replace(/[^:]*:/, '') %>" disabled />
-                                </label>
-                                <label class="block mt-4 text-sm">
-                                    <span class="text-gray-700 dark:text-gray-400">
-                                        New Image Version
-                                    </span>
-                                    <div class="relative inline-block w-full">
-                                        <select class="shadow appearance-none border rounded w-full py-2 px-3 pr-7 text-gray-700 mt-1 bg-white leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                            <% edit_service_image_tags.forEach((tag) => { %>
-                                                <option value="<%= tag %>"><%= tag %></option>
-                                            <% }); %>
-                                        </select>
-                                        <div class="text-gray-700 dark:text-gray-400 absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-                                            </svg>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">
+                                            Service
+                                        </span>
+                                        <input name="service_name" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service_name %>" readonly="readonly" />
+                                    </label>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">
+                                            Image
+                                        </span>
+                                        <input name="service_image" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0] %>" readonly="readonly" />
+                                    </label>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">
+                                            Current Image Version
+                                        </span>
+                                        <input name="service_old_image_version" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.replace(/[^:]*:/, '') %>" readonly="readonly" />
+                                    </label>
+                                    <label class="block mt-4 text-sm">
+                                        <span class="text-gray-700 dark:text-gray-400">
+                                            New Image Version
+                                        </span>
+                                        <div class="relative inline-block w-full">
+                                            <select name="service_new_image_version" class="shadow appearance-none border rounded w-full py-2 px-3 pr-7 text-gray-700 mt-1 bg-white leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                <% edit_service_image_tags.forEach((tag) => { %>
+                                                    <option value="<%= tag %>"><%= tag %></option>
+                                                <% }); %>
+                                            </select>
+                                            <div class="text-gray-700 dark:text-gray-400 absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+                                                </svg>
+                                            </div>
                                         </div>
-                                    </div>
-                                </label>
-                            </p>
-                        </div>
-                        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-8 -mb-4 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex-row bg-gray-100 dark:bg-gray-800">
-                            <a href="/" class="text-center w-full px-5 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
-                                <button>
+                                    </label>
+                                    <input name="service_id" type="hidden" value="<%= edit_service.ID %>" />
+                                    <input name="service_version" type="hidden" value="<%= edit_service.Version.Index %>" />
+                                </p>
+                            </div>
+                            <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-8 -mb-4 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex-row bg-gray-100 dark:bg-gray-800">
+                                <a href="/" class="text-center w-full px-5 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
                                     Cancel
+                                </a>
+                                <button class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                    Update Service
                                 </button>
-                            </a>
-                            <button class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                                Update Service
-                            </button>
-                        </footer>
+                            </footer>
+                        </form>
                     </div>
                 </div>
             <% } %>

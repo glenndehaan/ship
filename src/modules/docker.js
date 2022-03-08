@@ -30,6 +30,7 @@ const mock = dev;
  * @type {{__tasks: [{Status: {State: string}, CreatedAt: number, Slot: number, ID: string}], ServiceStatus: {RunningTasks: number, DesiredTasks: number}, CreatedAt: number, Spec: {TaskTemplate: {ContainerSpec: {Image: string}}, Name: string}, UpdatedAt: number}}
  */
 const mockData = {
+    ID: '00000000000000000',
     CreatedAt: 0,
     UpdatedAt: 0,
     Spec: {
@@ -43,6 +44,9 @@ const mockData = {
     ServiceStatus: {
         RunningTasks: 0,
         DesiredTasks: 0
+    },
+    Version: {
+        Index: 5
     },
     __tasks: [
         {
@@ -154,6 +158,39 @@ module.exports = {
         return docker.listTasks({}).catch((e) => {
             console.error(e);
             process.exit(1);
+        });
+    },
+
+    /**
+     * Updates a service image version
+     *
+     * @param id
+     * @param service_version
+     * @param image
+     * @param version
+     * @returns {Promise<unknown>}
+     */
+    updateService: (id, service_version, image, version) => {
+        return new Promise(async (resolve) => {
+            console.log('id', id);
+            console.log('service_version', service_version);
+            console.log('image', image);
+            console.log('version', version);
+
+            console.log('image-version', `${image}:${version}`);
+
+            const result = await docker.getService(id).update({}, {
+                version: service_version,
+                TaskTemplate: {
+                    ContainerSpec: {
+                        Image: `${image}:${version}`
+                    }
+                }
+            });
+
+            console.log('result', result);
+
+            resolve();
         });
     }
 };
