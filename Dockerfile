@@ -26,15 +26,18 @@ ENV NODE_ENV=production
 # Run app
 CMD ["node", "/app/src/server.js"]
 
+# Bundle package.json and package-lock.json source
+COPY ./package.json ./package-lock.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
 #
 # Require app
 #
 
 # Bundle app source
 COPY . .
-
-# Install dependencies
-RUN npm ci --only=production
 
 # Create production build
 RUN npm run build

@@ -127,9 +127,20 @@ app.disable('x-powered-by');
 /**
  * Start listening on port
  */
-app.listen(3000, '0.0.0.0', async () => {
+const server = app.listen(3000, '0.0.0.0', async () => {
     log.info(`[WEB] App is running on: 0.0.0.0:3000`);
 
     const dockerInfo = await docker.info();
     log.info(`[DOCKER] Connected! ID: ${dockerInfo.ID}, Hostname: ${dockerInfo.Name}`);
+});
+
+/**
+ * Handle SIGTERM for docker
+ */
+process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing HTTP server');
+
+    server.close(() => {
+        console.log('HTTP server closed!');
+    });
 });
