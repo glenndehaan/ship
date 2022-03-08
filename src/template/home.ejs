@@ -81,11 +81,11 @@
                     <div class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4" role="dialog" id="modal">
                         <div class="mt-1 mb-5">
                             <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-                                Container logs: <%= logs_container.Id %>
+                                Container logs: <%= logs_container.Names.map((name) => name.replace('/', '')).join(', ') %> <span class="text-sm">(ID: <%= logs_container.Id %>)</span>
                             </p>
                             <p class="text-sm text-gray-700 dark:text-gray-400">
                                 <span>
-                                    Check the last 250 logged lines from the container:
+                                    Last 250 logged lines from inside the container:
                                 </span>
                                 <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50" style="height: 450px;"><%= logs_container_logs %></pre>
                             </p>
