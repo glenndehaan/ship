@@ -84,7 +84,11 @@ app.get('/', async (req, res) => {
         docker_tasks: await docker.getTasks(),
         edit: false,
         edit_service: {},
-        edit_service_name: null
+        edit_service_name: null,
+        edit_service_image_tags: [],
+        logs: false,
+        logs_container: {},
+        logs_container_logs: ''
     });
 });
 
@@ -108,7 +112,40 @@ app.get('/update/:service', async (req, res) => {
         edit: true,
         edit_service: service,
         edit_service_name: req.params.service,
-        edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0])
+        edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0]),
+        logs: false,
+        logs_container: {},
+        logs_container_logs: ''
+    });
+});
+
+app.get('/logs/:container_id', async (req, res) => {
+    const container = await docker.getContainer(req.params.container_id);
+
+    if(typeof container.Names === "undefined") {
+        res.status(404);
+        res.send('Not Found!');
+        return;
+    }
+
+    const logs = await docker.getContainerLogs(req.params.container_id);
+    const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
+
+    res.render('home', {
+        info: typeof req.query.message === 'string' && req.query.message !== '',
+        info_text: req.query.message || '',
+        app_title,
+        debug_docker,
+        hostname: os.hostname(),
+        docker_services: await docker.getServices(),
+        docker_tasks: await docker.getTasks(),
+        edit: false,
+        edit_service: {},
+        edit_service_name: null,
+        edit_service_image_tags: [],
+        logs: true,
+        logs_container: container,
+        logs_container_logs: reversedLogs
     });
 });
 

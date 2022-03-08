@@ -54,7 +54,10 @@ const mockData = {
             Slot: 1,
             CreatedAt: 0,
             Status: {
-                State: 'running'
+                State: 'running',
+                ContainerStatus: {
+                    ContainerID: '00000000000000000'
+                }
             },
             Spec: {
                 ContainerSpec: {
@@ -197,6 +200,46 @@ const dockerModule = {
             console.log('result', result);
 
             resolve();
+        });
+    },
+
+    /**
+     * Get a docker container
+     *
+     * @param id
+     * @returns {Promise<unknown>}
+     */
+    getContainer: (id) => {
+        return new Promise(async (resolve) => {
+            const containers = await docker.listContainers({filters: {id: [id]}, status: true}).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            const container = containers.find((container) => {
+                return container.Id === id;
+            });
+
+            if(typeof container !== "undefined") {
+                resolve(container);
+            }
+
+            resolve({});
+        });
+    },
+
+    /**
+     * Get the last logs from a container
+     *
+     * @param id
+     * @param amount
+     * @returns {*}
+     */
+    getContainerLogs: (id, amount = 250) => {
+        return docker.getContainer(id).logs({
+            stdout: true,
+            stderr: true,
+            tail: amount
         });
     }
 };
