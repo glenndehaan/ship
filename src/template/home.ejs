@@ -247,12 +247,14 @@
                                                                     <%= new Date(task.CreatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
                                                                 </td>
                                                                 <td class="px-4 py-3 text-sm flex space-x-4">
-                                                                    <a href="/logs/<%= task.Status.ContainerStatus.ContainerID %>" aria-label="View the <%= task.Status.ContainerStatus.ContainerID %> logs" title="View the <%= task.Status.ContainerStatus.ContainerID %> logs">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
-                                                                            <path d="M0 0h24v24H0V0z" fill="none"/>
-                                                                            <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
-                                                                        </svg>
-                                                                    </a>
+                                                                    <% if(typeof task.Status.ContainerStatus !== "undefined") { %>
+                                                                        <a href="/logs/<%= task.Status.ContainerStatus.ContainerID %>" aria-label="View the <%= task.Status.ContainerStatus.ContainerID %> logs" title="View the <%= task.Status.ContainerStatus.ContainerID %> logs">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
+                                                                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                                                <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
+                                                                            </svg>
+                                                                        </a>
+                                                                    <% } %>
                                                                 </td>
                                                             </tr>
                                                         <% }); %>
