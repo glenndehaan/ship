@@ -37,7 +37,7 @@ COPY ./package.json ./package-lock.json ./
 RUN npm ci --only=production && npm cache clean --force
 
 #
-# Require app
+# Require app (image caching from this point is not possible anymore)
 #
 
 # Bundle app source
