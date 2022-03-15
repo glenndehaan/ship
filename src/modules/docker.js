@@ -205,7 +205,6 @@ const dockerModule = {
         return docker.getService(name).logs({
             details: true,
             stdout: true,
-            stderr: true,
             tail: amount
         });
     },
@@ -263,7 +262,6 @@ const dockerModule = {
     getTaskLogs: (id, amount = 250) => {
         return docker.getTask(id).logs({
             stdout: true,
-            stderr: true,
             tail: amount
         });
     }
