@@ -147,7 +147,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
     }
 
     const logs = await docker.getServiceLogs(req.params.service_id);
-    const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
+    const reversedLogs = logs.toString('utf-8').split(/\r?\n/).reverse().join('\n');
 
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
@@ -186,7 +186,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
     }
 
     const logs = await docker.getTaskLogs(req.params.task_id);
-    const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
+    const reversedLogs = logs.toString('utf-8').split(/\r?\n/).reverse().join('\n');
 
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
