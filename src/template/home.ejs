@@ -81,22 +81,28 @@
                     <div class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4" role="dialog" id="modal">
                         <div class="mt-1 mb-5">
                             <p class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">
-                                Container logs: <%= logs_container.Names.map((name) => name.replace('/', '')).join(', ') %> <span class="text-sm">(ID: <%= logs_container.Id %>)</span>
+                                <% if(logs_type === 'service') { %>
+                                    <span>Service logs: <%= logs_data.service.self.Spec.Name %> <span class="text-sm">(ID: <%= logs_data.service.self.ID %>)</span></span>
+                                <% } %>
                             </p>
                             <p class="text-sm text-gray-700 dark:text-gray-400">
                                 <span>
                                     Last 250 logged lines from inside the container:
                                 </span>
-                                <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50" style="height: 450px;"><%= logs_container_logs %></pre>
+                                <% if(logs_type === 'service') { %>
+                                    <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50" style="height: 450px;"><%= logs_data.service.logs %></pre>
+                                <% } %>
                             </p>
                         </div>
                         <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-8 -mb-4 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex-row bg-gray-100 dark:bg-gray-800">
                             <a href="/" class="text-center w-full px-5 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
                                 Close
                             </a>
-                            <a href="/logs/<%= logs_container.Id %>" class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                                Refresh
-                            </a>
+                            <% if(logs_type === 'service') { %>
+                                <a href="/logs/service/<%= logs_data.service.self.Spec.Name %>" class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                                    Refresh
+                                </a>
+                            <% } %>
                         </footer>
                     </div>
                 </div>
@@ -205,7 +211,7 @@
                                             <%= new Date(service.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
                                         </td>
                                         <td class="px-4 py-3 text-sm flex space-x-4">
-                                            <a href="/logs/services/<%= service.Spec.Name %>" aria-label="View the <%= service.Spec.Name %> logs" title="View the <%= service.Spec.Name %> logs">
+                                            <a href="/logs/service/<%= service.Spec.Name %>" aria-label="View the <%= service.Spec.Name %> logs" title="View the <%= service.Spec.Name %> logs">
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
                                                     <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
                                                 </svg>
@@ -253,7 +259,7 @@
                                                                 </td>
                                                                 <td class="px-4 py-3 text-sm flex space-x-4">
                                                                     <% if(typeof task.Status.ContainerStatus !== "undefined") { %>
-                                                                        <a href="/logs/tasks/<%= task.ID %>" aria-label="View the <%= task.ID %> logs" title="View the <%= task.ID %> logs">
+                                                                        <a href="/logs/task/<%= task.ID %>" aria-label="View the <%= task.ID %> logs" title="View the <%= task.ID %> logs">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
                                                                                 <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
                                                                             </svg>
