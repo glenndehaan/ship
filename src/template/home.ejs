@@ -205,14 +205,14 @@
                                             <%= new Date(service.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
                                         </td>
                                         <td class="px-4 py-3 text-sm flex space-x-4">
-                                            <a href="/update/<%= service.Spec.Name %>" aria-label="Update the <%= service.Spec.Name %> service" title="Update the <%= service.Spec.Name %> service">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-orange-400 hover:fill-orange-300">
-                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                                                </svg>
-                                            </a>
                                             <a href="/logs/services/<%= service.Spec.Name %>" aria-label="View the <%= service.Spec.Name %> logs" title="View the <%= service.Spec.Name %> logs">
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
                                                     <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
+                                                </svg>
+                                            </a>
+                                            <a href="/update/<%= service.Spec.Name %>" aria-label="Update the <%= service.Spec.Name %> service" title="Update the <%= service.Spec.Name %> service">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-orange-400 hover:fill-orange-300">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                 </svg>
                                             </a>
                                         </td>

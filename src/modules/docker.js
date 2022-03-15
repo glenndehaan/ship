@@ -215,49 +215,19 @@ const dockerModule = {
     },
 
     /**
-     * Get a docker container
+     * Get the last logs from a service
      *
-     * @param id
-     * @returns {Promise<unknown>}
-     */
-    getContainer: (id) => {
-        return new Promise(async (resolve) => {
-            const containers = await docker.listContainers({filters: {id: [id]}, status: true}).catch((e) => {
-                console.error(e);
-                process.exit(1);
-            });
-
-            const container = containers.find((container) => {
-                return container.Id === id;
-            });
-
-            if(typeof container !== "undefined") {
-                resolve(container);
-            }
-
-            resolve({});
-        });
-    },
-
-    /**
-     * Get the last logs from a container
-     *
-     * @param id
+     * @param name
      * @param amount
      * @returns {*}
      */
-    getContainerLogs: (id, amount = 250) => {
-        return docker.getService(id).logs({
+    getServiceLogs: (name, amount = 250) => {
+        return docker.getService(name).logs({
+            details: true,
             stdout: true,
             stderr: true,
             tail: amount
         });
-
-        // return docker.getContainer(id).logs({
-        //     stdout: true,
-        //     stderr: true,
-        //     tail: amount
-        // });
     }
 };
 

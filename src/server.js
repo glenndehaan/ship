@@ -87,8 +87,17 @@ app.get('/', async (req, res) => {
         edit_service_name: null,
         edit_service_image_tags: [],
         logs: false,
-        logs_container: {},
-        logs_container_logs: ''
+        logs_type: '',
+        logs_data: {
+            service: {
+                self: {},
+                logs: ''
+            },
+            task: {
+                self: {},
+                logs: ''
+            }
+        }
     });
 });
 
@@ -114,21 +123,30 @@ app.get('/update/:service', async (req, res) => {
         edit_service_name: req.params.service,
         edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0]),
         logs: false,
-        logs_container: {},
-        logs_container_logs: ''
+        logs_type: '',
+        logs_data: {
+            service: {
+                self: {},
+                logs: ''
+            },
+            task: {
+                self: {},
+                logs: ''
+            }
+        }
     });
 });
 
-app.get('/logs/:container_id', async (req, res) => {
-    // const container = await docker.getContainer(req.params.container_id);
-    //
-    // if(typeof container.Names === "undefined") {
-    //     res.status(404);
-    //     res.send('Not Found!');
-    //     return;
-    // }
+app.get('/logs/service/:service_id', async (req, res) => {
+    const service = await docker.getService(req.params.service_id);
 
-    const logs = await docker.getContainerLogs(req.params.container_id);
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.send('Not Found!');
+        return;
+    }
+
+    const logs = await docker.getServiceLogs(req.params.service_id);
     const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
 
     console.log('reversedLogs', reversedLogs);
@@ -146,8 +164,17 @@ app.get('/logs/:container_id', async (req, res) => {
         edit_service_name: null,
         edit_service_image_tags: [],
         logs: true,
-        logs_container: {},
-        logs_container_logs: reversedLogs
+        logs_type: 'service',
+        logs_data: {
+            service: {
+                self: service,
+                logs: reversedLogs
+            },
+            task: {
+                self: {},
+                logs: ''
+            }
+        }
     });
 });
 
