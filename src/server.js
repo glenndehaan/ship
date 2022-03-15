@@ -120,16 +120,18 @@ app.get('/update/:service', async (req, res) => {
 });
 
 app.get('/logs/:container_id', async (req, res) => {
-    const container = await docker.getContainer(req.params.container_id);
-
-    if(typeof container.Names === "undefined") {
-        res.status(404);
-        res.send('Not Found!');
-        return;
-    }
+    // const container = await docker.getContainer(req.params.container_id);
+    //
+    // if(typeof container.Names === "undefined") {
+    //     res.status(404);
+    //     res.send('Not Found!');
+    //     return;
+    // }
 
     const logs = await docker.getContainerLogs(req.params.container_id);
     const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
+
+    console.log('reversedLogs', reversedLogs);
 
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
@@ -144,7 +146,7 @@ app.get('/logs/:container_id', async (req, res) => {
         edit_service_name: null,
         edit_service_image_tags: [],
         logs: true,
-        logs_container: container,
+        logs_container: {},
         logs_container_logs: reversedLogs
     });
 });
