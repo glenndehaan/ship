@@ -9,6 +9,11 @@ const Docker = require('dockerode');
 const dev = process.env.NODE_ENV !== 'production';
 
 /**
+ * Define hidden services
+ */
+const hiddenServices = typeof process.env.HIDDEN_SERVICES === "undefined" ? [] : process.env.HIDDEN_SERVICES.split(',');
+
+/**
  * Create docker connection
  *
  * @type {Docker}
@@ -100,6 +105,10 @@ const dockerModule = {
             const services = await docker.listServices({status: true}).catch((e) => {
                 console.error(e);
                 process.exit(1);
+            });
+
+            services.filter((service) => {
+                return !hiddenServices.includes(service.Spec.Name);
             });
 
             for(let item = 0; item < services.length; item++) {
