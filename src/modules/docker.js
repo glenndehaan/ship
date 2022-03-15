@@ -236,7 +236,7 @@ const dockerModule = {
      */
     getTask: (id) => {
         return new Promise(async (resolve) => {
-            const tasks = await docker.listTasks({filters: {id: id}}).catch((e) => {
+            const tasks = await docker.listTasks({filters: {id: [id]}}).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
