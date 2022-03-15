@@ -210,6 +210,11 @@
                                                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                                 </svg>
                                             </a>
+                                            <a href="/logs/services/<%= service.Spec.Name %>" aria-label="View the <%= service.Spec.Name %> logs" title="View the <%= service.Spec.Name %> logs">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
+                                                    <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
+                                                </svg>
+                                            </a>
                                         </td>
                                     </tr>
                                     <tr class="text-gray-700 dark:text-gray-400">
@@ -248,9 +253,8 @@
                                                                 </td>
                                                                 <td class="px-4 py-3 text-sm flex space-x-4">
                                                                     <% if(typeof task.Status.ContainerStatus !== "undefined") { %>
-                                                                        <a href="/logs/<%= task.Status.ContainerStatus.ContainerID %>" aria-label="View the <%= task.Status.ContainerStatus.ContainerID %> logs" title="View the <%= task.Status.ContainerStatus.ContainerID %> logs">
+                                                                        <a href="/logs/tasks/<%= task.ID %>" aria-label="View the <%= task.ID %> logs" title="View the <%= task.ID %> logs">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="fill-purple-400 hover:fill-purple-300">
-                                                                                <path d="M0 0h24v24H0V0z" fill="none"/>
                                                                                 <path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/>
                                                                             </svg>
                                                                         </a>
