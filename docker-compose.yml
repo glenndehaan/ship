@@ -7,4 +7,4 @@ services:
     environment:
       HIDDEN_SERVICES: 'ship_ship,traefik_traefik,portainer_agent,portainer_portainer,traefik_socket-proxy'
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
