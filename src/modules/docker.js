@@ -108,8 +108,6 @@ const dockerModule = {
             });
 
             const services = allServices.filter((service) => {
-                console.log('service.Spec.Name', service.Spec.Name);
-                console.log('hiddenServices', hiddenServices);
                 return !hiddenServices.includes(service.Spec.Name);
             });
 
@@ -163,24 +161,6 @@ const dockerModule = {
     },
 
     /**
-     * Get all docker tasks
-     *
-     * @returns {*}
-     */
-    getTasks: () => {
-        if(mock) {
-            return new Promise((resolve) => {
-                resolve([]);
-            });
-        }
-
-        return docker.listTasks({}).catch((e) => {
-            console.error(e);
-            process.exit(1);
-        });
-    },
-
-    /**
      * Updates a service image version
      *
      * @param name
@@ -224,6 +204,64 @@ const dockerModule = {
     getServiceLogs: (name, amount = 250) => {
         return docker.getService(name).logs({
             details: true,
+            stdout: true,
+            stderr: true,
+            tail: amount
+        });
+    },
+
+    /**
+     * Get all docker tasks
+     *
+     * @returns {*}
+     */
+    getTasks: () => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve([]);
+            });
+        }
+
+        return docker.listTasks({}).catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
+    },
+
+    /**
+     * Get a docker task
+     *
+     * @param id
+     * @returns {Promise<unknown>}
+     */
+    getTask: (id) => {
+        return new Promise(async (resolve) => {
+            const tasks = await docker.listTasks({filters: {id: id}}).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            const task = tasks.find((task) => {
+                return task.ID === id;
+            });
+
+            if(typeof task !== "undefined") {
+                resolve(task);
+            }
+
+            resolve({});
+        });
+    },
+
+    /**
+     * Get the last logs from a task
+     *
+     * @param id
+     * @param amount
+     * @returns {*}
+     */
+    getTaskLogs: (id, amount = 250) => {
+        return docker.getTask(id).logs({
             stdout: true,
             stderr: true,
             tail: amount

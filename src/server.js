@@ -149,8 +149,6 @@ app.get('/logs/service/:service_id', async (req, res) => {
     const logs = await docker.getServiceLogs(req.params.service_id);
     const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
 
-    console.log('reversedLogs', reversedLogs);
-
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
@@ -173,6 +171,45 @@ app.get('/logs/service/:service_id', async (req, res) => {
             task: {
                 self: {},
                 logs: ''
+            }
+        }
+    });
+});
+
+app.get('/logs/task/:task_id', async (req, res) => {
+    const task = await docker.getTask(req.params.task_id);
+
+    if(typeof task.Spec === "undefined") {
+        res.status(404);
+        res.send('Not Found!');
+        return;
+    }
+
+    const logs = await docker.getTaskLogs(req.params.task_id);
+    const reversedLogs = logs.toString().split(/\r?\n/).reverse().join('\n');
+
+    res.render('home', {
+        info: typeof req.query.message === 'string' && req.query.message !== '',
+        info_text: req.query.message || '',
+        app_title,
+        debug_docker,
+        hostname: os.hostname(),
+        docker_services: await docker.getServices(),
+        docker_tasks: await docker.getTasks(),
+        edit: false,
+        edit_service: {},
+        edit_service_name: null,
+        edit_service_image_tags: [],
+        logs: true,
+        logs_type: 'service',
+        logs_data: {
+            service: {
+                self: {},
+                logs: ''
+            },
+            task: {
+                self: task,
+                logs: reversedLogs
             }
         }
     });
