@@ -102,12 +102,14 @@ const dockerModule = {
         }
 
         return new Promise(async (resolve) => {
-            const services = await docker.listServices({status: true}).catch((e) => {
+            const allServices = await docker.listServices({status: true}).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            services.filter((service) => {
+            const services = allServices.filter((service) => {
+                console.log('service.Spec.Name', service.Spec.Name);
+                console.log('hiddenServices', hiddenServices);
                 return !hiddenServices.includes(service.Spec.Name);
             });
 
