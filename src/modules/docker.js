@@ -247,11 +247,17 @@ const dockerModule = {
      * @returns {*}
      */
     getContainerLogs: (id, amount = 250) => {
-        return docker.getContainer(id).logs({
+        return docker.getService(id).logs({
             stdout: true,
             stderr: true,
             tail: amount
         });
+
+        // return docker.getContainer(id).logs({
+        //     stdout: true,
+        //     stderr: true,
+        //     tail: amount
+        // });
     }
 };
 
