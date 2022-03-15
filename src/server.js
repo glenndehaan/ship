@@ -201,7 +201,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
         edit_service_name: null,
         edit_service_image_tags: [],
         logs: true,
-        logs_type: 'service',
+        logs_type: 'task',
         logs_data: {
             service: {
                 self: {},
