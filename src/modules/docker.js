@@ -254,7 +254,6 @@ const dockerModule = {
 
             const opts = service.Spec;
             opts.version = parseInt(service.Version.Index);
-            opts.TaskTemplate.ForceUpdate = 0;
             opts.Mode.Replicated.Replicas = parseInt(scale);
 
             console.log('OLD Opts', service.Spec);
