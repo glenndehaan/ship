@@ -44,6 +44,11 @@ const mockData = {
             ContainerSpec: {
                 Image: 'alpine:latest'
             }
+        },
+        Mode: {
+            Replicated: {
+                Replicas: 1
+            }
         }
     },
     ServiceStatus: {
@@ -200,7 +205,7 @@ const dockerModule = {
     },
 
     /**
-     * Updates a service image version
+     * Force update a service
      *
      * @param name
      * @returns {Promise<unknown>}
@@ -218,6 +223,39 @@ const dockerModule = {
             const opts = service.Spec;
             opts.version = parseInt(service.Version.Index);
             opts.TaskTemplate.ForceUpdate = typeof opts.TaskTemplate.ForceUpdate !== "number" ? 1 : opts.TaskTemplate.ForceUpdate + 1;
+
+            console.log('OLD Opts', service.Spec);
+            console.log('NEW Opts', opts);
+
+            const result = await docker.getService(service.ID).update({}, opts);
+
+            console.log('result', result);
+
+            resolve();
+        });
+    },
+
+    /**
+     * Updates a service scale
+     *
+     * @param name
+     * @param scale
+     * @returns {Promise<unknown>}
+     */
+    updateServiceScale: (name, scale) => {
+        return new Promise(async (resolve) => {
+            const service = await dockerModule.getService(name);
+            console.log('service', service);
+
+            if(typeof service.Spec === "undefined") {
+                resolve();
+                return;
+            }
+
+            const opts = service.Spec;
+            opts.version = parseInt(service.Version.Index);
+            opts.TaskTemplate.ForceUpdate = 0;
+            opts.Mode.Replicated.Replicas = parseInt(scale);
 
             console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);
