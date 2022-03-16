@@ -53,6 +53,9 @@ const mockData = {
     Version: {
         Index: 5
     },
+    UpdateStatus: {
+        State: 'completed'
+    },
     __tasks: [
         {
             ID: '00000000000000000',
