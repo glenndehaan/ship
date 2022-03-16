@@ -213,6 +213,7 @@ const dockerModule = {
 
             const opts = service.Spec;
             opts.version = parseInt(service.Version.Index);
+            opts.TaskTemplate.ForceUpdate = 1;
 
             console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);
