@@ -97,7 +97,9 @@ app.get('/', async (req, res) => {
                 self: {},
                 logs: ''
             }
-        }
+        },
+        force_update: false,
+        force_update_service: {}
     });
 });
 
@@ -133,7 +135,47 @@ app.get('/update/:service', async (req, res) => {
                 self: {},
                 logs: ''
             }
-        }
+        },
+        force_update: false,
+        force_update_service: {}
+    });
+});
+
+app.get('/force_update/:service', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.send('Not Found!');
+        return;
+    }
+
+    res.render('home', {
+        info: typeof req.query.message === 'string' && req.query.message !== '',
+        info_text: req.query.message || '',
+        app_title,
+        debug_docker,
+        hostname: os.hostname(),
+        docker_services: await docker.getServices(),
+        docker_tasks: await docker.getTasks(),
+        edit: false,
+        edit_service: {},
+        edit_service_name: null,
+        edit_service_image_tags: [],
+        logs: false,
+        logs_type: '',
+        logs_data: {
+            service: {
+                self: {},
+                logs: ''
+            },
+            task: {
+                self: {},
+                logs: ''
+            }
+        },
+        force_update: true,
+        force_update_service: service
     });
 });
 
@@ -172,7 +214,9 @@ app.get('/logs/service/:service_id', async (req, res) => {
                 self: {},
                 logs: ''
             }
-        }
+        },
+        force_update: false,
+        force_update_service: {}
     });
 });
 
@@ -211,13 +255,20 @@ app.get('/logs/task/:task_id', async (req, res) => {
                 self: task,
                 logs: reversedLogs
             }
-        }
+        },
+        force_update: false,
+        force_update_service: {}
     });
 });
 
 app.post('/update', async (req, res) => {
     await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
     res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
+});
+
+app.post('/force_update', async (req, res) => {
+    await docker.updateServiceForce(req.body.service_name);
+    res.redirect(encodeURI(`/?message=Successfully force updated the ${req.body.service_name} service!`));
 });
 
 /**

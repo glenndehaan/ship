@@ -58,6 +58,7 @@ const mockData = {
             ID: '00000000000000000',
             Slot: 1,
             CreatedAt: 0,
+            UpdatedAt: 0,
             Status: {
                 State: 'running',
                 ContainerStatus: {
@@ -182,6 +183,36 @@ const dockerModule = {
             opts.version = parseInt(service.Version.Index);
             opts.TaskTemplate.ContainerSpec.Image = `${image}:${version}`;
             opts.Labels['com.docker.stack.image'] = `${image}:${version}`;
+
+            console.log('OLD Opts', service.Spec);
+            console.log('NEW Opts', opts);
+
+            const result = await docker.getService(service.ID).update({}, opts);
+
+            console.log('result', result);
+
+            resolve();
+        });
+    },
+
+    /**
+     * Updates a service image version
+     *
+     * @param name
+     * @returns {Promise<unknown>}
+     */
+    updateServiceForce: (name) => {
+        return new Promise(async (resolve) => {
+            const service = await dockerModule.getService(name);
+            console.log('service', service);
+
+            if(typeof service.Spec === "undefined") {
+                resolve();
+                return;
+            }
+
+            const opts = service.Spec;
+            opts.version = parseInt(service.Version.Index);
 
             console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);
