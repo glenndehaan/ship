@@ -184,6 +184,7 @@ const dockerModule = {
 
             const opts = service.Spec;
             opts.version = parseInt(service.Version.Index);
+            opts.TaskTemplate.ForceUpdate = 0;
             opts.TaskTemplate.ContainerSpec.Image = `${image}:${version}`;
             opts.Labels['com.docker.stack.image'] = `${image}:${version}`;
 
@@ -216,7 +217,7 @@ const dockerModule = {
 
             const opts = service.Spec;
             opts.version = parseInt(service.Version.Index);
-            opts.TaskTemplate.ForceUpdate = 1;
+            opts.TaskTemplate.ForceUpdate = typeof opts.TaskTemplate.ForceUpdate !== "number" ? 1 : opts.TaskTemplate.ForceUpdate + 1;
 
             console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);
