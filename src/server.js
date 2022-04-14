@@ -39,6 +39,7 @@ log.setLevel(dev ? 'trace' : 'info');
  * Define global variables
  */
 const app_title = process.env.APP_TITLE || 'Ship';
+const max_scale = process.env.MAX_SCALE || '20';
 const debug_docker = process.env.DEBUG_DOCKER || false;
 
 /**
@@ -102,6 +103,7 @@ app.get('/', async (req, res) => {
         force_update: false,
         force_update_service: {},
         scale: false,
+        max_scale,
         scale_service: {}
     });
 });
@@ -143,6 +145,7 @@ app.get('/update/:service', async (req, res) => {
         force_update: false,
         force_update_service: {},
         scale: false,
+        max_scale,
         scale_service: {}
     });
 });
@@ -184,6 +187,7 @@ app.get('/force_update/:service', async (req, res) => {
         force_update: true,
         force_update_service: service,
         scale: false,
+        max_scale,
         scale_service: {}
     });
 });
@@ -225,6 +229,7 @@ app.get('/scale/:service', async (req, res) => {
         force_update: false,
         force_update_service: {},
         scale: true,
+        max_scale,
         scale_service: service
     });
 });
@@ -269,6 +274,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
         force_update: false,
         force_update_service: {},
         scale: false,
+        max_scale,
         scale_service: {}
     });
 });
@@ -313,6 +319,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
         force_update: false,
         force_update_service: {},
         scale: false,
+        max_scale,
         scale_service: {}
     });
 });
