@@ -289,7 +289,13 @@ app.get('/logs/task/:task_id', async (req, res) => {
     }
 
     const logs = await docker.getTaskLogs(req.params.task_id);
-    const reversedLogs = logs.toString('utf-8').replace(/[^\x00-\x7F]/g, '').split(/\r?\n/).reverse().join('\n');
+    const reversedLogs = logs.toString('utf-8').split(/\r?\n/).map((item) => {
+        const buffer = Buffer.from(item, "utf-8");
+        const header = buffer.slice(0, 8);
+        const size = header.readUInt32BE(4);
+
+        return item.slice(0, size).toString();
+    }).reverse().join('\n');
 
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
