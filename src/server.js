@@ -77,10 +77,11 @@ app.get('/', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        search: req.query.search || '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
-        docker_services: await docker.getServices(),
+        docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
         edit: false,
         edit_service: {},
@@ -117,6 +118,7 @@ app.get('/update/:service', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
@@ -157,6 +159,7 @@ app.get('/force_update/:service', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
@@ -197,6 +200,7 @@ app.get('/scale/:service', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
@@ -240,6 +244,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
@@ -283,6 +288,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
     res.render('home', {
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),

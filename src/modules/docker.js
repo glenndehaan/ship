@@ -101,12 +101,15 @@ const dockerModule = {
     /**
      * Get all docker services
      *
+     * @param search
      * @returns {Promise<unknown>}
      */
-    getServices: () => {
+    getServices: (search = '') => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([mockData]);
+                resolve([mockData, mockData, mockData, mockData, mockData, mockData, mockData].filter((item) => {
+                    return item.Spec.Name.includes(search);
+                }));
             });
         }
 
@@ -129,7 +132,9 @@ const dockerModule = {
                 });
             }
 
-            resolve(services);
+            resolve(services.filter((item) => {
+                return item.Spec.Name.includes(search);
+            }));
         });
     },
 
