@@ -13,7 +13,7 @@ module.exports = (logs) => {
 
         i += 8;
 
-        returnLogs.push(logs.slice(i, i + size).toString());
+        returnLogs.push(logs.slice(i, i + size).toString('utf-8'));
 
         i += size;
     }
