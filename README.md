@@ -52,10 +52,13 @@ services:
       HIDDEN_SERVICES: 'ship_ship'
       # Defines the maximum allowed scale. This means you can't scale a service with more containers then this amount
       MAX_SCALE: '20'
+      # Can be used to instruct Ship to use an SSO providers username header
+      # AUTH_HEADER: ''
       # Can be enabled to include debug data as JS window parameters
       # DEBUG_DOCKER: 'true'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/ship/ship.json:/data/ship.json
 ```
 
 * Run `docker stack deploy -c ship-stack.yml ship` this pulls ship and starts it on the docker swarm

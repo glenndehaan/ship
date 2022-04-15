@@ -4,6 +4,8 @@
 const os = require('os');
 const express = require('express');
 const multer = require('multer');
+const {JsonDB} = require('node-json-db');
+const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 
 /**
  * Import own modules
@@ -11,6 +13,7 @@ const multer = require('multer');
 const docker = require('./modules/docker');
 const registry = require('./modules/registry');
 const demux = require('./modules/demux');
+const time = require('./modules/time');
 
 /**
  * Create express app
@@ -37,10 +40,26 @@ const log = require('simple-node-logger').createSimpleLogger({
 log.setLevel(dev ? 'trace' : 'info');
 
 /**
+ * Initialize a database for logging purposes
+ */
+const db = new JsonDB(new Config(dev ? `${__dirname}/ship` : `/data/ship`, true, false, '/'));
+
+/**
+ * Check if the database base structure exists
+ */
+if(!db.exists('/logs')) {
+    log.info('[DB] Initialized for the first time!');
+    db.push('/logs', []);
+} else {
+    log.info('[DB] Ready!');
+}
+
+/**
  * Define global variables
  */
 const app_title = process.env.APP_TITLE || 'Ship';
 const max_scale = process.env.MAX_SCALE || '20';
+const auth_header = process.env.AUTH_HEADER || false;
 const debug_docker = process.env.DEBUG_DOCKER || false;
 
 /**
@@ -77,12 +96,14 @@ app.use(express.static(`${__dirname}/public`));
  */
 app.get('/', async (req, res) => {
     res.render('home', {
+        getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         search: req.query.search || '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
+        logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -119,12 +140,14 @@ app.get('/update/:service', async (req, res) => {
     }
 
     res.render('home', {
+        getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
+        logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: true,
@@ -161,12 +184,14 @@ app.get('/force_update/:service', async (req, res) => {
     }
 
     res.render('home', {
+        getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
+        logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -203,12 +228,14 @@ app.get('/scale/:service', async (req, res) => {
     }
 
     res.render('home', {
+        getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
+        logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -248,12 +275,14 @@ app.get('/logs/service/:service_id', async (req, res) => {
     const reversedLogs = logs.toString('utf-8').replace(/[^\x00-\x7F]/g, '').split(/\r?\n/).reverse().join('\n');
 
     res.render('home', {
+        getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
+        logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -293,12 +322,14 @@ app.get('/logs/task/:task_id', async (req, res) => {
     const reversedLogs = demux(logs).reverse().join('\n');
 
     res.render('home', {
+        getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         search: '',
         app_title,
         debug_docker,
         hostname: os.hostname(),
+        logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(),
         docker_tasks: await docker.getTasks(),
         edit: false,
@@ -326,16 +357,34 @@ app.get('/logs/task/:task_id', async (req, res) => {
 });
 
 app.post('/update', async (req, res) => {
+    db.push('/logs[]', {
+        username: 'Anonymous',
+        service: req.body.service_name,
+        message: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}`,
+        time: new Date().getTime()
+    });
     await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
     res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
 });
 
 app.post('/force_update', async (req, res) => {
+    db.push('/logs[]', {
+        username: 'Anonymous',
+        service: req.body.service_name,
+        message: `Force re-deployed the ${req.body.service_name} service`,
+        time: new Date().getTime()
+    });
     await docker.updateServiceForce(req.body.service_name);
     res.redirect(encodeURI(`/?message=Successfully force updated the ${req.body.service_name} service!`));
 });
 
 app.post('/scale', async (req, res) => {
+    db.push('/logs[]', {
+        username: 'Anonymous',
+        service: req.body.service_name,
+        message: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)`,
+        time: new Date().getTime()
+    });
     await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
     res.redirect(encodeURI(`/?message=Successfully scaled the ${req.body.service_name} service!`));
 });

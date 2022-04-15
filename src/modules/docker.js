@@ -107,7 +107,7 @@ const dockerModule = {
     getServices: (search = '') => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([mockData, mockData, mockData, mockData, mockData, mockData, mockData].filter((item) => {
+                resolve([mockData].filter((item) => {
                     return item.Spec.Name.includes(search);
                 }));
             });
