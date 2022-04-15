@@ -50,6 +50,10 @@ services:
     environment:
       # Can be used to hide specific services from the ship overview page
       HIDDEN_SERVICES: 'ship_ship'
+      # Defines the maximum allowed scale. This means you can't scale a service with more containers then this amount
+      MAX_SCALE: '20'
+      # Can be enabled to include debug data as JS window parameters
+      # DEBUG_DOCKER: 'true'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 ```
