@@ -58,7 +58,7 @@ services:
       # DEBUG_DOCKER: 'true'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /opt/ship/ship.json:/data/ship.json
+      - /opt/ship_data/ship.json:/data/ship.json
 ```
 
 * Run `docker stack deploy -c ship-stack.yml ship` this pulls ship and starts it on the docker swarm
