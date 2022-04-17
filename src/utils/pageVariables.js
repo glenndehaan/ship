@@ -51,6 +51,9 @@ module.exports = async (req, db, globals) => {
         force_update_service: {},
         scale: false,
         max_scale: globals.max_scale,
-        scale_service: {}
+        scale_service: {},
+        activity: false,
+        activity_service: '',
+        activity_logs: []
     };
 }

@@ -240,6 +240,22 @@ app.get('/logs/task/:task_id', async (req, res) => {
     });
 });
 
+app.get('/activity/:service', async (req, res) => {
+    res.render('home', {
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        }),
+        activity: true,
+        activity_service: req.params.service,
+        activity_logs: db.getData('/logs').filter((item) => {
+            return item.service === req.params.service;
+        })
+    });
+});
+
 app.post('/update', async (req, res) => {
     db.push('/logs[]', {
         username: auth_header ? req.get(auth_header) : 'Anonymous',

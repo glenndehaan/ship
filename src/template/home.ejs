@@ -33,6 +33,10 @@
                 <%- include('partials/logs') %>
             <% } %>
 
+            <% if(activity) { %>
+                <%- include('partials/activity_detail') %>
+            <% } %>
+
             <div class="flex flex-col flex-1 w-full gap-10">
                 <div class="container px-6 mx-auto grid gap-10">
                     <%- include('partials/stats') %>
@@ -62,7 +66,9 @@
                                     <% docker_services.forEach((service) => { %>
                                         <tr class="text-gray-700 dark:text-gray-400">
                                             <td class="px-4 py-3">
-                                                <%= service.Spec.Name %>
+                                                <a href="/activity/<%= service.Spec.Name %>" class="text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-200">
+                                                    <%= service.Spec.Name %>
+                                                </a>
                                             </td>
                                             <td class="px-4 py-3 text-xs">
                                                 <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= service.ServiceStatus.RunningTasks === service.ServiceStatus.DesiredTasks && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= service.ServiceStatus.RunningTasks !== service.ServiceStatus.DesiredTasks && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
