@@ -14,6 +14,7 @@ const docker = require('./modules/docker');
 const registry = require('./modules/registry');
 const demux = require('./modules/demux');
 const time = require('./modules/time');
+const pageVariables = require('./utils/pageVariables');
 
 /**
  * Create express app
@@ -96,37 +97,12 @@ app.use(express.static(`${__dirname}/public`));
  */
 app.get('/', async (req, res) => {
     res.render('home', {
-        getTimeAgo: time,
-        info: typeof req.query.message === 'string' && req.query.message !== '',
-        info_text: req.query.message || '',
-        search: req.query.search || '',
-        app_title,
-        debug_docker,
-        hostname: os.hostname(),
-        logs_activity: db.getData('/logs'),
-        docker_services: await docker.getServices(req.query.search || ''),
-        docker_tasks: await docker.getTasks(),
-        edit: false,
-        edit_service: {},
-        edit_service_name: null,
-        edit_service_image_tags: [],
-        logs: false,
-        logs_type: '',
-        logs_data: {
-            service: {
-                self: {},
-                logs: ''
-            },
-            task: {
-                self: {},
-                logs: ''
-            }
-        },
-        force_update: false,
-        force_update_service: {},
-        scale: false,
-        max_scale,
-        scale_service: {}
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        })
     });
 });
 
@@ -140,37 +116,16 @@ app.get('/update/:service', async (req, res) => {
     }
 
     res.render('home', {
-        getTimeAgo: time,
-        info: typeof req.query.message === 'string' && req.query.message !== '',
-        info_text: req.query.message || '',
-        search: '',
-        app_title,
-        debug_docker,
-        hostname: os.hostname(),
-        logs_activity: db.getData('/logs'),
-        docker_services: await docker.getServices(),
-        docker_tasks: await docker.getTasks(),
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        }),
         edit: true,
         edit_service: service,
         edit_service_name: req.params.service,
-        edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0]),
-        logs: false,
-        logs_type: '',
-        logs_data: {
-            service: {
-                self: {},
-                logs: ''
-            },
-            task: {
-                self: {},
-                logs: ''
-            }
-        },
-        force_update: false,
-        force_update_service: {},
-        scale: false,
-        max_scale,
-        scale_service: {}
+        edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0])
     });
 });
 
@@ -184,37 +139,14 @@ app.get('/force_update/:service', async (req, res) => {
     }
 
     res.render('home', {
-        getTimeAgo: time,
-        info: typeof req.query.message === 'string' && req.query.message !== '',
-        info_text: req.query.message || '',
-        search: '',
-        app_title,
-        debug_docker,
-        hostname: os.hostname(),
-        logs_activity: db.getData('/logs'),
-        docker_services: await docker.getServices(),
-        docker_tasks: await docker.getTasks(),
-        edit: false,
-        edit_service: {},
-        edit_service_name: null,
-        edit_service_image_tags: [],
-        logs: false,
-        logs_type: '',
-        logs_data: {
-            service: {
-                self: {},
-                logs: ''
-            },
-            task: {
-                self: {},
-                logs: ''
-            }
-        },
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        }),
         force_update: true,
-        force_update_service: service,
-        scale: false,
-        max_scale,
-        scale_service: {}
+        force_update_service: service
     });
 });
 
@@ -228,34 +160,12 @@ app.get('/scale/:service', async (req, res) => {
     }
 
     res.render('home', {
-        getTimeAgo: time,
-        info: typeof req.query.message === 'string' && req.query.message !== '',
-        info_text: req.query.message || '',
-        search: '',
-        app_title,
-        debug_docker,
-        hostname: os.hostname(),
-        logs_activity: db.getData('/logs'),
-        docker_services: await docker.getServices(),
-        docker_tasks: await docker.getTasks(),
-        edit: false,
-        edit_service: {},
-        edit_service_name: null,
-        edit_service_image_tags: [],
-        logs: false,
-        logs_type: '',
-        logs_data: {
-            service: {
-                self: {},
-                logs: ''
-            },
-            task: {
-                self: {},
-                logs: ''
-            }
-        },
-        force_update: false,
-        force_update_service: {},
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        }),
         scale: true,
         max_scale,
         scale_service: service
@@ -275,20 +185,12 @@ app.get('/logs/service/:service_id', async (req, res) => {
     const reversedLogs = logs.toString('utf-8').replace(/[^\x00-\x7F]/g, '').split(/\r?\n/).reverse().join('\n');
 
     res.render('home', {
-        getTimeAgo: time,
-        info: typeof req.query.message === 'string' && req.query.message !== '',
-        info_text: req.query.message || '',
-        search: '',
-        app_title,
-        debug_docker,
-        hostname: os.hostname(),
-        logs_activity: db.getData('/logs'),
-        docker_services: await docker.getServices(),
-        docker_tasks: await docker.getTasks(),
-        edit: false,
-        edit_service: {},
-        edit_service_name: null,
-        edit_service_image_tags: [],
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        }),
         logs: true,
         logs_type: 'service',
         logs_data: {
@@ -300,12 +202,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
                 self: {},
                 logs: ''
             }
-        },
-        force_update: false,
-        force_update_service: {},
-        scale: false,
-        max_scale,
-        scale_service: {}
+        }
     });
 });
 
@@ -322,20 +219,12 @@ app.get('/logs/task/:task_id', async (req, res) => {
     const reversedLogs = demux(logs).reverse().join('\n');
 
     res.render('home', {
-        getTimeAgo: time,
-        info: typeof req.query.message === 'string' && req.query.message !== '',
-        info_text: req.query.message || '',
-        search: '',
-        app_title,
-        debug_docker,
-        hostname: os.hostname(),
-        logs_activity: db.getData('/logs'),
-        docker_services: await docker.getServices(),
-        docker_tasks: await docker.getTasks(),
-        edit: false,
-        edit_service: {},
-        edit_service_name: null,
-        edit_service_image_tags: [],
+        ...await pageVariables(req, db, {
+            app_title,
+            max_scale,
+            auth_header,
+            debug_docker
+        }),
         logs: true,
         logs_type: 'task',
         logs_data: {
@@ -347,12 +236,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
                 self: task,
                 logs: reversedLogs
             }
-        },
-        force_update: false,
-        force_update_service: {},
-        scale: false,
-        max_scale,
-        scale_service: {}
+        }
     });
 });
 
@@ -420,5 +304,6 @@ process.on('SIGTERM', () => {
 
     server.close(() => {
         console.log('HTTP server closed!');
+        process.exit(0);
     });
 });
