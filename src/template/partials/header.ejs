@@ -24,22 +24,39 @@
                 </form>
             </div>
         </div>
-        <% if(username) { %>
-            <ul class="flex items-center flex-shrink-0 space-x-6">
+        <ul class="flex items-center flex-shrink-0 md:space-x-6">
+            <li class="hidden md:inline-block">
+                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple text-gray-700 dark:text-gray-200" aria-label="Email notifications are disabled" title="Email notifications are disabled">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
+                    </svg>
+                    <span aria-hidden="true" class="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"></span>
+                </button>
+            </li>
+            <li class="hidden md:inline-block">
+                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple" aria-label="Slack notifications are disabled" title="Slack notifications are disabled">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127 127">
+                        <path d="M27.2 80c0 7.3-5.9 13.2-13.2 13.2C6.7 93.2.8 87.3.8 80c0-7.3 5.9-13.2 13.2-13.2h13.2V80zm6.6 0c0-7.3 5.9-13.2 13.2-13.2 7.3 0 13.2 5.9 13.2 13.2v33c0 7.3-5.9 13.2-13.2 13.2-7.3 0-13.2-5.9-13.2-13.2V80z" fill="#E01E5A"/>
+                        <path d="M47 27c-7.3 0-13.2-5.9-13.2-13.2C33.8 6.5 39.7.6 47 .6c7.3 0 13.2 5.9 13.2 13.2V27H47zm0 6.7c7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2H13.9C6.6 60.1.7 54.2.7 46.9c0-7.3 5.9-13.2 13.2-13.2H47z" fill="#36C5F0"/>
+                        <path d="M99.9 46.9c0-7.3 5.9-13.2 13.2-13.2 7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2H99.9V46.9zm-6.6 0c0 7.3-5.9 13.2-13.2 13.2-7.3 0-13.2-5.9-13.2-13.2V13.8C66.9 6.5 72.8.6 80.1.6c7.3 0 13.2 5.9 13.2 13.2v33.1z" fill="#2EB67D"/>
+                        <path d="M80.1 99.8c7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2-7.3 0-13.2-5.9-13.2-13.2V99.8h13.2zm0-6.6c-7.3 0-13.2-5.9-13.2-13.2 0-7.3 5.9-13.2 13.2-13.2h33.1c7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2H80.1z" fill="#ECB22E"/>
+                    </svg>
+                    <span aria-hidden="true" class="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"></span>
+                </button>
+            </li>
+            <% if(username) { %>
                 <li>
                     <div class="align-middle rounded-full">
                         <img class="object-cover w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/<%= username %>" alt="Profile Picture"/>
                     </div>
                 </li>
-            </ul>
-        <% } else { %>
-            <ul class="flex items-center flex-shrink-0 space-x-6">
+            <% } else { %>
                 <li>
                     <div class="align-middle rounded-full">
                         <img class="object-cover w-10 h-10 rounded-full" src="/images/anonymous-profile.jpg" alt="Profile Picture"/>
                     </div>
                 </li>
-            </ul>
-        <% } %>
+            <% } %>
+        </ul>
     </div>
 </header>
