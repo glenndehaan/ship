@@ -7,10 +7,10 @@
             </svg>
         </div>
         <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            <p class="mb-2 text-xs font-medium text-gray-600 dark:text-gray-400">
                 Total services
             </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            <p class="text-base font-semibold text-gray-700 dark:text-gray-200">
                 <%= docker_services.length %>
             </p>
         </div>
@@ -22,10 +22,10 @@
             </svg>
         </div>
         <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            <p class="mb-2 text-xs font-medium text-gray-600 dark:text-gray-400">
                 Total containers/tasks
             </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            <p class="text-base font-semibold text-gray-700 dark:text-gray-200">
                 <%= docker_tasks.length %>
             </p>
         </div>
@@ -37,10 +37,10 @@
             </svg>
         </div>
         <div>
-            <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            <p class="mb-2 text-xs font-medium text-gray-600 dark:text-gray-400">
                 Last update
             </p>
-            <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+            <p class="text-base font-semibold text-gray-700 dark:text-gray-200">
                 <%= new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
             </p>
         </div>
