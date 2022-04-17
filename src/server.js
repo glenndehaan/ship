@@ -358,7 +358,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
 
 app.post('/update', async (req, res) => {
     db.push('/logs[]', {
-        username: 'Anonymous',
+        username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
         message: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}`,
         time: new Date().getTime()
@@ -369,7 +369,7 @@ app.post('/update', async (req, res) => {
 
 app.post('/force_update', async (req, res) => {
     db.push('/logs[]', {
-        username: 'Anonymous',
+        username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
         message: `Force re-deployed the ${req.body.service_name} service`,
         time: new Date().getTime()
@@ -380,7 +380,7 @@ app.post('/force_update', async (req, res) => {
 
 app.post('/scale', async (req, res) => {
     db.push('/logs[]', {
-        username: 'Anonymous',
+        username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
         message: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)`,
         time: new Date().getTime()
