@@ -24,12 +24,22 @@
                 </form>
             </div>
         </div>
-        <ul class="flex items-center flex-shrink-0 space-x-6">
-            <li>
-                <div class="align-middle rounded-full">
-                    <img class="object-cover w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/1d4a372291204c3fb76a5ca0009b1916" alt="Profile Picture"/>
-                </div>
-            </li>
-        </ul>
+        <% if(username) { %>
+            <ul class="flex items-center flex-shrink-0 space-x-6">
+                <li>
+                    <div class="align-middle rounded-full">
+                        <img class="object-cover w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/<%= username %>" alt="Profile Picture"/>
+                    </div>
+                </li>
+            </ul>
+        <% } else { %>
+            <ul class="flex items-center flex-shrink-0 space-x-6">
+                <li>
+                    <div class="align-middle rounded-full">
+                        <img class="object-cover w-10 h-10 rounded-full" src="/images/anonymous-profile.jpg" alt="Profile Picture"/>
+                    </div>
+                </li>
+            </ul>
+        <% } %>
     </div>
 </header>

@@ -2,6 +2,7 @@
  * Import base packages
  */
 const os = require('os');
+const crypto = require('crypto');
 
 /**
  * Import own modules
@@ -26,6 +27,7 @@ module.exports = async (req, db, globals) => {
         app_title: globals.app_title,
         debug_docker: globals.debug_docker,
         hostname: os.hostname(),
+        username: globals.auth_header ? crypto.createHash('md5').update(req.get(globals.auth_header)).digest("hex") : false,
         logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
