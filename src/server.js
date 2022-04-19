@@ -62,6 +62,7 @@ const app_title = process.env.APP_TITLE || 'Ship';
 const max_scale = process.env.MAX_SCALE || '20';
 const auth_header = process.env.AUTH_HEADER || false;
 const debug_docker = process.env.DEBUG_DOCKER || false;
+const slack_webhook = process.env.SLACK_WEBHOOK || false;
 
 /**
  * Trust proxy
@@ -101,7 +102,8 @@ app.get('/', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         })
     });
 });
@@ -120,7 +122,8 @@ app.get('/update/:service', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         }),
         edit: true,
         edit_service: service,
@@ -143,7 +146,8 @@ app.get('/force_update/:service', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         }),
         force_update: true,
         force_update_service: service
@@ -164,7 +168,8 @@ app.get('/scale/:service', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         }),
         scale: true,
         max_scale,
@@ -189,7 +194,8 @@ app.get('/logs/service/:service_id', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         }),
         logs: true,
         logs_type: 'service',
@@ -223,7 +229,8 @@ app.get('/logs/task/:task_id', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         }),
         logs: true,
         logs_type: 'task',
@@ -246,7 +253,8 @@ app.get('/activity/:service', async (req, res) => {
             app_title,
             max_scale,
             auth_header,
-            debug_docker
+            debug_docker,
+            slack_webhook
         }),
         activity: true,
         activity_service: req.params.service,
