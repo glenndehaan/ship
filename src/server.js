@@ -1,7 +1,7 @@
 /**
  * Import base packages
  */
-const os = require('os');
+const log = require('js-logger');
 const express = require('express');
 const multer = require('multer');
 const {JsonDB} = require('node-json-db');
@@ -13,7 +13,7 @@ const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 const docker = require('./modules/docker');
 const registry = require('./modules/registry');
 const demux = require('./modules/demux');
-const time = require('./modules/time');
+const slack = require('./modules/slack');
 const pageVariables = require('./utils/pageVariables');
 
 /**
@@ -31,14 +31,30 @@ const dev = process.env.NODE_ENV !== 'production';
 /**
  * Setup logger
  */
-const log = require('simple-node-logger').createSimpleLogger({
-    timestampFormat: 'YYYY-MM-DD HH:mm:ss.SSS'
+const consoleLogger = log.createDefaultHandler({
+    formatter: (messages, context) => {
+        // Get current date, change this to the current timezone, then generate a date-time string
+        const utcDate = new Date();
+        const offset = utcDate.getTimezoneOffset();
+        const date = new Date(utcDate.getTime() - (offset * 60 * 1000));
+        const dateTimeString = date.toISOString().replace('T', ' ').replace('Z', '');
+
+        // Prefix each log message with a timestamp and log level
+        messages.unshift(`${dateTimeString} ${context.level.name}${context.level.name === 'INFO' || context.level.name === 'WARN' ? ' ' : ''}`);
+    }
+});
+
+/**
+ * Set all logger handlers
+ */
+log.setHandler((messages, context) => {
+    consoleLogger(messages, context);
 });
 
 /**
  * Set log level from config
  */
-log.setLevel(dev ? 'trace' : 'info');
+log.setLevel(dev ? log.TRACE : log.INFO);
 
 /**
  * Initialize a database for logging purposes
@@ -271,6 +287,37 @@ app.post('/update', async (req, res) => {
         message: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}`,
         time: new Date().getTime()
     });
+
+    if(slack_webhook) {
+        slack({
+            fallback: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}\n\n---`,
+            text: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}\n\n---`,
+            color: 'good',
+            fields: [
+                {
+                    title: 'User',
+                    value: auth_header ? req.get(auth_header) : 'Anonymous',
+                    short: false
+                },
+                {
+                    title: 'Service',
+                    value: req.body.service_name,
+                    short: false
+                },
+                {
+                    title: 'Current Image',
+                    value: `${req.body.service_image}:${req.body.service_old_image_version}`,
+                    short: false
+                },
+                {
+                    title: 'New Image',
+                    value: `${req.body.service_image}:${req.body.service_new_image_version}`,
+                    short: false
+                }
+            ]
+        });
+    }
+
     await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
     res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
 });
@@ -282,6 +329,27 @@ app.post('/force_update', async (req, res) => {
         message: `Force re-deployed the ${req.body.service_name} service`,
         time: new Date().getTime()
     });
+
+    if(slack_webhook) {
+        slack({
+            fallback: `Force re-deployed the ${req.body.service_name} service\n\n---`,
+            text: `Force re-deployed the ${req.body.service_name} service\n\n---`,
+            color: 'good',
+            fields: [
+                {
+                    title: 'User',
+                    value: auth_header ? req.get(auth_header) : 'Anonymous',
+                    short: false
+                },
+                {
+                    title: 'Service',
+                    value: req.body.service_name,
+                    short: false
+                }
+            ]
+        });
+    }
+
     await docker.updateServiceForce(req.body.service_name);
     res.redirect(encodeURI(`/?message=Successfully force updated the ${req.body.service_name} service!`));
 });
@@ -293,6 +361,32 @@ app.post('/scale', async (req, res) => {
         message: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)`,
         time: new Date().getTime()
     });
+
+    if(slack_webhook) {
+        slack({
+            fallback: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)\n\n---`,
+            text: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)\n\n---`,
+            color: 'good',
+            fields: [
+                {
+                    title: 'User',
+                    value: auth_header ? req.get(auth_header) : 'Anonymous',
+                    short: false
+                },
+                {
+                    title: 'Service',
+                    value: req.body.service_name,
+                    short: false
+                },
+                {
+                    title: 'Scale',
+                    value: req.body.service_scale,
+                    short: false
+                }
+            ]
+        });
+    }
+
     await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
     res.redirect(encodeURI(`/?message=Successfully scaled the ${req.body.service_name} service!`));
 });
