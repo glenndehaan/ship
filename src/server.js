@@ -100,7 +100,7 @@ app.use(multer().none());
  * Request logger
  */
 app.use((req, res, next) => {
-    log.trace(`[Web][REQUEST]: ${req.originalUrl}`);
+    log.debug(`[Web][REQUEST]: ${req.originalUrl}`);
     next();
 });
 
