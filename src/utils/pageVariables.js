@@ -27,6 +27,7 @@ module.exports = async (req, db, globals) => {
         app_title: globals.app_title,
         debug_docker: globals.debug_docker,
         slack_webhook: globals.slack_webhook,
+        email_smtp_host: globals.email_smtp_host,
         hostname: os.hostname(),
         username: globals.auth_header ? crypto.createHash('md5').update(req.get(globals.auth_header)).digest("hex") : false,
         logs_activity: db.getData('/logs'),

@@ -56,6 +56,12 @@ services:
       # AUTH_HEADER: ''
       # Can be used to enable slack notifications whenever an action on ship is performed
       # SLACK_WEBHOOK: ''
+      # Can be used to enable email notifications whenever an action on ship is performed
+      # EMAIL_SMTP_HOST: 'smtp.example.com'
+      # EMAIL_SMTP_PORT: '25'
+      # EMAIL_SMTP_SECURE: 'false'
+      # EMAIL_FROM: 'noreply@example.com'
+      # EMAIL_TO: 'user1@example.com,user2@example.com'
       # Can be enabled to include debug data as JS window parameters
       # DEBUG_DOCKER: 'true'
     volumes:

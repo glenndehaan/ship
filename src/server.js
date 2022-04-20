@@ -14,6 +14,7 @@ const docker = require('./modules/docker');
 const registry = require('./modules/registry');
 const demux = require('./modules/demux');
 const slack = require('./modules/slack');
+const email = require('./modules/email');
 const pageVariables = require('./utils/pageVariables');
 
 /**
@@ -79,6 +80,7 @@ const max_scale = process.env.MAX_SCALE || '20';
 const auth_header = process.env.AUTH_HEADER || false;
 const debug_docker = process.env.DEBUG_DOCKER || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
+const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 
 /**
  * Trust proxy
@@ -110,6 +112,12 @@ app.use((req, res, next) => {
 app.use(express.static(`${__dirname}/public`));
 
 /**
+ * Output notification module status
+ */
+log.info(slack_webhook ? '[SLACK] Enabled!' : '[SLACK] Disabled!');
+log.info(email_smtp_host ? '[EMAIL] Enabled!' : '[EMAIL] Disabled!');
+
+/**
  * Configure routers
  */
 app.get('/', async (req, res) => {
@@ -119,7 +127,8 @@ app.get('/', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         })
     });
 });
@@ -139,7 +148,8 @@ app.get('/update/:service', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         }),
         edit: true,
         edit_service: service,
@@ -163,7 +173,8 @@ app.get('/force_update/:service', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         }),
         force_update: true,
         force_update_service: service
@@ -185,7 +196,8 @@ app.get('/scale/:service', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         }),
         scale: true,
         max_scale,
@@ -211,7 +223,8 @@ app.get('/logs/service/:service_id', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         }),
         logs: true,
         logs_type: 'service',
@@ -246,7 +259,8 @@ app.get('/logs/task/:task_id', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         }),
         logs: true,
         logs_type: 'task',
@@ -270,7 +284,8 @@ app.get('/activity/:service', async (req, res) => {
             max_scale,
             auth_header,
             debug_docker,
-            slack_webhook
+            slack_webhook,
+            email_smtp_host
         }),
         activity: true,
         activity_service: req.params.service,
@@ -318,6 +333,12 @@ app.post('/update', async (req, res) => {
         });
     }
 
+    if(email_smtp_host) {
+        const title = `Ship: Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}`;
+        const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Current Image:</b> ${req.body.service_image}:${req.body.service_old_image_version}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><b>New Image:</b> ${req.body.service_image}:${req.body.service_new_image_version}</p>`;
+        email(title, message);
+    }
+
     await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
     res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
 });
@@ -348,6 +369,12 @@ app.post('/force_update', async (req, res) => {
                 }
             ]
         });
+    }
+
+    if(email_smtp_host) {
+        const title = `Ship: Force re-deployed the ${req.body.service_name} service`;
+        const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Force re-deployed the ${req.body.service_name} service</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
+        email(title, message);
     }
 
     await docker.updateServiceForce(req.body.service_name);
@@ -385,6 +412,12 @@ app.post('/scale', async (req, res) => {
                 }
             ]
         });
+    }
+
+    if(email_smtp_host) {
+        const title = `Ship: Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)`;
+        const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Scale:</b> ${req.body.service_scale}</p>`;
+        email(title, message);
     }
 
     await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
