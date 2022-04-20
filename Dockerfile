@@ -1,3 +1,71 @@
+#=====================================================
+# Build Stage (1/2)
+#=====================================================
+
+#
+# Define OS
+#
+FROM alpine:3.14 AS build
+
+#
+# Basic OS management
+#
+
+# Install packages
+RUN apk add --no-cache nodejs npm
+
+#
+# Require app
+#
+
+# Create app directory
+WORKDIR /app
+
+# Bundle package.json and package-lock.json
+COPY ./package.json ./package-lock.json ./
+
+# Install dependencies
+RUN npm ci && npm cache clean --force
+
+# Bundle application source
+COPY . .
+
+# Create a production build
+RUN npm run build
+
+#=====================================================
+# Build Stage (2/2)
+#=====================================================
+
+#
+# Define OS
+#
+FROM alpine:3.14 AS build-prod
+
+#
+# Basic OS management
+#
+
+# Install packages
+RUN apk add --no-cache nodejs npm
+
+#
+# Require app
+#
+
+# Create app directory
+WORKDIR /app
+
+# Bundle package.json and package-lock.json
+COPY ./package.json ./package-lock.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+#=====================================================
+# Image Stage
+#=====================================================
+
 #
 # Define OS
 #
@@ -8,7 +76,7 @@ FROM alpine:3.14
 #
 
 # Install packages
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs
 
 #
 # Setup app
@@ -30,18 +98,10 @@ HEALTHCHECK --interval=30s --timeout=3s \
 # Run app
 CMD ["node", "/app/src/server.js"]
 
-# Bundle package.json and package-lock.json source
-COPY ./package.json ./package-lock.json ./
-
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
-
 #
-# Require app (image caching from this point is not possible anymore)
+# Bundle app
 #
 
-# Bundle app source
-COPY . .
-
-# Create production build
-RUN npm run build
+# Bundle from build image
+COPY --from=build-prod /app/node_modules ./node_modules
+COPY --from=build /app/src ./src
