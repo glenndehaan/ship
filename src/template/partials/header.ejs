@@ -47,13 +47,17 @@
             <% if(username) { %>
                 <li>
                     <div class="align-middle rounded-full">
-                        <img class="object-cover w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/<%= username %>" alt="Profile Picture"/>
+                        <button class="relative align-middle" aria-label="Profile Picture: <%= username %>" title="Profile Picture: <%= username %>">
+                            <img class="object-cover w-10 h-10 rounded-full" src="https://www.gravatar.com/avatar/<%= username %>" alt="Profile Picture"/>
+                        </button>
                     </div>
                 </li>
             <% } else { %>
                 <li>
                     <div class="align-middle rounded-full">
-                        <img class="object-cover w-10 h-10 rounded-full" src="/images/anonymous-profile.jpg" alt="Profile Picture"/>
+                        <button class="relative align-middle" aria-label="Profile Picture: Anonymous" title="Profile Picture: Anonymous">
+                            <img class="object-cover w-10 h-10 rounded-full" src="/images/anonymous-profile.jpg" alt="Profile Picture"/>
+                        </button>
                     </div>
                 </li>
             <% } %>
