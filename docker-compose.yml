@@ -11,6 +11,8 @@ services:
       MAX_SCALE: '20'
       # Can be used to instruct Ship to use an SSO providers username header
       # AUTH_HEADER: ''
+      # Can be used to enable slack notifications whenever an action on ship is performed
+      # SLACK_WEBHOOK: ''
       # Can be enabled to include debug data as JS window parameters
       # DEBUG_DOCKER: 'true'
     volumes:
