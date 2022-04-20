@@ -2,7 +2,7 @@
 
 [![Image Size](https://img.shields.io/docker/image-size/glenndehaan/ship)](https://hub.docker.com/r/glenndehaan/ship)
 
-![Ship Overview Page](https://user-images.githubusercontent.com/7496187/158958023-e53869b3-9f7d-4d28-8664-a45200a86b0f.png)
+![Ship Overview Page](https://user-images.githubusercontent.com/7496187/164229292-748c9594-bb20-491e-8ee6-d21dc961d719.png)
 
 ## What is it?
 Ship is a simple stack/service manager for Docker Swarm.
@@ -79,16 +79,16 @@ services:
 ## Screenshots
 
 ### Service Logs/Task Logs
-![Service Logs](https://user-images.githubusercontent.com/7496187/158958271-e45e5696-271b-4aaf-ac50-f235f810749d.png)
+![Service Logs](https://user-images.githubusercontent.com/7496187/164229290-131d5a4b-98c8-4506-b6dd-781672df1e3d.png)
 
 ### Update the service image
-![Update Service](https://user-images.githubusercontent.com/7496187/158958267-a22426ad-00f0-4a77-ba7d-37e7c38bb1c0.png)
+![Update Service](https://user-images.githubusercontent.com/7496187/164229288-b821b30e-60c1-4a61-a00a-c343fd957356.png)
 
 ### Force Update/Re-deploy Service
-![Force Update Service](https://user-images.githubusercontent.com/7496187/158958259-f57758e3-13fc-4465-bd83-3a6a6ab0ab0e.png)
+![Force Update Service](https://user-images.githubusercontent.com/7496187/164229285-4fbe066e-654d-4432-81f4-641909b8bcf2.png)
 
 ### Scale Service
-![Scale Service](https://user-images.githubusercontent.com/7496187/158958249-a7853f8e-56bd-44f1-97c6-380b8884460b.png)
+![Scale Service](https://user-images.githubusercontent.com/7496187/164229275-d3d575ec-3791-4524-ab3b-8f78d3b4cda5.png)
 
 ## License
 
