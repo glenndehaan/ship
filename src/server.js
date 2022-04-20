@@ -13,6 +13,7 @@ const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 const docker = require('./modules/docker');
 const registry = require('./modules/registry');
 const demux = require('./modules/demux');
+const lockout = require('./modules/lockout');
 const slack = require('./modules/slack');
 const email = require('./modules/email');
 const pageVariables = require('./utils/pageVariables');
@@ -53,7 +54,7 @@ log.setHandler((messages, context) => {
 });
 
 /**
- * Set log level from config
+ * Set log level
  */
 log.setLevel(dev ? log.TRACE : log.INFO);
 
@@ -296,6 +297,44 @@ app.get('/activity/:service', async (req, res) => {
 });
 
 app.post('/update', async (req, res) => {
+    if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
+        db.push('/logs[]', {
+            username: auth_header ? req.get(auth_header) : 'Anonymous',
+            service: req.body.service_name,
+            message: `Attempt to update the ${req.body.service_name} service during lockout days/hours`,
+            time: new Date().getTime()
+        });
+
+        if(slack_webhook) {
+            slack({
+                fallback: `Attempt to update the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                text: `Attempt to update the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                color: 'danger',
+                fields: [
+                    {
+                        title: 'User',
+                        value: auth_header ? req.get(auth_header) : 'Anonymous',
+                        short: false
+                    },
+                    {
+                        title: 'Service',
+                        value: req.body.service_name,
+                        short: false
+                    }
+                ]
+            });
+        }
+
+        if(email_smtp_host) {
+            const title = `Ship: Attempt to update the ${req.body.service_name} service during lockout days/hours`;
+            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to update the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
+            email(title, message);
+        }
+
+        res.redirect(encodeURI(`/?error=Unable to update service during lockout days/hours!`));
+        return;
+    }
+
     db.push('/logs[]', {
         username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
@@ -344,6 +383,44 @@ app.post('/update', async (req, res) => {
 });
 
 app.post('/force_update', async (req, res) => {
+    if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
+        db.push('/logs[]', {
+            username: auth_header ? req.get(auth_header) : 'Anonymous',
+            service: req.body.service_name,
+            message: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours`,
+            time: new Date().getTime()
+        });
+
+        if(slack_webhook) {
+            slack({
+                fallback: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                text: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                color: 'danger',
+                fields: [
+                    {
+                        title: 'User',
+                        value: auth_header ? req.get(auth_header) : 'Anonymous',
+                        short: false
+                    },
+                    {
+                        title: 'Service',
+                        value: req.body.service_name,
+                        short: false
+                    }
+                ]
+            });
+        }
+
+        if(email_smtp_host) {
+            const title = `Ship: Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours`;
+            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
+            email(title, message);
+        }
+
+        res.redirect(encodeURI(`/?error=Unable to force re-deploy service during lockout days/hours!`));
+        return;
+    }
+
     db.push('/logs[]', {
         username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
@@ -382,6 +459,44 @@ app.post('/force_update', async (req, res) => {
 });
 
 app.post('/scale', async (req, res) => {
+    if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
+        db.push('/logs[]', {
+            username: auth_header ? req.get(auth_header) : 'Anonymous',
+            service: req.body.service_name,
+            message: `Attempt to scale the ${req.body.service_name} service during lockout days/hours`,
+            time: new Date().getTime()
+        });
+
+        if(slack_webhook) {
+            slack({
+                fallback: `Attempt to scale the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                text: `Attempt to scale the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                color: 'danger',
+                fields: [
+                    {
+                        title: 'User',
+                        value: auth_header ? req.get(auth_header) : 'Anonymous',
+                        short: false
+                    },
+                    {
+                        title: 'Service',
+                        value: req.body.service_name,
+                        short: false
+                    }
+                ]
+            });
+        }
+
+        if(email_smtp_host) {
+            const title = `Ship: Attempt to scale the ${req.body.service_name} service during lockout days/hours`;
+            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to scale the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
+            email(title, message);
+        }
+
+        res.redirect(encodeURI(`/?error=Unable to scale service during lockout days/hours!`));
+        return;
+    }
+
     db.push('/logs[]', {
         username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,

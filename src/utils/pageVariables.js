@@ -23,6 +23,8 @@ module.exports = async (req, db, globals) => {
         getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
+        error: typeof req.query.error === 'string' && req.query.error !== '',
+        error_text: req.query.error || '',
         search: req.query.search || '',
         app_title: globals.app_title,
         debug_docker: globals.debug_docker,
