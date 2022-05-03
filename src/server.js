@@ -4,6 +4,7 @@
 const log = require('js-logger');
 const express = require('express');
 const multer = require('multer');
+const AnsiToHtml = require('ansi-to-html');
 const {JsonDB} = require('node-json-db');
 const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 
@@ -24,6 +25,11 @@ const pageVariables = require('./utils/pageVariables');
  * @type {*|Express}
  */
 const app = express();
+
+/**
+ * Create an ansi converter
+ */
+const convertAnsi = new AnsiToHtml();
 
 /**
  * Check if we are using the dev version
@@ -220,7 +226,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
     }
 
     const logs = await docker.getServiceLogs(req.params.service_id);
-    const reversedLogs = demux(logs).join('');
+    const reversedLogs = convertAnsi.toHtml(demux(logs).join(''));
 
     res.render('home', {
         ...await pageVariables(req, db, {
@@ -257,7 +263,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
     }
 
     const logs = await docker.getTaskLogs(req.params.task_id);
-    const reversedLogs = demux(logs).join('');
+    const reversedLogs = convertAnsi.toHtml(demux(logs).join(''));
 
     res.render('home', {
         ...await pageVariables(req, db, {
