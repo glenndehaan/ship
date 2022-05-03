@@ -6,7 +6,7 @@
             </p>
             <div class="grid gap-y-4 p-4 max-h-96 overflow-y-auto">
                 <% activity_logs.sort((a, b) => b.time - a.time).forEach((log) => { %>
-                    <div class="dark:text-gray-400 text-sm grid gap-y-1 border-b border-gray-200 dark:border-gray-600 pb-4 relative">
+                    <div class="dark:text-gray-400 text-gray-500 text-sm grid gap-y-1 border-b border-gray-200 dark:border-gray-600 pb-4 relative">
                         <h2 class="font-medium text-gray-900 pr-20 dark:text-gray-100 text-base">
                             <%= log.username %>
                         </h2>
