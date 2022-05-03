@@ -220,7 +220,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
     }
 
     const logs = await docker.getServiceLogs(req.params.service_id);
-    const reversedLogs = logs.toString('utf-8').replace(/[^\x00-\x7F]/g, '').split(/\r?\n/).reverse().join('\n');
+    const reversedLogs = demux(logs).join('');
 
     res.render('home', {
         ...await pageVariables(req, db, {
@@ -257,7 +257,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
     }
 
     const logs = await docker.getTaskLogs(req.params.task_id);
-    const reversedLogs = demux(logs).reverse().join('\n');
+    const reversedLogs = demux(logs).join('');
 
     res.render('home', {
         ...await pageVariables(req, db, {
@@ -268,7 +268,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
-        page_title: `Task logs: ${req.params.service}`,
+        page_title: `Task logs: ${req.params.task_id}`,
         logs: true,
         logs_type: 'task',
         logs_data: {
