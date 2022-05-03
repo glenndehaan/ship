@@ -11,13 +11,13 @@
             </p>
             <p class="text-sm text-gray-700 dark:text-gray-400">
                 <span>
-                    Last 250 logged lines from inside the container:
+                    Last 250 logged lines from the <%= logs_type === 'task' ? 'task' : 'service' %>:
                 </span>
                 <% if(logs_type === 'service') { %>
-                    <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50" style="height: 450px;"><%= logs_data.service.logs %></pre>
+                    <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs" style="height: 450px;"><%= logs_data.service.logs %></pre>
                 <% } %>
                 <% if(logs_type === 'task') { %>
-                    <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50" style="height: 450px;"><%= logs_data.task.logs %></pre>
+                    <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs" style="height: 450px;"><%= logs_data.task.logs %></pre>
                 <% } %>
             </p>
         </div>
