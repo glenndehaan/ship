@@ -130,7 +130,8 @@ app.get('/', async (req, res) => {
             debug_docker,
             slack_webhook,
             email_smtp_host
-        })
+        }),
+        page_title: 'Service Overview'
     });
 });
 
@@ -152,6 +153,7 @@ app.get('/update/:service', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
+        page_title: `Edit Service: ${req.params.service}`,
         edit: true,
         edit_service: service,
         edit_service_name: req.params.service,
@@ -177,6 +179,7 @@ app.get('/force_update/:service', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
+        page_title: `Force Update Service: ${req.params.service}`,
         force_update: true,
         force_update_service: service
     });
@@ -200,6 +203,7 @@ app.get('/scale/:service', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
+        page_title: `Scale Service: ${req.params.service}`,
         scale: true,
         max_scale,
         scale_service: service
@@ -227,6 +231,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
+        page_title: `Service logs: ${req.params.service}`,
         logs: true,
         logs_type: 'service',
         logs_data: {
@@ -263,6 +268,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
+        page_title: `Task logs: ${req.params.service}`,
         logs: true,
         logs_type: 'task',
         logs_data: {
@@ -288,6 +294,7 @@ app.get('/activity/:service', async (req, res) => {
             slack_webhook,
             email_smtp_host
         }),
+        page_title: `Activity logs: ${req.params.service}`,
         activity: true,
         activity_service: req.params.service,
         activity_logs: db.getData('/logs').filter((item) => {
