@@ -6,24 +6,27 @@
                 <h2 class="font-medium text-gray-900 pr-8 dark:text-gray-100 text-base">
                     <%= log.username %>
                 </h2>
+                <h3 class="text-xs mb-2 break-all">
+                    <%= log.service %>
+                </h3>
                 <% if(log.type === 'attempt_update') { %>
-                    <span>Attempt to update the <span class="break-all"><%= log.service %></span> service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to update the service during lockout days/hours</span>
                 <% } %>
                 <% if(log.type === 'attempt_force_update') { %>
-                    <span>Attempt to force re-deploy the <span class="break-all"><%= log.service %></span> service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to force re-deploy the service during lockout days/hours</span>
                 <% } %>
                 <% if(log.type === 'attempt_scale') { %>
-                    <span>Attempt to scale the <span class="break-all"><%= log.service %></span> service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to scale the service during lockout days/hours</span>
                 <% } %>
 
                 <% if(log.type === 'update') { %>
-                    <span>Updated the <span class="break-all"><%= log.service %></span> service image version from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %></span>
+                    <span>Updated the service image version from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %></span>
                 <% } %>
                 <% if(log.type === 'force_update') { %>
-                    <span>Force re-deployed the <span class="break-all"><%= log.service %></span> service</span>
+                    <span>Force re-deployed the service</span>
                 <% } %>
                 <% if(log.type === 'scale') { %>
-                    <span>Scaled the <span class="break-all"><%= log.service %></span> service to <%= log.params.scale %> container(s)</span>
+                    <span>Scaled the service to <%= log.params.scale %> container(s)</span>
                 <% } %>
                 <div class="absolute top-0 right-0"><%= getTimeAgo(log.time) %></div>
             </div>
