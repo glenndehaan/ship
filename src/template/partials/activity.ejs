@@ -1,4 +1,4 @@
-<div class="fixed bottom-0 lg:border-r top-16 left-0 p-6 lg:w-80 border-l border-gray-200 bg-gray-100 w-full overflow-auto lg:block hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 text-gray-800">
+<div class="fixed bottom-0 lg:border-r top-16 left-0 p-6 lg:w-80 border-gray-200 bg-gray-100 w-full overflow-auto lg:block hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 text-gray-800">
     <div class="font-bold text-xl tracking-tight mb-8">Activity</div>
     <div class="grid gap-y-4">
         <% logs_activity.sort((a, b) => b.time - a.time).slice(0, 25).forEach((log) => { %>
