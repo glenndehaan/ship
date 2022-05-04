@@ -261,9 +261,10 @@ app.get('/activity/:service', async (req, res) => {
 app.post('/update', async (req, res) => {
     if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
         db.push('/logs[]', {
+            type: 'attempt_update',
             username: auth_header ? req.get(auth_header) : 'Anonymous',
             service: req.body.service_name,
-            message: `Attempt to update the ${req.body.service_name} service during lockout days/hours`,
+            params: {},
             time: new Date().getTime()
         });
 
@@ -298,9 +299,14 @@ app.post('/update', async (req, res) => {
     }
 
     db.push('/logs[]', {
+        type: 'update',
         username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
-        message: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}`,
+        params: {
+            image: req.body.service_image,
+            old_image_version: req.body.service_old_image_version,
+            new_image_version: req.body.service_new_image_version
+        },
         time: new Date().getTime()
     });
 
@@ -347,9 +353,10 @@ app.post('/update', async (req, res) => {
 app.post('/force_update', async (req, res) => {
     if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
         db.push('/logs[]', {
+            type: 'attempt_force_update',
             username: auth_header ? req.get(auth_header) : 'Anonymous',
             service: req.body.service_name,
-            message: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours`,
+            params: {},
             time: new Date().getTime()
         });
 
@@ -384,9 +391,10 @@ app.post('/force_update', async (req, res) => {
     }
 
     db.push('/logs[]', {
+        type: 'force_update',
         username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
-        message: `Force re-deployed the ${req.body.service_name} service`,
+        params: {},
         time: new Date().getTime()
     });
 
@@ -423,9 +431,10 @@ app.post('/force_update', async (req, res) => {
 app.post('/scale', async (req, res) => {
     if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
         db.push('/logs[]', {
+            type: 'attempt_scale',
             username: auth_header ? req.get(auth_header) : 'Anonymous',
             service: req.body.service_name,
-            message: `Attempt to scale the ${req.body.service_name} service during lockout days/hours`,
+            params: {},
             time: new Date().getTime()
         });
 
@@ -460,9 +469,12 @@ app.post('/scale', async (req, res) => {
     }
 
     db.push('/logs[]', {
+        type: 'scale',
         username: auth_header ? req.get(auth_header) : 'Anonymous',
         service: req.body.service_name,
-        message: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)`,
+        params: {
+            scale: req.body.service_scale
+        },
         time: new Date().getTime()
     });
 

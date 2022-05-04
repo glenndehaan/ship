@@ -10,7 +10,25 @@
                         <h2 class="font-medium text-gray-900 pr-20 dark:text-gray-100 text-base">
                             <%= log.username %>
                         </h2>
-                        <div><%= log.message %></div>
+                        <% if(log.type === 'attempt_update') { %>
+                            <span>Attempt to update the <%= log.service %> service during lockout days/hours</span>
+                        <% } %>
+                        <% if(log.type === 'attempt_force_update') { %>
+                            <span>Attempt to force re-deploy the <%= log.service %> service during lockout days/hours</span>
+                        <% } %>
+                        <% if(log.type === 'attempt_scale') { %>
+                            <span>Attempt to scale the <%= log.service %> service during lockout days/hours</span>
+                        <% } %>
+
+                        <% if(log.type === 'update') { %>
+                            <span>Updated the <%= log.service %> service image from <%= log.params.image.replace(/^.*\//, '') %>:<%= log.params.old_image_version.split('@')[0] %> to <%= log.params.image.replace(/^.*\//, '') %>:<%= log.params.new_image_version.split('@')[0] %></span>
+                        <% } %>
+                        <% if(log.type === 'force_update') { %>
+                            <span>Force re-deployed the <%= log.service %> service</span>
+                        <% } %>
+                        <% if(log.type === 'scale') { %>
+                            <span>Scaled the <%= log.service %> service to <%= log.params.scale %> container(s)</span>
+                        <% } %>
                         <div class="absolute top-0 right-0"><%= new Date(log.time).toLocaleTimeString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', hour: '2-digit', minute:'2-digit', hour12: false, timeZoneName: 'short'}) %></div>
                     </div>
                 <% }); %>
