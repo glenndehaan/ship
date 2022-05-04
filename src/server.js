@@ -129,7 +129,8 @@ log.info(email_smtp_host ? '[EMAIL] Enabled!' : '[EMAIL] Disabled!');
 app.get('/', async (req, res) => {
     res.render('home', {
         ...await pageVariables(req, db),
-        page_title: 'Service Overview'
+        page_title: 'Service Overview',
+        allow_overflow: true
     });
 });
 

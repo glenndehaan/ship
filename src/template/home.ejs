@@ -12,7 +12,7 @@
         <link rel="preload" href="/dist/style.css" as="style">
         <link href="/dist/style.css" rel="stylesheet">
     </head>
-    <body class="bg-gray-50 dark:bg-gray-900">
+    <body class="bg-gray-50 dark:bg-gray-900 <%= !allow_overflow ? 'overflow-hidden' : '' %>">
         <%- include('partials/header') %>
         <%- include('partials/activity') %>
 

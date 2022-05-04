@@ -47,6 +47,7 @@ module.exports = async (req, db) => {
         logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
+        allow_overflow: false,
         edit: false,
         edit_service: {},
         edit_service_name: null,
