@@ -26,7 +26,7 @@
         </div>
         <ul class="flex items-center flex-shrink-0 md:space-x-6">
             <li class="hidden md:inline-block">
-                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple text-gray-700 dark:text-gray-200" aria-label="Email notifications are <%= email_smtp_host ? 'enabled' : 'disabled' %>" title="Email notifications are <%= email_smtp_host ? 'enabled' : 'disabled' %>">
+                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple text-gray-700 dark:text-gray-200" aria-label="Email notifications are <%= email_smtp_host ? 'enabled' : 'disabled' %><%= email_smtp_host ? ', Receiver(s): ' + email_to : '' %>" title="Email notifications are <%= email_smtp_host ? 'enabled' : 'disabled' %><%= email_smtp_host ? ', Receiver(s): ' + email_to : '' %>">
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
                     </svg>
@@ -34,7 +34,7 @@
                 </button>
             </li>
             <li class="hidden md:inline-block">
-                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple" aria-label="Slack notifications are <%= slack_webhook ? 'enabled' : 'disabled' %>" title="Slack notifications are <%= slack_webhook ? 'enabled' : 'disabled' %>">
+                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple" aria-label="Slack notifications are <%= slack_webhook ? 'enabled' : 'disabled' %><%= slack_webhook ? ', Receiver: ' + slack_webhook : '' %>" title="Slack notifications are <%= slack_webhook ? 'enabled' : 'disabled' %><%= slack_webhook ? ', Receiver: ' + slack_webhook : '' %>">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127 127">
                         <path d="M27.2 80c0 7.3-5.9 13.2-13.2 13.2C6.7 93.2.8 87.3.8 80c0-7.3 5.9-13.2 13.2-13.2h13.2V80zm6.6 0c0-7.3 5.9-13.2 13.2-13.2 7.3 0 13.2 5.9 13.2 13.2v33c0 7.3-5.9 13.2-13.2 13.2-7.3 0-13.2-5.9-13.2-13.2V80z" fill="#E01E5A"/>
                         <path d="M47 27c-7.3 0-13.2-5.9-13.2-13.2C33.8 6.5 39.7.6 47 .6c7.3 0 13.2 5.9 13.2 13.2V27H47zm0 6.7c7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2H13.9C6.6 60.1.7 54.2.7 46.9c0-7.3 5.9-13.2 13.2-13.2H47z" fill="#36C5F0"/>

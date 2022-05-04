@@ -11,14 +11,24 @@ const docker = require('../modules/docker');
 const time = require('../modules/time');
 
 /**
+ * Define global variables
+ */
+const app_title = process.env.APP_TITLE || 'Ship';
+const max_scale = process.env.MAX_SCALE || '20';
+const auth_header = process.env.AUTH_HEADER || false;
+const debug_docker = process.env.DEBUG_DOCKER || false;
+const slack_webhook = process.env.SLACK_WEBHOOK || false;
+const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
+const email_to = process.env.EMAIL_TO || false;
+
+/**
  * Returns the base page variables
  *
  * @param req
  * @param db
- * @param globals
  * @return {{}}
  */
-module.exports = async (req, db, globals) => {
+module.exports = async (req, db) => {
     return {
         getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',
@@ -26,13 +36,14 @@ module.exports = async (req, db, globals) => {
         error: typeof req.query.error === 'string' && req.query.error !== '',
         error_text: req.query.error || '',
         search: req.query.search || '',
-        app_title: globals.app_title,
-        debug_docker: globals.debug_docker,
-        slack_webhook: globals.slack_webhook,
-        email_smtp_host: globals.email_smtp_host,
+        app_title,
+        debug_docker,
+        slack_webhook,
+        email_smtp_host,
+        email_to,
         hostname: os.hostname(),
-        username: globals.auth_header ? typeof req.get(globals.auth_header) !== "undefined" ? req.get(globals.auth_header) : false : false,
-        username_md5: globals.auth_header ? typeof req.get(globals.auth_header) !== "undefined" ? crypto.createHash('md5').update(req.get(globals.auth_header)).digest("hex") : false : false,
+        username: auth_header ? typeof req.get(auth_header) !== "undefined" ? req.get(auth_header) : false : false,
+        username_md5: auth_header ? typeof req.get(auth_header) !== "undefined" ? crypto.createHash('md5').update(req.get(auth_header)).digest("hex") : false : false,
         logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
@@ -55,7 +66,7 @@ module.exports = async (req, db, globals) => {
         force_update: false,
         force_update_service: {},
         scale: false,
-        max_scale: globals.max_scale,
+        max_scale: max_scale,
         scale_service: {},
         activity: false,
         activity_service: '',

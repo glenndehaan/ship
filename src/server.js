@@ -82,10 +82,8 @@ if(!db.exists('/logs')) {
 /**
  * Define global variables
  */
-const app_title = process.env.APP_TITLE || 'Ship';
 const max_scale = process.env.MAX_SCALE || '20';
 const auth_header = process.env.AUTH_HEADER || false;
-const debug_docker = process.env.DEBUG_DOCKER || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 
@@ -129,14 +127,7 @@ log.info(email_smtp_host ? '[EMAIL] Enabled!' : '[EMAIL] Disabled!');
  */
 app.get('/', async (req, res) => {
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: 'Service Overview'
     });
 });
@@ -151,14 +142,7 @@ app.get('/update/:service', async (req, res) => {
     }
 
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: `Edit Service: ${req.params.service}`,
         edit: true,
         edit_service: service,
@@ -177,14 +161,7 @@ app.get('/force_update/:service', async (req, res) => {
     }
 
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: `Force Update Service: ${req.params.service}`,
         force_update: true,
         force_update_service: service
@@ -201,14 +178,7 @@ app.get('/scale/:service', async (req, res) => {
     }
 
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: `Scale Service: ${req.params.service}`,
         scale: true,
         max_scale,
@@ -229,14 +199,7 @@ app.get('/logs/service/:service_id', async (req, res) => {
     const reversedLogs = convertAnsi.toHtml(demux(logs).join(''));
 
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: `Service logs: ${req.params.service}`,
         logs: true,
         logs_type: 'service',
@@ -266,14 +229,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
     const reversedLogs = convertAnsi.toHtml(demux(logs).join(''));
 
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: `Task logs: ${req.params.task_id}`,
         logs: true,
         logs_type: 'task',
@@ -292,14 +248,7 @@ app.get('/logs/task/:task_id', async (req, res) => {
 
 app.get('/activity/:service', async (req, res) => {
     res.render('home', {
-        ...await pageVariables(req, db, {
-            app_title,
-            max_scale,
-            auth_header,
-            debug_docker,
-            slack_webhook,
-            email_smtp_host
-        }),
+        ...await pageVariables(req, db),
         page_title: `Activity logs: ${req.params.service}`,
         activity: true,
         activity_service: req.params.service,
