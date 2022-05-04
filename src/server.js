@@ -17,6 +17,7 @@ const demux = require('./modules/demux');
 const lockout = require('./modules/lockout');
 const slack = require('./modules/slack');
 const email = require('./modules/email');
+const cron = require('./modules/cron');
 const pageVariables = require('./utils/pageVariables');
 
 /**
@@ -537,6 +538,11 @@ const server = app.listen(3000, '0.0.0.0', async () => {
 });
 
 /**
+ * Start the cron
+ */
+cron.start(db, log);
+
+/**
  * Handle SIGTERM for docker
  */
 process.on('SIGTERM', () => {
@@ -544,6 +550,9 @@ process.on('SIGTERM', () => {
 
     server.close(() => {
         console.log('HTTP server closed!');
+        cron.stop();
+        console.log('CRON stopped!');
+
         process.exit(0);
     });
 });
