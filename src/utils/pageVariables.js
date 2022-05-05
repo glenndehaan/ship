@@ -20,6 +20,9 @@ const debug_docker = process.env.DEBUG_DOCKER || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 const email_to = process.env.EMAIL_TO || false;
+const lockout_service_regex = process.env.LOCKOUT_SERVICE_REGEX || '';
+const lockout_days = process.env.LOCKOUT_DAYS || '';
+const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
 
 /**
  * Returns the base page variables
@@ -47,6 +50,8 @@ module.exports = async (req, db) => {
         logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
+        lockout_active: (lockout_days && lockout_days.split(',').includes(`${new Date().getDay()}`)) || (lockout_after_hour && new Date().getHours() >= parseInt(lockout_after_hour)),
+        lockout_rule: lockout_service_regex,
         allow_overflow: false,
         edit: false,
         edit_service: {},

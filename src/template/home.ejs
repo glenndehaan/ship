@@ -13,6 +13,9 @@
         <link href="/dist/style.css" rel="stylesheet">
     </head>
     <body class="bg-gray-50 dark:bg-gray-900 <%= !allow_overflow ? 'overflow-hidden' : '' %>">
+        <% if(lockout_active) { %>
+            <%- include('partials/lockout_banner') %>
+        <% } %>
         <%- include('partials/header') %>
         <%- include('partials/activity') %>
 
