@@ -1,6 +1,6 @@
 <header class="z-10 h-16 py-2 border-gray-200 dark:border-gray-600 border-b dark:bg-gray-800 backdrop-blur bg-white/75 fixed top-0 w-full left-0 <%= lockout_active ? 'mt-16' : '' %>">
     <div class="container flex items-center justify-between h-full px-6 mx-auto text-purple-400 dark:text-purple-400">
-        <a href="/" aria-label="Homepage" title="Homepage">
+        <a href="/" class="md:w-[180px]" aria-label="Homepage" title="Homepage">
             <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200">
                 <svg class="md:mr-2 w-10 h-10 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
@@ -26,6 +26,14 @@
         </div>
         <ul class="flex items-center flex-shrink-0 md:space-x-6">
             <li class="hidden md:inline-block">
+                <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple text-gray-700 dark:text-gray-200" aria-label="Custom Webhooks are <%= custom_webhook ? 'enabled' : 'disabled' %><%= custom_webhook ? ', Receiver(s): ' + custom_webhook : '' %>" title="Custom Webhooks are <%= custom_webhook ? 'enabled' : 'disabled' %><%= custom_webhook ? ', Receiver(s): ' + custom_webhook : '' %>">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+                        <path d="M13.5 42Q9.6 42 6.8 39.2Q4 36.4 4 32.5Q4 29.15 5.95 26.65Q7.9 24.15 11 23.35V26.5Q9.25 27.2 8.125 28.825Q7 30.45 7 32.5Q7 35.2 8.9 37.1Q10.8 39 13.5 39Q16.2 39 18.1 37.1Q20 35.2 20 32.5V31H32.45Q32.85 30.55 33.4 30.275Q33.95 30 34.5 30Q35.55 30 36.275 30.725Q37 31.45 37 32.5Q37 33.5 36.275 34.25Q35.55 35 34.5 35Q33.95 35 33.4 34.725Q32.85 34.45 32.45 34H22.9Q22.2 37.45 19.575 39.725Q16.95 42 13.5 42ZM13.5 35Q12.5 35 11.75 34.25Q11 33.5 11 32.5Q11 31.6 11.625 30.925Q12.25 30.25 13.2 30L18.75 20.65Q17.25 19.2 16.375 17.375Q15.5 15.55 15.5 13.5Q15.5 9.55 18.3 6.775Q21.1 4 25 4Q28.8 4 31.55 6.625Q34.3 9.25 34.5 13H31.5Q31.35 10.45 29.475 8.725Q27.6 7 25 7Q22.3 7 20.4 8.9Q18.5 10.8 18.5 13.5Q18.5 15.6 19.725 17.275Q20.95 18.95 22.85 19.65L15.8 31.55Q15.9 31.85 15.95 32.075Q16 32.3 16 32.5Q16 33.5 15.275 34.25Q14.55 35 13.5 35ZM34.5 42Q32.1 42 30.075 40.9Q28.05 39.8 26.75 38H31.05Q31.8 38.5 32.675 38.75Q33.55 39 34.5 39Q37.2 39 39.1 37.1Q41 35.2 41 32.5Q41 29.8 39.1 27.9Q37.2 26 34.5 26Q33.55 26 32.75 26.225Q31.95 26.45 31.2 26.9L24.75 16Q23.75 15.8 23.125 15.125Q22.5 14.45 22.5 13.5Q22.5 12.45 23.25 11.725Q24 11 25 11Q26.05 11 26.775 11.725Q27.5 12.45 27.5 13.5Q27.5 13.7 27.475 13.875Q27.45 14.05 27.35 14.4L32.5 23.2Q33.05 23.1 33.575 23.05Q34.1 23 34.5 23Q38.45 23 41.225 25.775Q44 28.55 44 32.5Q44 36.4 41.225 39.2Q38.45 42 34.5 42Z"/>
+                    </svg>
+                    <span aria-hidden="true" class="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800 <%= custom_webhook ? 'bg-green-600' : 'bg-red-600' %>"></span>
+                </button>
+            </li>
+            <li class="hidden md:inline-block">
                 <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple text-gray-700 dark:text-gray-200" aria-label="Email notifications are <%= email_smtp_host ? 'enabled' : 'disabled' %><%= email_smtp_host ? ', Receiver(s): ' + email_to : '' %>" title="Email notifications are <%= email_smtp_host ? 'enabled' : 'disabled' %><%= email_smtp_host ? ', Receiver(s): ' + email_to : '' %>">
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
@@ -35,7 +43,7 @@
             </li>
             <li class="hidden md:inline-block">
                 <button class="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple" aria-label="Slack notifications are <%= slack_webhook ? 'enabled' : 'disabled' %><%= slack_webhook ? ', Receiver: ' + slack_webhook : '' %>" title="Slack notifications are <%= slack_webhook ? 'enabled' : 'disabled' %><%= slack_webhook ? ', Receiver: ' + slack_webhook : '' %>">
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127 127">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 150 150">
                         <path d="M27.2 80c0 7.3-5.9 13.2-13.2 13.2C6.7 93.2.8 87.3.8 80c0-7.3 5.9-13.2 13.2-13.2h13.2V80zm6.6 0c0-7.3 5.9-13.2 13.2-13.2 7.3 0 13.2 5.9 13.2 13.2v33c0 7.3-5.9 13.2-13.2 13.2-7.3 0-13.2-5.9-13.2-13.2V80z" fill="#E01E5A"/>
                         <path d="M47 27c-7.3 0-13.2-5.9-13.2-13.2C33.8 6.5 39.7.6 47 .6c7.3 0 13.2 5.9 13.2 13.2V27H47zm0 6.7c7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2H13.9C6.6 60.1.7 54.2.7 46.9c0-7.3 5.9-13.2 13.2-13.2H47z" fill="#36C5F0"/>
                         <path d="M99.9 46.9c0-7.3 5.9-13.2 13.2-13.2 7.3 0 13.2 5.9 13.2 13.2 0 7.3-5.9 13.2-13.2 13.2H99.9V46.9zm-6.6 0c0 7.3-5.9 13.2-13.2 13.2-7.3 0-13.2-5.9-13.2-13.2V13.8C66.9 6.5 72.8.6 80.1.6c7.3 0 13.2 5.9 13.2 13.2v33.1z" fill="#2EB67D"/>

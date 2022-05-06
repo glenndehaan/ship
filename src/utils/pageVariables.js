@@ -17,6 +17,7 @@ const app_title = process.env.APP_TITLE || 'Ship';
 const max_scale = process.env.MAX_SCALE || '20';
 const auth_header = process.env.AUTH_HEADER || false;
 const debug_docker = process.env.DEBUG_DOCKER || false;
+const custom_webhook = process.env.CUSTOM_WEBHOOK || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 const email_to = process.env.EMAIL_TO || false;
@@ -41,6 +42,7 @@ module.exports = async (req, db) => {
         search: req.query.search || '',
         app_title,
         debug_docker,
+        custom_webhook,
         slack_webhook,
         email_smtp_host,
         email_to,
