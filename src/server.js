@@ -15,6 +15,7 @@ const docker = require('./modules/docker');
 const registry = require('./modules/registry');
 const demux = require('./modules/demux');
 const lockout = require('./modules/lockout');
+const webhook = require('./modules/webhook');
 const slack = require('./modules/slack');
 const email = require('./modules/email');
 const cron = require('./modules/cron');
@@ -85,6 +86,7 @@ if(!db.exists('/logs')) {
  */
 const max_scale = process.env.MAX_SCALE || '20';
 const auth_header = process.env.AUTH_HEADER || false;
+const custom_webhook = process.env.CUSTOM_WEBHOOK || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 
@@ -270,6 +272,19 @@ app.post('/update', async (req, res) => {
             time: new Date().getTime()
         });
 
+        if(custom_webhook) {
+            const webhooks = custom_webhook.split(',');
+            for(let item = 0; item < webhooks.length; item++) {
+                webhook(webhooks[item], {
+                    type: 'attempt_update',
+                    username: auth_header ? req.get(auth_header) : 'Anonymous',
+                    service: req.body.service_name,
+                    params: {},
+                    time: new Date().getTime()
+                });
+            }
+        }
+
         if(slack_webhook) {
             slack({
                 fallback: `Attempt to update the ${req.body.service_name} service during lockout days/hours\n\n---`,
@@ -311,6 +326,23 @@ app.post('/update', async (req, res) => {
         },
         time: new Date().getTime()
     });
+
+    if(custom_webhook) {
+        const webhooks = custom_webhook.split(',');
+        for(let item = 0; item < webhooks.length; item++) {
+            webhook(webhooks[item], {
+                type: 'update',
+                username: auth_header ? req.get(auth_header) : 'Anonymous',
+                service: req.body.service_name,
+                params: {
+                    image: req.body.service_image,
+                    old_image_version: req.body.service_old_image_version,
+                    new_image_version: req.body.service_new_image_version
+                },
+                time: new Date().getTime()
+            });
+        }
+    }
 
     if(slack_webhook) {
         slack({
@@ -362,6 +394,19 @@ app.post('/force_update', async (req, res) => {
             time: new Date().getTime()
         });
 
+        if(custom_webhook) {
+            const webhooks = custom_webhook.split(',');
+            for(let item = 0; item < webhooks.length; item++) {
+                webhook(webhooks[item], {
+                    type: 'attempt_force_update',
+                    username: auth_header ? req.get(auth_header) : 'Anonymous',
+                    service: req.body.service_name,
+                    params: {},
+                    time: new Date().getTime()
+                });
+            }
+        }
+
         if(slack_webhook) {
             slack({
                 fallback: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours\n\n---`,
@@ -399,6 +444,19 @@ app.post('/force_update', async (req, res) => {
         params: {},
         time: new Date().getTime()
     });
+
+    if(custom_webhook) {
+        const webhooks = custom_webhook.split(',');
+        for(let item = 0; item < webhooks.length; item++) {
+            webhook(webhooks[item], {
+                type: 'force_update',
+                username: auth_header ? req.get(auth_header) : 'Anonymous',
+                service: req.body.service_name,
+                params: {},
+                time: new Date().getTime()
+            });
+        }
+    }
 
     if(slack_webhook) {
         slack({
@@ -440,6 +498,19 @@ app.post('/scale', async (req, res) => {
             time: new Date().getTime()
         });
 
+        if(custom_webhook) {
+            const webhooks = custom_webhook.split(',');
+            for(let item = 0; item < webhooks.length; item++) {
+                webhook(webhooks[item], {
+                    type: 'attempt_scale',
+                    username: auth_header ? req.get(auth_header) : 'Anonymous',
+                    service: req.body.service_name,
+                    params: {},
+                    time: new Date().getTime()
+                });
+            }
+        }
+
         if(slack_webhook) {
             slack({
                 fallback: `Attempt to scale the ${req.body.service_name} service during lockout days/hours\n\n---`,
@@ -479,6 +550,21 @@ app.post('/scale', async (req, res) => {
         },
         time: new Date().getTime()
     });
+
+    if(custom_webhook) {
+        const webhooks = custom_webhook.split(',');
+        for(let item = 0; item < webhooks.length; item++) {
+            webhook(webhooks[item], {
+                type: 'scale',
+                username: auth_header ? req.get(auth_header) : 'Anonymous',
+                service: req.body.service_name,
+                params: {
+                    scale: req.body.service_scale
+                },
+                time: new Date().getTime()
+            });
+        }
+    }
 
     if(slack_webhook) {
         slack({

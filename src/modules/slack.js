@@ -17,5 +17,5 @@ module.exports = (payload) => {
     fetch(slack_webhook, {
         method: 'POST',
         body: JSON.stringify(payload)
-    });
+    }).catch(() => {});
 }

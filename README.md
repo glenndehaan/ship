@@ -13,7 +13,7 @@ It also provides an option to scale services and force re-deploy services.
 
 ## Development Usage
 Make sure you have Node.JS 14.x installed then run the following commands in your terminal:
-```
+```text
 npm ci
 npm run tailwind
 npm run dev
@@ -54,6 +54,8 @@ services:
       MAX_SCALE: '20'
       # Can be used to instruct Ship to use an SSO providers username header
       # AUTH_HEADER: ''
+      # Can be used to enable custom webhooks to forward Ship events to other services
+      # CUSTOM_WEBHOOK: 'https://webhook1.exmaple.com/hook,https://webhook2.exmaple.com/hook'
       # Can be used to enable slack notifications whenever an action on ship is performed
       # SLACK_WEBHOOK: ''
       # Can be used to enable email notifications whenever an action on ship is performed
@@ -75,6 +77,34 @@ services:
 ```
 
 * Run `docker stack deploy -c ship-stack.yml ship` this pulls ship and starts it on the docker swarm
+
+## Custom Webhooks
+Ship can forward events to other services through the help of webhooks (POST Request).
+Below you will find an example payload of what you can expect:
+```json
+{
+  "type": "force_update",
+  "username": "Anonymous",
+  "service": "test_test",
+  "params": {},
+  "time": 1651821585213
+}
+```
+
+Below are some options that get send with different events:
+```text
+{
+  "type": "attempt_update | update | attempt_force_update | force_update | attempt_scale | scale",
+  "username": "Anonymous | Authenticated User Email/Username",
+  "service": "stack_service",
+  "params": {
+    image: "library/repo", // Only gets send with type: update
+    old_image_version: "latest | tag", // Only gets send with type: update
+    new_image_version: "latest | tag" // Only gets send with type: update
+  },
+  "time": 0
+}
+```
 
 ## Screenshots
 
