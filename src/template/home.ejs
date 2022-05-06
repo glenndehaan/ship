@@ -19,7 +19,7 @@
         <%- include('partials/header') %>
         <%- include('partials/activity') %>
 
-        <main class="h-full overflow-y-auto mb-12 mt-8 pt-16 lg:pl-80">
+        <main class="h-full overflow-y-auto mb-12 mt-8 pt-16 lg:pl-80 <%= lockout_active ? 'mt-24' : '' %>">
             <% if(edit) { %>
                 <%- include('partials/edit') %>
             <% } %>
