@@ -26,7 +26,7 @@ module.exports = {
                 }
 
                 if(tags.tags) {
-                    resolve(tags.tags.reverse());
+                    resolve(tags.tags.sort((a, b) => b.localeCompare(a)));
                 } else {
                     resolve([]);
                 }
