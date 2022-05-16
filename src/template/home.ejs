@@ -191,8 +191,15 @@
                             </table>
                         </div>
                     </div>
-                    <footer class="text-xs italic text-gray-700 dark:text-gray-400">
-                        Host: <%= hostname %>, <a href="https://github.com/glenndehaan/ship" title="Ship GitHub Page" aria-label="Ship GitHub Page" target="_blank" rel="noopener noreferrer">GitHub / Issues</a><br/>Created by: <a href="https://glenndehaan.com" title="Glenn de Haan's Website" aria-label="Glenn de Haan's Website" target="_blank" rel="noopener noreferrer">Glenn de Haan</a>
+                    <footer class="flex-shrink-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+                        <nav class="flex justify-center space-x-4 mb-2">
+                            <a href="https://github.com/glenndehaan/ship" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">GitHub</a>
+                            <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                            <a href="https://github.com/glenndehaan/ship/issues" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Issues</a>
+                            <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                            <a href="https://github.com/glenndehaan/ship/blob/master/README.md" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Documentation</a>
+                        </nav>
+                        <div class="flex justify-center text-xs italic">Host: <%= hostname %></div>
                     </footer>
                 </div>
             </div>

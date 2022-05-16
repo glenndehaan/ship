@@ -604,9 +604,12 @@ app.post('/scale', async (req, res) => {
 /**
  * Setup default 404 message
  */
-app.use((req, res) => {
+app.use(async (req, res) => {
     res.status(404);
-    res.send('Not Found!');
+    res.render('404', {
+        ...await pageVariables(req, db),
+        page_title: `Not Found`
+    });
 });
 
 /**
