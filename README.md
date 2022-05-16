@@ -55,7 +55,7 @@ services:
       # Can be used to instruct Ship to use an SSO providers username header
       # AUTH_HEADER: ''
       # Can be used to enable custom webhooks to forward Ship events to other services
-      # CUSTOM_WEBHOOK: 'https://webhook1.exmaple.com/hook,https://webhook2.exmaple.com/hook'
+      # CUSTOM_WEBHOOK: 'https://webhook1.example.com/hook,https://webhook2.example.com/hook'
       # Can be used to enable slack notifications whenever an action on ship is performed
       # SLACK_WEBHOOK: ''
       # Can be used to enable email notifications whenever an action on ship is performed
