@@ -2,7 +2,7 @@
 
 [![Image Size](https://img.shields.io/docker/image-size/glenndehaan/ship)](https://hub.docker.com/r/glenndehaan/ship)
 
-![Ship Overview Page](https://user-images.githubusercontent.com/7496187/166507961-d0b91c35-20e1-43f1-a71e-8291266ba4fa.png)
+![Ship Overview Page](https://user-images.githubusercontent.com/7496187/168587952-73eb2a28-9c53-4015-8cf2-fa061594122a.png)
 
 ## What is it?
 Ship is a simple stack/service manager for Docker Swarm.
@@ -109,22 +109,22 @@ Below are some options that get send with different events:
 ## Screenshots
 
 ### Service Logs/Task Logs
-![Service Logs](https://user-images.githubusercontent.com/7496187/166507958-df784e85-f2f9-4474-93dd-deb3953bb0a8.png)
+![Service Logs](https://user-images.githubusercontent.com/7496187/168587945-c80d363a-ae16-4f7f-9199-c3a33ac64d0f.png)
 
 ### Update the service image
-![Update Service](https://user-images.githubusercontent.com/7496187/166507957-5434a566-3a1f-48bd-b4dc-cef53b0f8822.png)
+![Update Service](https://user-images.githubusercontent.com/7496187/168587944-a29f057a-033b-4871-a4a7-1244f6782f38.png)
 
 ### Force Update/Re-deploy Service
-![Force Update Service](https://user-images.githubusercontent.com/7496187/166507955-8d0b1f43-da22-465d-8a06-12423d4ab9c0.png)
+![Force Update Service](https://user-images.githubusercontent.com/7496187/168587941-0748ef7e-a736-4466-aea4-c98f1bb6055f.png)
 
 ### Scale Service
-![Scale Service](https://user-images.githubusercontent.com/7496187/166507952-241dd665-96c3-4c69-9ae8-e34e6ec486f7.png)
+![Scale Service](https://user-images.githubusercontent.com/7496187/168587935-4b86de93-2733-4baa-a5a5-a82e5c47aa15.png)
 
 ### Email Notification
 ![Email Notification](https://user-images.githubusercontent.com/7496187/166509782-187f44da-8dde-4dfd-8d54-53f4b0b0f049.png)
 
 ### Slack Notification
-Coming Soon!
+![Slack Notification](https://user-images.githubusercontent.com/7496187/168585953-d55d478b-1c29-4907-b7eb-436efa52214c.png)
 
 ## License
 
