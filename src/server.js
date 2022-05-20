@@ -5,6 +5,7 @@ const log = require('js-logger');
 const express = require('express');
 const multer = require('multer');
 const AnsiToHtml = require('ansi-to-html');
+const cookieParser = require('cookie-parser');
 const {JsonDB} = require('node-json-db');
 const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 
@@ -107,6 +108,11 @@ app.set('views', `${__dirname}/template`);
 app.use(multer().none());
 
 /**
+ * Enable cookie parser
+ */
+app.use(cookieParser());
+
+/**
  * Request logger
  */
 app.use((req, res, next) => {
@@ -129,7 +135,7 @@ log.info(email_smtp_host ? '[EMAIL] Enabled!' : '[EMAIL] Disabled!');
  * Configure routers
  */
 app.get('/', async (req, res) => {
-    res.render('home', {
+    res.render(req.cookies.ship_experimental_ui ? 'home_new' : 'home', {
         ...await pageVariables(req, db),
         page_title: 'Service Overview',
         allow_overflow: true
@@ -599,6 +605,16 @@ app.post('/scale', async (req, res) => {
 
     await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
     res.redirect(encodeURI(`/?message=Successfully scaled the ${req.body.service_name} service!`));
+});
+
+app.get('/enable_experimental_ui', (req, res) => {
+    res.cookie('ship_experimental_ui', true, { httpOnly: true });
+    res.redirect('/');
+});
+
+app.get('/disable_experimental_ui', (req, res) => {
+    res.clearCookie('ship_experimental_ui', { httpOnly: true });
+    res.redirect('/');
 });
 
 /**
