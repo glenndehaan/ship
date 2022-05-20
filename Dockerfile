@@ -5,7 +5,7 @@
 #
 # Define OS
 #
-FROM alpine:3.14 AS build
+FROM alpine:3.15 AS build
 
 #
 # Basic OS management
@@ -40,7 +40,7 @@ RUN npm run build
 #
 # Define OS
 #
-FROM alpine:3.14 AS build-prod
+FROM alpine:3.15 AS build-prod
 
 #
 # Basic OS management
@@ -69,7 +69,7 @@ RUN npm ci --only=production && npm cache clean --force
 #
 # Define OS
 #
-FROM alpine:3.14
+FROM alpine:3.15
 
 #
 # Basic OS management

@@ -12,7 +12,7 @@ Developers are then also able to see the logs for either the service or connecte
 It also provides an option to scale services and force re-deploy services.
 
 ## Development Usage
-Make sure you have Node.JS 14.x installed then run the following commands in your terminal:
+Make sure you have Node.JS 16.x installed then run the following commands in your terminal:
 ```text
 npm ci
 npm run tailwind
