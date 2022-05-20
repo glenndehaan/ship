@@ -112,13 +112,13 @@ Below are some options that get send with different events:
 ![Service Logs](https://user-images.githubusercontent.com/7496187/168587945-c80d363a-ae16-4f7f-9199-c3a33ac64d0f.png)
 
 ### Update the service image
-![Update Service](https://user-images.githubusercontent.com/7496187/168587944-a29f057a-033b-4871-a4a7-1244f6782f38.png)
+![Update Service](https://user-images.githubusercontent.com/7496187/169502113-b1a05903-6e3c-44e2-a517-8dc6ab70d24a.png)
 
 ### Force Update/Re-deploy Service
-![Force Update Service](https://user-images.githubusercontent.com/7496187/168587941-0748ef7e-a736-4466-aea4-c98f1bb6055f.png)
+![Force Update Service](https://user-images.githubusercontent.com/7496187/169502106-132c1b8c-1225-447a-84dd-b06aa14dae34.png)
 
 ### Scale Service
-![Scale Service](https://user-images.githubusercontent.com/7496187/168587935-4b86de93-2733-4baa-a5a5-a82e5c47aa15.png)
+![Scale Service](https://user-images.githubusercontent.com/7496187/169502102-8595c55a-465f-461c-9abc-cba86617f675.png)
 
 ### Email Notification
 ![Email Notification](https://user-images.githubusercontent.com/7496187/166509782-187f44da-8dde-4dfd-8d54-53f4b0b0f049.png)
