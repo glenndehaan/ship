@@ -109,7 +109,7 @@ const dockerModule = {
             return new Promise((resolve) => {
                 resolve([mockData].filter((item) => {
                     return item.Spec.Name.includes(search);
-                }));
+                }).sort((a, b) => b.Spec.Name.localeCompare(a.Spec.Name)));
             });
         }
 
@@ -134,7 +134,7 @@ const dockerModule = {
 
             resolve(services.filter((item) => {
                 return item.Spec.Name.includes(search);
-            }));
+            }).sort((a, b) => b.Spec.Name.localeCompare(a.Spec.Name)));
         });
     },
 

@@ -34,7 +34,7 @@
                                                 Service
                                             </label>
                                             <div class="mt-1">
-                                                <input id="service_name" name="service_name" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= scale_service.Spec.Name %>" readonly="readonly" />
+                                                <input id="service_name" name="service_name" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= scale_service.Spec.Name %>" readonly="readonly" />
                                             </div>
                                         </div>
                                         <div>
@@ -42,7 +42,7 @@
                                                 Scale
                                             </label>
                                             <div class="mt-1">
-                                                <input id="service_scale" name="service_scale" type="number" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white" min="1" max="<%= max_scale %>" value="<%= scale_service.Spec.Mode.Replicated.Replicas %>" />
+                                                <input id="service_scale" name="service_scale" type="number" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white" min="1" max="<%= max_scale %>" value="<%= scale_service.Spec.Mode.Replicated.Replicas %>" />
                                             </div>
                                         </div>
                                     </div>

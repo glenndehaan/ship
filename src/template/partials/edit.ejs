@@ -34,7 +34,7 @@
                                                 Service
                                             </label>
                                             <div class="mt-1">
-                                                <input id="service_name" name="service_name" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service_name %>" readonly="readonly" />
+                                                <input id="service_name" name="service_name" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service_name %>" readonly="readonly" />
                                             </div>
                                         </div>
                                         <div>
@@ -42,7 +42,7 @@
                                                 Image
                                             </label>
                                             <div class="mt-1">
-                                                <input id="service_image" name="service_image" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0] %>" readonly="readonly" />
+                                                <input id="service_image" name="service_image" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0] %>" readonly="readonly" />
                                             </div>
                                         </div>
                                         <div>
@@ -50,7 +50,7 @@
                                                 Current Image Version
                                             </label>
                                             <div class="mt-1">
-                                                <input id="service_old_image_version" name="service_old_image_version" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.replace(/[^:]*:/, '') %>" readonly="readonly" />
+                                                <input id="service_old_image_version" name="service_old_image_version" type="text" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-sm text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white read-only:bg-gray-50 dark:read-only:bg-transparent" value="<%= edit_service.Spec.TaskTemplate.ContainerSpec.Image.replace(/[^:]*:/, '') %>" readonly="readonly" />
                                             </div>
                                         </div>
                                         <div>
@@ -59,12 +59,12 @@
                                             </label>
                                             <div class="mt-1">
                                                 <div class="relative inline-block w-full">
-                                                    <select id="service_new_image_version" name="service_new_image_version" class="shadow appearance-none border rounded w-full py-2 px-3 pr-7 text-gray-700 mt-1 bg-white leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                    <select id="service_new_image_version" name="service_new_image_version" class="shadow appearance-none border rounded w-full py-2 px-3 pr-7 text-sm text-gray-700 mt-1 bg-white leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                         <% edit_service_image_tags.forEach((tag) => { %>
                                                             <option value="<%= tag %>"><%= tag %></option>
                                                         <% }); %>
                                                     </select>
-                                                    <div class="text-gray-700 dark:text-gray-400 absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                                    <div class="text-gray-700 dark:text-gray-400 absolute inset-y-0 right-0 flex items-center px-2 mt-1 pointer-events-none">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                                             <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
                                                         </svg>
