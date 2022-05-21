@@ -142,12 +142,35 @@ app.get('/', async (req, res) => {
     });
 });
 
+app.get('/service/:service', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
+        return;
+    }
+
+    res.render('service', {
+        ...await pageVariables(req, db),
+        page_title: `Service: ${req.params.service}`,
+        allow_overflow: true,
+        service
+    });
+});
+
 app.get('/update/:service', async (req, res) => {
     const service = await docker.getService(req.params.service);
 
     if(typeof service.Spec === "undefined") {
         res.status(404);
-        res.send('Not Found!');
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
         return;
     }
 
@@ -166,7 +189,10 @@ app.get('/force_update/:service', async (req, res) => {
 
     if(typeof service.Spec === "undefined") {
         res.status(404);
-        res.send('Not Found!');
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
         return;
     }
 
@@ -183,7 +209,10 @@ app.get('/scale/:service', async (req, res) => {
 
     if(typeof service.Spec === "undefined") {
         res.status(404);
-        res.send('Not Found!');
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
         return;
     }
 
@@ -201,7 +230,10 @@ app.get('/logs/service/:service_id', async (req, res) => {
 
     if(typeof service.Spec === "undefined") {
         res.status(404);
-        res.send('Not Found!');
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
         return;
     }
 
@@ -231,7 +263,10 @@ app.get('/logs/task/:task_id', async (req, res) => {
 
     if(typeof task.Spec === "undefined") {
         res.status(404);
-        res.send('Not Found!');
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
         return;
     }
 
