@@ -189,7 +189,7 @@ app.get('/service/:service/task/:task', async (req, res) => {
     }
 
     const logs = await docker.getTaskLogs(req.params.task);
-    const task_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : 'Testing 123';
+    const task_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
 
     res.render('task', {
         ...await pageVariables(req, db),

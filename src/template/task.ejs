@@ -76,7 +76,7 @@
             </nav>
 
             <div class="flex flex-col flex-1 w-full gap-10">
-                <div class="container px-6 mx-auto grid gap-10">
+                <div class="container px-6 mx-auto flex flex-col gap-10">
                     <div class="md:flex md:items-center md:justify-between">
                         <div class="flex-1 min-w-0">
                             <h2 class="text-xl font-bold leading-7 text-gray-900 dark:text-gray-100 sm:truncate">
@@ -127,23 +127,21 @@
                     </div>
 
                     <main>
-                        <div class="max-w-3xl mx-auto lg:max-w-7xl">
-                            <section>
-                                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                                    <div class="px-4 py-5 sm:px-6">
-                                        <h2 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Logs</h2>
-                                    </div>
-                                    <div class="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
-                                        <p class="text-sm text-gray-700 dark:text-gray-400">
-                                            <span>
-                                                Last 250 logged lines from the task:
-                                            </span>
-                                            <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs p-4" style="min-height: calc(100vh - 600px);"><%- task_logs %></pre>
-                                        </p>
-                                    </div>
+                        <section>
+                            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:px-6">
+                                    <h2 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Logs</h2>
                                 </div>
-                            </section>
-                        </div>
+                                <div class="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+                                    <p class="text-sm text-gray-700 dark:text-gray-400">
+                                        <span>
+                                            Last 250 logged lines from the task:
+                                        </span>
+                                        <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs p-4" style="min-height: calc(100vh - 650px);"><%- task_logs %></pre>
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
                     </main>
 
                     <footer class="flex-shrink-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
