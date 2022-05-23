@@ -266,7 +266,7 @@
                                                         <% service.__tasks.sort((a, b) => a.Status.State.localeCompare(b.Status.State)).forEach((task) => { %>
                                                             <% if(typeof task.Status.ContainerStatus !== "undefined") { %>
                                                                 <li>
-                                                                    <a href="/logs/task/<%= task.ID %>" class="block hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                                    <a href="/service/<%= service.Spec.Name %>/task/<%= task.ID %>" class="block hover:bg-gray-100 dark:hover:bg-gray-700">
                                                                         <div class="px-4 py-4 flex items-center sm:px-6">
                                                                             <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                                                                                 <div class="truncate">

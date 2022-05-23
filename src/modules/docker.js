@@ -300,7 +300,7 @@ const dockerModule = {
     getTasks: () => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([]);
+                resolve([mockData.__tasks[0]]);
             });
         }
 
@@ -317,6 +317,12 @@ const dockerModule = {
      * @returns {Promise<unknown>}
      */
     getTask: (id) => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve(mockData.__tasks[0]);
+            });
+        }
+
         return new Promise(async (resolve) => {
             const tasks = await docker.listTasks({filters: {id: [id]}}).catch((e) => {
                 console.error(e);
@@ -343,6 +349,12 @@ const dockerModule = {
      * @returns {*}
      */
     getTaskLogs: (id, amount = 250) => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve([]);
+            });
+        }
+
         return docker.getTask(id).logs({
             stdout: true,
             stderr: true,

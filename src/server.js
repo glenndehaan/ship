@@ -165,6 +165,45 @@ app.get('/service/:service', async (req, res) => {
     });
 });
 
+app.get('/service/:service/task/:task', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
+        return;
+    }
+
+    const task = await docker.getTask(req.params.task_id);
+
+    if(typeof task.Spec === "undefined") {
+        res.status(404);
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
+        return;
+    }
+
+    const logs = await docker.getTaskLogs(req.params.task_id);
+    const task_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : 'Testing 123';
+
+    res.render('task', {
+        ...await pageVariables(req, db),
+        page_title: `Task: ${req.params.task}`,
+        allow_overflow: true,
+        service,
+        service_logs: db.getData('/logs').filter((item) => {
+            return item.service === req.params.service;
+        }),
+        task,
+        task_logs
+    });
+});
+
 app.get('/update/:service', async (req, res) => {
     const service = await docker.getService(req.params.service);
 
