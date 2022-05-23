@@ -158,7 +158,10 @@ app.get('/service/:service', async (req, res) => {
         ...await pageVariables(req, db),
         page_title: `Service: ${req.params.service}`,
         allow_overflow: true,
-        service
+        service,
+        service_logs: db.getData('/logs').filter((item) => {
+            return item.service === req.params.service;
+        })
     });
 });
 
