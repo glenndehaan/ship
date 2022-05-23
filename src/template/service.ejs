@@ -264,46 +264,84 @@
                                                 <div class="bg-white dark:bg-gray-900 shadow overflow-hidden sm:rounded-md">
                                                     <ul class="divide-y divide-gray-200 dark:divide-gray-600">
                                                         <% service.__tasks.forEach((task) => { %>
-                                                            <li>
-                                                                <a href="#" class="block hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                                    <div class="px-4 py-4 flex items-center sm:px-6">
-                                                                        <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                                                                            <div class="truncate">
-                                                                                <div class="flex">
-                                                                                    <p class="font-medium text-sm text-purple-600 dark:text-purple-400 truncate"><%= task.ID %></p>
-                                                                                    <p class="ml-1 flex-shrink-0 font-normal text-sm text-gray-500 dark:text-gray-400">- Slot: <%= task.Slot %></p>
-                                                                                </div>
-                                                                                <div class="mt-2 sm:flex sm:justify-between">
-                                                                                    <div class="sm:flex">
-                                                                                        <p class="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                                                                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                                                                <path d="M21,10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-0.1c-2.73,2.71-2.73,7.08,0,9.79s7.15,2.71,9.88,0 C18.32,15.65,19,14.08,19,12.1h2c0,1.98-0.88,4.55-2.64,6.29c-3.51,3.48-9.21,3.48-12.72,0c-3.5-3.47-3.53-9.11-0.02-12.58 s9.14-3.47,12.65,0L21,3V10.12z M12.5,8v4.25l3.5,2.08l-0.72,1.21L11,13V8H12.5z"/>
-                                                                                            </svg>
-                                                                                            <%= new Date(task.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
-                                                                                        </p>
-                                                                                        <p class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
-                                                                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                                                                <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/>
-                                                                                            </svg>
-                                                                                            <span class="truncate"><%= task.Spec.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %></span>
-                                                                                        </p>
+                                                            <% if(typeof task.Status.ContainerStatus !== "undefined") { %>
+                                                                <li>
+                                                                    <a href="/logs/task/<%= task.ID %>" class="block hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                                        <div class="px-4 py-4 flex items-center sm:px-6">
+                                                                            <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                                                                                <div class="truncate">
+                                                                                    <div class="flex">
+                                                                                        <p class="font-medium text-sm text-purple-600 dark:text-purple-400 truncate"><%= task.ID %></p>
+                                                                                        <p class="ml-1 flex-shrink-0 font-normal text-sm text-gray-500 dark:text-gray-400">- Slot: <%= task.Slot %></p>
+                                                                                    </div>
+                                                                                    <div class="mt-2 sm:flex sm:justify-between">
+                                                                                        <div class="sm:flex">
+                                                                                            <p class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path d="M21,10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-0.1c-2.73,2.71-2.73,7.08,0,9.79s7.15,2.71,9.88,0 C18.32,15.65,19,14.08,19,12.1h2c0,1.98-0.88,4.55-2.64,6.29c-3.51,3.48-9.21,3.48-12.72,0c-3.5-3.47-3.53-9.11-0.02-12.58 s9.14-3.47,12.65,0L21,3V10.12z M12.5,8v4.25l3.5,2.08l-0.72,1.21L11,13V8H12.5z"/>
+                                                                                                </svg>
+                                                                                                <%= new Date(task.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                                                            </p>
+                                                                                            <p class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/>
+                                                                                                </svg>
+                                                                                                <span class="truncate"><%= task.Spec.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %></span>
+                                                                                            </p>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+                                                                                    <span class="px-2 py-1 font-semibold leading-tight text-xs text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= (task.Status.State === 'running' || task.Status.State === 'complete') && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= (task.Status.State === 'new' || task.Status.State === 'allocated' || task.Status.State === 'pending' || task.Status.State === 'assigned' || task.Status.State === 'accepted' || task.Status.State === 'preparing' || task.Status.State === 'ready' || task.Status.State === 'starting') && 'text-blue-800 bg-blue-200 dark:text-blue-50 dark:bg-blue-600' %> <%= (task.Status.State === 'shutdown' || task.Status.State === 'failed' || task.Status.State === 'rejected' || task.Status.State === 'remove' || task.Status.State === 'orphaned') && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
+                                                                                        <%= task.Status.State %>
+                                                                                    </span>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-                                                                                <span class="px-2 py-1 font-semibold leading-tight text-xs text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= (task.Status.State === 'running' || task.Status.State === 'complete') && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= (task.Status.State === 'new' || task.Status.State === 'allocated' || task.Status.State === 'pending' || task.Status.State === 'assigned' || task.Status.State === 'accepted' || task.Status.State === 'preparing' || task.Status.State === 'ready' || task.Status.State === 'starting') && 'text-blue-800 bg-blue-200 dark:text-blue-50 dark:bg-blue-600' %> <%= (task.Status.State === 'shutdown' || task.Status.State === 'failed' || task.Status.State === 'rejected' || task.Status.State === 'remove' || task.Status.State === 'orphaned') && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
-                                                                                    <%= task.Status.State %>
-                                                                                </span>
+                                                                            <div class="ml-5 flex-shrink-0">
+                                                                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                                                                </svg>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="ml-5 flex-shrink-0">
-                                                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                                                            </svg>
+                                                                    </a>
+                                                                </li>
+                                                            <% } else { %>
+                                                                <li>
+                                                                    <span class="block cursor-not-allowed">
+                                                                        <div class="px-4 py-4 flex items-center sm:px-6">
+                                                                            <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                                                                                <div class="truncate">
+                                                                                    <div class="flex">
+                                                                                        <p class="font-medium text-sm text-purple-600 dark:text-purple-400 truncate"><%= task.ID %></p>
+                                                                                        <p class="ml-1 flex-shrink-0 font-normal text-sm text-gray-500 dark:text-gray-400">- Slot: <%= task.Slot %></p>
+                                                                                    </div>
+                                                                                    <div class="mt-2 sm:flex sm:justify-between">
+                                                                                        <div class="sm:flex">
+                                                                                            <p class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path d="M21,10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-0.1c-2.73,2.71-2.73,7.08,0,9.79s7.15,2.71,9.88,0 C18.32,15.65,19,14.08,19,12.1h2c0,1.98-0.88,4.55-2.64,6.29c-3.51,3.48-9.21,3.48-12.72,0c-3.5-3.47-3.53-9.11-0.02-12.58 s9.14-3.47,12.65,0L21,3V10.12z M12.5,8v4.25l3.5,2.08l-0.72,1.21L11,13V8H12.5z"/>
+                                                                                                </svg>
+                                                                                                <%= new Date(task.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                                                            </p>
+                                                                                            <p class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/>
+                                                                                                </svg>
+                                                                                                <span class="truncate"><%= task.Spec.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %></span>
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+                                                                                    <span class="px-2 py-1 font-semibold leading-tight text-xs text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= (task.Status.State === 'running' || task.Status.State === 'complete') && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= (task.Status.State === 'new' || task.Status.State === 'allocated' || task.Status.State === 'pending' || task.Status.State === 'assigned' || task.Status.State === 'accepted' || task.Status.State === 'preparing' || task.Status.State === 'ready' || task.Status.State === 'starting') && 'text-blue-800 bg-blue-200 dark:text-blue-50 dark:bg-blue-600' %> <%= (task.Status.State === 'shutdown' || task.Status.State === 'failed' || task.Status.State === 'rejected' || task.Status.State === 'remove' || task.Status.State === 'orphaned') && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
+                                                                                        <%= task.Status.State %>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </a>
-                                                            </li>
+                                                                    </span>
+                                                                </li>
+                                                            <% } %>
                                                         <% }); %>
                                                     </ul>
                                                 </div>
