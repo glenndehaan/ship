@@ -321,7 +321,7 @@
                                 <section>
                                     <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
                                         <h2 class="text-lg font-medium text-gray-900">Shortcuts</h2>
-                                        <div class="mt-6 flex flex-col justify-stretch">
+                                        <div class="mt-6 flex flex-col justify-stretch space-y-2">
                                             <a href="#" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                                                 <svg class="-ml-1 mr-2 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57 66" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" fill="currentColor">
                                                     <use xlink:href="#A" x=".5" y=".5"/>
@@ -367,6 +367,12 @@
                                                     </symbol>
                                                 </svg>
                                                 Open website
+                                            </a>
+                                            <a href="/logs/service/<%= service.Spec.Name %>" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                                <svg class="-ml-1 mr-2 h-6 w-6 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                                </svg>
+                                                Open logs
                                             </a>
                                         </div>
                                     </div>
