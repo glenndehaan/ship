@@ -188,7 +188,7 @@ app.get('/service/:service/task/:task', async (req, res) => {
         return;
     }
 
-    const logs = await docker.getTaskLogs(req.params.task_id);
+    const logs = await docker.getTaskLogs(req.params.task);
     const task_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : 'Testing 123';
 
     res.render('task', {
