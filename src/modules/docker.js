@@ -49,6 +49,10 @@ const mockData = {
             Replicated: {
                 Replicas: 1
             }
+        },
+        Labels: {
+            "com.docker.stack.image": "alpine:latest",
+            "com.docker.stack.namespace": "test"
         }
     },
     ServiceStatus: {
