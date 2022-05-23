@@ -56,6 +56,7 @@ module.exports = async (req, db) => {
         lockout_rule: lockout_service_regex,
         allow_overflow: false,
         service: {},
+        service_logs: [],
         edit: false,
         edit_service: {},
         edit_service_name: null,
