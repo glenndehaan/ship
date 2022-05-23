@@ -177,7 +177,7 @@ app.get('/service/:service/task/:task', async (req, res) => {
         return;
     }
 
-    const task = await docker.getTask(req.params.task_id);
+    const task = await docker.getTask(req.params.task);
 
     if(typeof task.Spec === "undefined") {
         res.status(404);
