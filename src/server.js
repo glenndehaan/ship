@@ -21,6 +21,7 @@ const slack = require('./modules/slack');
 const email = require('./modules/email');
 const cron = require('./modules/cron');
 const pageVariables = require('./utils/pageVariables');
+const regex = require('./utils/regex');
 
 /**
  * Create express app
@@ -161,7 +162,8 @@ app.get('/service/:service', async (req, res) => {
         service,
         service_logs: db.getData('/logs').filter((item) => {
             return item.service === req.params.service;
-        })
+        }),
+        traefik_url: regex.getTraefikUrlFromLabels(service.Spec.Labels)
     });
 });
 
