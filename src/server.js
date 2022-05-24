@@ -167,6 +167,47 @@ app.get('/service/:service', async (req, res) => {
     });
 });
 
+app.get('/service/:service/history/download', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
+        return;
+    }
+
+    res.set('Content-Type', 'text/plain');
+    res.send(db.getData('/logs').filter((item) => {
+        return item.service === req.params.service;
+    }).map((item) => {
+        let message = '';
+
+        if(item.type === 'attempt_update') {
+            message = 'Attempted to update the service during lockout days/hours';
+        }
+        if(item.type === 'attempt_force_update') {
+            message = 'Attempted to force re-deploy the service during lockout days/hours';
+        }
+        if(item.type === 'attempt_scale') {
+            message = 'Attempted to scale the service during lockout days/hours';
+        }
+        if(item.type === 'update') {
+            message = `Updated the service image version from ${item.params.old_image_version.split('@')[0]} to ${item.params.new_image_version.split('@')[0]}`;
+        }
+        if(item.type === 'force_update') {
+            message = 'Force re-deployed the service';
+        }
+        if(item.type === 'scale') {
+            message = `Scaled the service to ${item.params.scale} container(s)`;
+        }
+
+        return `[${new Date(item.time).toLocaleTimeString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false })}] ${item.username}: ${message}`;
+    }).join('\n'));
+});
+
 app.get('/service/:service/task/:task', async (req, res) => {
     const service = await docker.getService(req.params.service);
 

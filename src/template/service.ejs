@@ -422,10 +422,10 @@
                                 </section>
 
                                 <section>
-                                    <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">History</h2>
-                                        <div class="mt-6 flow-root">
-                                            <ul class="-mb-8">
+                                    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                                        <div class="mt-6 flow-root px-4 py-5 sm:px-6">
+                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">History</h2>
+                                            <ul class="-mb-8 mt-6">
                                                 <% service_logs.sort((a, b) => b.time - a.time).slice(0, 6).forEach((log, index, logs) => { %>
                                                     <li>
                                                         <div class="relative pb-8">
@@ -487,6 +487,14 @@
                                                     </li>
                                                 <% }); %>
                                             </ul>
+                                        </div>
+                                        <div>
+                                            <a href="/service/<%= service.Spec.Name %>/history/download" download="<%= service.Spec.Name %>_<%= new Date().getTime() %>.log" class="mt-3 inline-flex items-center justify-center w-full block bg-gray-50 dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 text-center px-4 py-4 hover:text-gray-700 hover:dark:text-gray-50 sm:rounded-b-lg">
+                                                <svg class="-ml-1 mr-2 h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                                                </svg>
+                                                Download Logs
+                                            </a>
                                         </div>
                                     </div>
                                 </section>
