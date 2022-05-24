@@ -42,7 +42,14 @@
 
             <nav class="flex">
                 <ol class="flex items-center container px-6 mx-auto mb-4 space-x-4">
-                    <li>
+                    <li class="md:hidden">
+                        <div class="flex items-center">
+                            <a href="/" class="font-medium text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300">
+                                &#8592; Back
+                            </a>
+                        </div>
+                    </li>
+                    <li class="hidden md:contents">
                         <div>
                             <a href="/" class="text-gray-400 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-300">
                                 <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -52,7 +59,7 @@
                             </a>
                         </div>
                     </li>
-                    <li>
+                    <li class="hidden md:block">
                         <div class="flex items-center">
                             <svg class="flex-shrink-0 h-5 w-5 text-gray-400 dark:text-gray-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -67,13 +74,13 @@
 
             <div class="flex flex-col flex-1 w-full gap-10">
                 <div class="container px-6 mx-auto grid gap-10">
-                    <div class="md:flex md:items-center md:justify-between">
+                    <div class="lg:flex lg:items-center lg:justify-between">
                         <div class="flex-1 min-w-0">
                             <h2 class="text-xl font-bold leading-7 text-gray-900 dark:text-gray-100 sm:truncate">
                                 <%= service.Spec.Name %>
                             </h2>
                         </div>
-                        <div class="mt-4 flex md:mt-0 md:ml-4">
+                        <div class="mt-4 flex lg:mt-0 lg:ml-4">
                             <% if(typeof service.UpdateStatus === "undefined" || service.UpdateStatus.State === "completed") { %>
                                 <span>
                                     <a href="/update/<%= service.Spec.Name %>" aria-label="Update the <%= service.Spec.Name %> service" title="Update the <%= service.Spec.Name %> service" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
@@ -213,7 +220,7 @@
                                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
                                                         Image
                                                     </dt>
-                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400 truncate">
                                                         <%= service.Spec.TaskTemplate.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %>
                                                     </dd>
                                                 </div>
@@ -416,7 +423,7 @@
                                     <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">History</h2>
                                         <div class="mt-6 flow-root">
-                                            <ul role="list" class="-mb-8">
+                                            <ul class="-mb-8">
                                                 <% service_logs.sort((a, b) => b.time - a.time).slice(0, 6).forEach((log, index, logs) => { %>
                                                     <li>
                                                         <div class="relative pb-8">
@@ -450,26 +457,26 @@
                                                                 <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                                                                     <div>
                                                                         <% if(log.type === 'attempt_update') { %>
-                                                                            <p class="text-sm text-red-800 dark:text-red-400">Attempt to update by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-red-800 dark:text-red-400">Attempt to update by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                         <% if(log.type === 'attempt_force_update') { %>
-                                                                            <p class="text-sm text-red-800 dark:text-red-400">Attempt to force re-deploy by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-red-800 dark:text-red-400">Attempt to force re-deploy by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                         <% if(log.type === 'attempt_scale') { %>
-                                                                            <p class="text-sm text-red-800 dark:text-red-400">Attempt to scale by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-red-800 dark:text-red-400">Attempt to scale by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
 
                                                                         <% if(log.type === 'update') { %>
-                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">Image version updated from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %> by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Image version updated from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %> by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                         <% if(log.type === 'force_update') { %>
-                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">Force re-deployed by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Force re-deployed by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                         <% if(log.type === 'scale') { %>
-                                                                            <p class="text-sm text-gray-500 dark:text-gray-400">Scaled to <%= log.params.scale %> container(s) by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Scaled to <%= log.params.scale %> container(s) by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                     </div>
-                                                                    <div class="text-right text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                                                    <div class="text-right text-xs whitespace-nowrap text-gray-500 dark:text-gray-400">
                                                                         <%= new Date(log.time).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) %>
                                                                     </div>
                                                                 </div>

@@ -10,7 +10,7 @@ module.exports = {
             'md': '768px',
             // => @media (min-width: 768px) { ... }
 
-            'lg': '1124px',
+            'lg': '1224px',
             // => @media (min-width: 1124px) { ... }
 
             'xl': '1280px',
