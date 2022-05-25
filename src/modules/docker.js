@@ -32,17 +32,20 @@ const mock = dev;
 /**
  * Mock data
  *
- * @type {{__tasks: [{Status: {State: string}, CreatedAt: number, Slot: number, ID: string}], ServiceStatus: {RunningTasks: number, DesiredTasks: number}, CreatedAt: number, Spec: {TaskTemplate: {ContainerSpec: {Image: string}}, Name: string}, UpdatedAt: number}}
+ * @type {{__tasks: [{Status: {ContainerStatus: {ContainerID: string}, State: string}, CreatedAt: number, Slot: number, ID: string, Spec: {ContainerSpec: {Image: string}}, UpdatedAt: number}], UpdateStatus: {State: string}, Version: {Index: number}, ServiceStatus: {RunningTasks: number, DesiredTasks: number}, CreatedAt: number, ID: string, Spec: {TaskTemplate: {ContainerSpec: {Env: [string], Image: string}}, Mode: {Replicated: {Replicas: number}}, Labels: {"com.docker.stack.image": string, "com.docker.stack.namespace": string, "traefik.http.routers.example-website-2022-staging.rule": string}, Name: string}, UpdatedAt: number}}
  */
 const mockData = {
     ID: '00000000000000000',
     CreatedAt: 0,
     UpdatedAt: 0,
     Spec: {
-        Name: 'test_test',
+        Name: 'example-website-2022_example-website-2022-staging',
         TaskTemplate: {
             ContainerSpec: {
-                Image: 'alpine:latest'
+                Env: [
+                    'TEST123=1'
+                ],
+                Image: 'example_website_2022:v0.1.2.2370295269'
             }
         },
         Mode: {
@@ -51,8 +54,9 @@ const mockData = {
             }
         },
         Labels: {
-            "com.docker.stack.image": "alpine:latest",
-            "com.docker.stack.namespace": "test"
+            "com.docker.stack.image": "example_website_2022:v0.1.2.2370295269",
+            "com.docker.stack.namespace": "example-website-2022",
+            "traefik.http.routers.example-website-2022-staging.rule": "Host(`example-website-2022.staging.example.com`)"
         }
     },
     ServiceStatus: {
@@ -79,7 +83,7 @@ const mockData = {
             },
             Spec: {
                 ContainerSpec: {
-                    Image: 'alpine:latest'
+                    Image: 'example_website_2022:v0.1.2.2370295269'
                 }
             }
         }

@@ -256,6 +256,24 @@
                                                         </ul>
                                                     </dd>
                                                 </div>
+                                                <% if(service.Spec.TaskTemplate.ContainerSpec.Env) { %>
+                                                    <div class="sm:col-span-2">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">Environment Variables</dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <ul role="list" class="border border-gray-200 dark:border-gray-600 rounded-md divide-y divide-gray-200 dark:divide-gray-600">
+                                                                <% service.Spec.TaskTemplate.ContainerSpec.Env.forEach((env) => { %>
+                                                                    <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                                                                        <div class="w-0 flex-1 flex items-center">
+                                                                            <span class="ml-2 flex-1 w-0 text-xs">
+                                                                                <span class="font-bold"><%= env.split('=')[0] %></span>: <%= env.split('=')[1] %>
+                                                                            </span>
+                                                                        </div>
+                                                                    </li>
+                                                                <% }); %>
+                                                            </ul>
+                                                        </dd>
+                                                    </div>
+                                                <% } %>
                                             </dl>
                                         </div>
                                     </div>
