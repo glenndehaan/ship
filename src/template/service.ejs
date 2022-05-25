@@ -444,6 +444,15 @@
                                         <div class="mt-6 flow-root px-4 py-5 sm:px-6">
                                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">History</h2>
                                             <ul class="-mb-8 mt-6">
+                                                <% if(service_logs.length < 1) { %>
+                                                    <div class="text-center mb-10">
+                                                        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-100" viewBox="0 0 24 24" fill="currentColor">
+                                                            <path d="M21,10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-0.1c-2.73,2.71-2.73,7.08,0,9.79s7.15,2.71,9.88,0 C18.32,15.65,19,14.08,19,12.1h2c0,1.98-0.88,4.55-2.64,6.29c-3.51,3.48-9.21,3.48-12.72,0c-3.5-3.47-3.53-9.11-0.02-12.58 s9.14-3.47,12.65,0L21,3V10.12z M12.5,8v4.25l3.5,2.08l-0.72,1.21L11,13V8H12.5z"></path>
+                                                        </svg>
+                                                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No history</h3>
+                                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Logs will appear here once changes have been made to the service</p>
+                                                    </div>
+                                                <% } %>
                                                 <% service_logs.sort((a, b) => b.time - a.time).slice(0, 6).forEach((log, index, logs) => { %>
                                                     <li>
                                                         <div class="relative pb-8">
@@ -506,14 +515,16 @@
                                                 <% }); %>
                                             </ul>
                                         </div>
-                                        <div>
-                                            <a href="/service/<%= service.Spec.Name %>/history/download" download="<%= service.Spec.Name %>_<%= new Date().getTime() %>.log" class="mt-3 inline-flex items-center justify-center w-full block bg-gray-50 dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 text-center px-4 py-4 hover:text-gray-700 hover:dark:text-gray-50 sm:rounded-b-lg">
-                                                <svg class="-ml-1 mr-2 h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                                                </svg>
-                                                Download Logs
-                                            </a>
-                                        </div>
+                                        <% if(service_logs.length > 0) { %>
+                                            <div>
+                                                <a href="/service/<%= service.Spec.Name %>/history/download" download="<%= service.Spec.Name %>_<%= new Date().getTime() %>.log" class="mt-3 inline-flex items-center justify-center w-full block bg-gray-50 dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-300 text-center px-4 py-4 hover:text-gray-700 hover:dark:text-gray-50 sm:rounded-b-lg">
+                                                    <svg class="-ml-1 mr-2 h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                                                    </svg>
+                                                    Download Logs
+                                                </a>
+                                            </div>
+                                        <% } %>
                                     </div>
                                 </section>
                             </div>
