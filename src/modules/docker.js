@@ -288,6 +288,12 @@ const dockerModule = {
      * @returns {*}
      */
     getServiceLogs: (name, amount = 250) => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve([]);
+            });
+        }
+
         return docker.getService(name).logs({
             details: true,
             stdout: true,

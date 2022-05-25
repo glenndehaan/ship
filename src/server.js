@@ -167,6 +167,49 @@ app.get('/service/:service', async (req, res) => {
     });
 });
 
+app.get('/service/:service/logs', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
+        return;
+    }
+
+    const logs = await docker.getServiceLogs(req.params.service);
+    const service_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
+
+    res.render('service_logs', {
+        ...await pageVariables(req, db),
+        page_title: `Service: ${req.params.service}`,
+        allow_overflow: true,
+        service,
+        service_logs
+    });
+});
+
+app.get('/service/:service/logs/download', async (req, res) => {
+    const service = await docker.getService(req.params.service);
+
+    if(typeof service.Spec === "undefined") {
+        res.status(404);
+        res.render('404', {
+            ...await pageVariables(req, db),
+            page_title: `Not Found`
+        });
+        return;
+    }
+
+    const logs = await docker.getServiceLogs(req.params.service);
+    const service_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
+
+    res.set('Content-Type', 'text/plain');
+    res.send(service_logs);
+});
+
 app.get('/service/:service/history/download', async (req, res) => {
     const service = await docker.getService(req.params.service);
 
@@ -239,9 +282,6 @@ app.get('/service/:service/task/:task', async (req, res) => {
         page_title: `Task: ${req.params.task}`,
         allow_overflow: true,
         service,
-        service_logs: db.getData('/logs').filter((item) => {
-            return item.service === req.params.service;
-        }),
         task,
         task_logs
     });
