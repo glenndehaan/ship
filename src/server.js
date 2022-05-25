@@ -1,27 +1,26 @@
 /**
  * Import base packages
  */
-const log = require('js-logger');
 const express = require('express');
 const multer = require('multer');
-const AnsiToHtml = require('ansi-to-html');
 const cookieParser = require('cookie-parser');
-const {JsonDB} = require('node-json-db');
-const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 
 /**
  * Import own modules
  */
+const log = require('./modules/logger');
 const docker = require('./modules/docker');
 const registry = require('./modules/registry');
-const demux = require('./modules/demux');
-const lockout = require('./modules/lockout');
-const webhook = require('./modules/webhook');
-const slack = require('./modules/slack');
-const email = require('./modules/email');
 const cron = require('./modules/cron');
 const pageVariables = require('./utils/pageVariables');
-const regex = require('./utils/regex');
+
+/**
+ * Import controllers
+ */
+const HomeController = require('./controllers/HomeController');
+const ServiceController = require('./controllers/ServiceController');
+const TaskController = require('./controllers/TaskController');
+const ActionController = require('./controllers/ActionController');
 
 /**
  * Create express app
@@ -31,64 +30,9 @@ const regex = require('./utils/regex');
 const app = express();
 
 /**
- * Create an ansi converter
- */
-const convertAnsi = new AnsiToHtml();
-
-/**
- * Check if we are using the dev version
- */
-const dev = process.env.NODE_ENV !== 'production';
-
-/**
- * Setup logger
- */
-const consoleLogger = log.createDefaultHandler({
-    formatter: (messages, context) => {
-        // Get current date, change this to the current timezone, then generate a date-time string
-        const utcDate = new Date();
-        const offset = utcDate.getTimezoneOffset();
-        const date = new Date(utcDate.getTime() - (offset * 60 * 1000));
-        const dateTimeString = date.toISOString().replace('T', ' ').replace('Z', '');
-
-        // Prefix each log message with a timestamp and log level
-        messages.unshift(`${dateTimeString} ${context.level.name}${context.level.name === 'INFO' || context.level.name === 'WARN' ? ' ' : ''}`);
-    }
-});
-
-/**
- * Set all logger handlers
- */
-log.setHandler((messages, context) => {
-    consoleLogger(messages, context);
-});
-
-/**
- * Set log level
- */
-log.setLevel(dev ? log.TRACE : log.INFO);
-
-/**
- * Initialize a database for logging purposes
- */
-const db = new JsonDB(new Config(dev ? `${__dirname}/ship` : `/data/ship`, true, false, '/'));
-
-/**
- * Check if the database base structure exists
- */
-if(!db.exists('/logs')) {
-    log.info('[DB] Initialized for the first time!');
-    db.push('/logs', []);
-} else {
-    log.info('[DB] Ready!');
-}
-
-/**
  * Define global variables
  */
 const max_scale = process.env.MAX_SCALE || '20';
-const auth_header = process.env.AUTH_HEADER || false;
-const custom_webhook = process.env.CUSTOM_WEBHOOK || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 
@@ -117,7 +61,7 @@ app.use(cookieParser());
  * Request logger
  */
 app.use((req, res, next) => {
-    log.debug(`[Web][REQUEST]: ${req.originalUrl}`);
+    log.debug(`[WEB REQUEST]: ${req.originalUrl}`);
     next();
 });
 
@@ -133,189 +77,12 @@ log.info(slack_webhook ? '[SLACK] Enabled!' : '[SLACK] Disabled!');
 log.info(email_smtp_host ? '[EMAIL] Enabled!' : '[EMAIL] Disabled!');
 
 /**
- * Configure routers
+ * Configure routers/controllers
  */
-app.get('/', async (req, res) => {
-    res.render(req.cookies.ship_experimental_ui ? 'home_new' : 'home', {
-        ...await pageVariables(req, db),
-        page_title: 'Service Overview',
-        allow_overflow: true
-    });
-});
-
-app.get('/service/:service', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    res.render('service', {
-        ...await pageVariables(req, db),
-        page_title: `Service: ${req.params.service}`,
-        allow_overflow: true,
-        service,
-        service_logs: db.getData('/logs').filter((item) => {
-            return item.service === req.params.service;
-        }),
-        traefik_url: regex.getTraefikUrlFromLabels(service.Spec.Labels)
-    });
-});
-
-app.get('/service/:service/logs', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const logs = await docker.getServiceLogs(req.params.service);
-    const service_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
-
-    res.render('service_logs', {
-        ...await pageVariables(req, db),
-        page_title: `Service: ${req.params.service}`,
-        allow_overflow: true,
-        service,
-        service_logs
-    });
-});
-
-app.get('/service/:service/logs/download', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const logs = await docker.getServiceLogs(req.params.service);
-    const service_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
-
-    res.set('Content-Type', 'text/plain');
-    res.send(service_logs);
-});
-
-app.get('/service/:service/history/download', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    res.set('Content-Type', 'text/plain');
-    res.send(db.getData('/logs').filter((item) => {
-        return item.service === req.params.service;
-    }).map((item) => {
-        let message = '';
-
-        if(item.type === 'attempt_update') {
-            message = 'Attempted to update the service during lockout days/hours';
-        }
-        if(item.type === 'attempt_force_update') {
-            message = 'Attempted to force re-deploy the service during lockout days/hours';
-        }
-        if(item.type === 'attempt_scale') {
-            message = 'Attempted to scale the service during lockout days/hours';
-        }
-        if(item.type === 'update') {
-            message = `Updated the service image version from ${item.params.old_image_version.split('@')[0]} to ${item.params.new_image_version.split('@')[0]}`;
-        }
-        if(item.type === 'force_update') {
-            message = 'Force re-deployed the service';
-        }
-        if(item.type === 'scale') {
-            message = `Scaled the service to ${item.params.scale} container(s)`;
-        }
-
-        return `[${new Date(item.time).toLocaleTimeString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false })}] ${item.username}: ${message}`;
-    }).join('\n'));
-});
-
-app.get('/service/:service/task/:task', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const task = await docker.getTask(req.params.task);
-
-    if(typeof task.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const logs = await docker.getTaskLogs(req.params.task);
-    const task_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
-
-    res.render('task', {
-        ...await pageVariables(req, db),
-        page_title: `Task: ${req.params.task}`,
-        allow_overflow: true,
-        service,
-        task,
-        task_logs
-    });
-});
-
-app.get('/service/:service/task/:task/logs/download', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const task = await docker.getTask(req.params.task);
-
-    if(typeof task.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const logs = await docker.getTaskLogs(req.params.task);
-    const task_logs = logs.length > 0 ? demux(logs).join('') : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
-
-    res.set('Content-Type', 'text/plain');
-    res.send(task_logs);
-});
+HomeController(app);
+ServiceController(app);
+TaskController(app);
+ActionController(app);
 
 app.get('/update/:service', async (req, res) => {
     const service = await docker.getService(req.params.service);
@@ -323,14 +90,14 @@ app.get('/update/:service', async (req, res) => {
     if(typeof service.Spec === "undefined") {
         res.status(404);
         res.render('404', {
-            ...await pageVariables(req, db),
+            ...await pageVariables(req),
             page_title: `Not Found`
         });
         return;
     }
 
     res.render('home', {
-        ...await pageVariables(req, db),
+        ...await pageVariables(req),
         page_title: `Edit Service: ${req.params.service}`,
         edit: true,
         edit_service: service,
@@ -345,14 +112,14 @@ app.get('/force_update/:service', async (req, res) => {
     if(typeof service.Spec === "undefined") {
         res.status(404);
         res.render('404', {
-            ...await pageVariables(req, db),
+            ...await pageVariables(req),
             page_title: `Not Found`
         });
         return;
     }
 
     res.render('home', {
-        ...await pageVariables(req, db),
+        ...await pageVariables(req),
         page_title: `Force Update Service: ${req.params.service}`,
         force_update: true,
         force_update_service: service
@@ -365,436 +132,19 @@ app.get('/scale/:service', async (req, res) => {
     if(typeof service.Spec === "undefined") {
         res.status(404);
         res.render('404', {
-            ...await pageVariables(req, db),
+            ...await pageVariables(req),
             page_title: `Not Found`
         });
         return;
     }
 
     res.render('home', {
-        ...await pageVariables(req, db),
+        ...await pageVariables(req),
         page_title: `Scale Service: ${req.params.service}`,
         scale: true,
         max_scale,
         scale_service: service
     });
-});
-
-app.get('/logs/service/:service_id', async (req, res) => {
-    const service = await docker.getService(req.params.service_id);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const logs = await docker.getServiceLogs(req.params.service_id);
-    const reversedLogs = convertAnsi.toHtml(demux(logs).join(''));
-
-    res.render('home', {
-        ...await pageVariables(req, db),
-        page_title: `Service logs: ${req.params.service}`,
-        logs: true,
-        logs_type: 'service',
-        logs_data: {
-            service: {
-                self: service,
-                logs: reversedLogs
-            },
-            task: {
-                self: {},
-                logs: ''
-            }
-        }
-    });
-});
-
-app.get('/logs/task/:task_id', async (req, res) => {
-    const task = await docker.getTask(req.params.task_id);
-
-    if(typeof task.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req, db),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    const logs = await docker.getTaskLogs(req.params.task_id);
-    const reversedLogs = convertAnsi.toHtml(demux(logs).join(''));
-
-    res.render('home', {
-        ...await pageVariables(req, db),
-        page_title: `Task logs: ${req.params.task_id}`,
-        logs: true,
-        logs_type: 'task',
-        logs_data: {
-            service: {
-                self: {},
-                logs: ''
-            },
-            task: {
-                self: task,
-                logs: reversedLogs
-            }
-        }
-    });
-});
-
-app.get('/activity/:service', async (req, res) => {
-    res.render('home', {
-        ...await pageVariables(req, db),
-        page_title: `Activity logs: ${req.params.service}`,
-        activity: true,
-        activity_service: req.params.service,
-        activity_logs: db.getData('/logs').filter((item) => {
-            return item.service === req.params.service;
-        })
-    });
-});
-
-app.post('/update', async (req, res) => {
-    if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
-        db.push('/logs[]', {
-            type: 'attempt_update',
-            username: auth_header ? req.get(auth_header) : 'Anonymous',
-            service: req.body.service_name,
-            params: {},
-            time: new Date().getTime()
-        });
-
-        if(custom_webhook) {
-            const webhooks = custom_webhook.split(',');
-            for(let item = 0; item < webhooks.length; item++) {
-                webhook(webhooks[item], {
-                    type: 'attempt_update',
-                    username: auth_header ? req.get(auth_header) : 'Anonymous',
-                    service: req.body.service_name,
-                    params: {},
-                    time: new Date().getTime()
-                });
-            }
-        }
-
-        if(slack_webhook) {
-            slack({
-                fallback: `Attempt to update the ${req.body.service_name} service during lockout days/hours\n\n---`,
-                text: `Attempt to update the ${req.body.service_name} service during lockout days/hours\n\n---`,
-                color: 'danger',
-                fields: [
-                    {
-                        title: 'User',
-                        value: auth_header ? req.get(auth_header) : 'Anonymous',
-                        short: false
-                    },
-                    {
-                        title: 'Service',
-                        value: req.body.service_name,
-                        short: false
-                    }
-                ]
-            });
-        }
-
-        if(email_smtp_host) {
-            const title = `Ship: Attempt to update the ${req.body.service_name} service during lockout days/hours`;
-            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to update the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
-            email(title, message);
-        }
-
-        res.redirect(encodeURI(`/?error=Unable to update service during lockout days/hours!`));
-        return;
-    }
-
-    db.push('/logs[]', {
-        type: 'update',
-        username: auth_header ? req.get(auth_header) : 'Anonymous',
-        service: req.body.service_name,
-        params: {
-            image: req.body.service_image,
-            old_image_version: req.body.service_old_image_version,
-            new_image_version: req.body.service_new_image_version
-        },
-        time: new Date().getTime()
-    });
-
-    if(custom_webhook) {
-        const webhooks = custom_webhook.split(',');
-        for(let item = 0; item < webhooks.length; item++) {
-            webhook(webhooks[item], {
-                type: 'update',
-                username: auth_header ? req.get(auth_header) : 'Anonymous',
-                service: req.body.service_name,
-                params: {
-                    image: req.body.service_image,
-                    old_image_version: req.body.service_old_image_version,
-                    new_image_version: req.body.service_new_image_version
-                },
-                time: new Date().getTime()
-            });
-        }
-    }
-
-    if(slack_webhook) {
-        slack({
-            fallback: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}\n\n---`,
-            text: `Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}\n\n---`,
-            color: 'good',
-            fields: [
-                {
-                    title: 'User',
-                    value: auth_header ? req.get(auth_header) : 'Anonymous',
-                    short: false
-                },
-                {
-                    title: 'Service',
-                    value: req.body.service_name,
-                    short: false
-                },
-                {
-                    title: 'Current Image',
-                    value: `${req.body.service_image}:${req.body.service_old_image_version}`,
-                    short: false
-                },
-                {
-                    title: 'New Image',
-                    value: `${req.body.service_image}:${req.body.service_new_image_version}`,
-                    short: false
-                }
-            ]
-        });
-    }
-
-    if(email_smtp_host) {
-        const title = `Ship: Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}`;
-        const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Updated the ${req.body.service_name} service image from ${req.body.service_image}:${req.body.service_old_image_version} to ${req.body.service_image}:${req.body.service_new_image_version}</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Current Image:</b> ${req.body.service_image}:${req.body.service_old_image_version}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;"><b>New Image:</b> ${req.body.service_image}:${req.body.service_new_image_version}</p>`;
-        email(title, message);
-    }
-
-    await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
-    res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
-});
-
-app.post('/force_update', async (req, res) => {
-    if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
-        db.push('/logs[]', {
-            type: 'attempt_force_update',
-            username: auth_header ? req.get(auth_header) : 'Anonymous',
-            service: req.body.service_name,
-            params: {},
-            time: new Date().getTime()
-        });
-
-        if(custom_webhook) {
-            const webhooks = custom_webhook.split(',');
-            for(let item = 0; item < webhooks.length; item++) {
-                webhook(webhooks[item], {
-                    type: 'attempt_force_update',
-                    username: auth_header ? req.get(auth_header) : 'Anonymous',
-                    service: req.body.service_name,
-                    params: {},
-                    time: new Date().getTime()
-                });
-            }
-        }
-
-        if(slack_webhook) {
-            slack({
-                fallback: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours\n\n---`,
-                text: `Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours\n\n---`,
-                color: 'danger',
-                fields: [
-                    {
-                        title: 'User',
-                        value: auth_header ? req.get(auth_header) : 'Anonymous',
-                        short: false
-                    },
-                    {
-                        title: 'Service',
-                        value: req.body.service_name,
-                        short: false
-                    }
-                ]
-            });
-        }
-
-        if(email_smtp_host) {
-            const title = `Ship: Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours`;
-            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to force re-deploy the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
-            email(title, message);
-        }
-
-        res.redirect(encodeURI(`/?error=Unable to force re-deploy service during lockout days/hours!`));
-        return;
-    }
-
-    db.push('/logs[]', {
-        type: 'force_update',
-        username: auth_header ? req.get(auth_header) : 'Anonymous',
-        service: req.body.service_name,
-        params: {},
-        time: new Date().getTime()
-    });
-
-    if(custom_webhook) {
-        const webhooks = custom_webhook.split(',');
-        for(let item = 0; item < webhooks.length; item++) {
-            webhook(webhooks[item], {
-                type: 'force_update',
-                username: auth_header ? req.get(auth_header) : 'Anonymous',
-                service: req.body.service_name,
-                params: {},
-                time: new Date().getTime()
-            });
-        }
-    }
-
-    if(slack_webhook) {
-        slack({
-            fallback: `Force re-deployed the ${req.body.service_name} service\n\n---`,
-            text: `Force re-deployed the ${req.body.service_name} service\n\n---`,
-            color: 'good',
-            fields: [
-                {
-                    title: 'User',
-                    value: auth_header ? req.get(auth_header) : 'Anonymous',
-                    short: false
-                },
-                {
-                    title: 'Service',
-                    value: req.body.service_name,
-                    short: false
-                }
-            ]
-        });
-    }
-
-    if(email_smtp_host) {
-        const title = `Ship: Force re-deployed the ${req.body.service_name} service`;
-        const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Force re-deployed the ${req.body.service_name} service</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
-        email(title, message);
-    }
-
-    await docker.updateServiceForce(req.body.service_name);
-    res.redirect(encodeURI(`/?message=Successfully force updated the ${req.body.service_name} service!`));
-});
-
-app.post('/scale', async (req, res) => {
-    if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
-        db.push('/logs[]', {
-            type: 'attempt_scale',
-            username: auth_header ? req.get(auth_header) : 'Anonymous',
-            service: req.body.service_name,
-            params: {},
-            time: new Date().getTime()
-        });
-
-        if(custom_webhook) {
-            const webhooks = custom_webhook.split(',');
-            for(let item = 0; item < webhooks.length; item++) {
-                webhook(webhooks[item], {
-                    type: 'attempt_scale',
-                    username: auth_header ? req.get(auth_header) : 'Anonymous',
-                    service: req.body.service_name,
-                    params: {},
-                    time: new Date().getTime()
-                });
-            }
-        }
-
-        if(slack_webhook) {
-            slack({
-                fallback: `Attempt to scale the ${req.body.service_name} service during lockout days/hours\n\n---`,
-                text: `Attempt to scale the ${req.body.service_name} service during lockout days/hours\n\n---`,
-                color: 'danger',
-                fields: [
-                    {
-                        title: 'User',
-                        value: auth_header ? req.get(auth_header) : 'Anonymous',
-                        short: false
-                    },
-                    {
-                        title: 'Service',
-                        value: req.body.service_name,
-                        short: false
-                    }
-                ]
-            });
-        }
-
-        if(email_smtp_host) {
-            const title = `Ship: Attempt to scale the ${req.body.service_name} service during lockout days/hours`;
-            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to scale the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
-            email(title, message);
-        }
-
-        res.redirect(encodeURI(`/?error=Unable to scale service during lockout days/hours!`));
-        return;
-    }
-
-    db.push('/logs[]', {
-        type: 'scale',
-        username: auth_header ? req.get(auth_header) : 'Anonymous',
-        service: req.body.service_name,
-        params: {
-            scale: req.body.service_scale
-        },
-        time: new Date().getTime()
-    });
-
-    if(custom_webhook) {
-        const webhooks = custom_webhook.split(',');
-        for(let item = 0; item < webhooks.length; item++) {
-            webhook(webhooks[item], {
-                type: 'scale',
-                username: auth_header ? req.get(auth_header) : 'Anonymous',
-                service: req.body.service_name,
-                params: {
-                    scale: req.body.service_scale
-                },
-                time: new Date().getTime()
-            });
-        }
-    }
-
-    if(slack_webhook) {
-        slack({
-            fallback: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)\n\n---`,
-            text: `Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)\n\n---`,
-            color: 'good',
-            fields: [
-                {
-                    title: 'User',
-                    value: auth_header ? req.get(auth_header) : 'Anonymous',
-                    short: false
-                },
-                {
-                    title: 'Service',
-                    value: req.body.service_name,
-                    short: false
-                },
-                {
-                    title: 'Scale',
-                    value: req.body.service_scale,
-                    short: false
-                }
-            ]
-        });
-    }
-
-    if(email_smtp_host) {
-        const title = `Ship: Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)`;
-        const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Scaled the ${req.body.service_name} service to ${req.body.service_scale} container(s)</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Scale:</b> ${req.body.service_scale}</p>`;
-        email(title, message);
-    }
-
-    await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
-    res.redirect(encodeURI(`/?message=Successfully scaled the ${req.body.service_name} service!`));
 });
 
 app.get('/enable_experimental_ui', (req, res) => {
@@ -813,7 +163,7 @@ app.get('/disable_experimental_ui', (req, res) => {
 app.use(async (req, res) => {
     res.status(404);
     res.render('404', {
-        ...await pageVariables(req, db),
+        ...await pageVariables(req),
         page_title: `Not Found`
     });
 });
@@ -836,7 +186,7 @@ const server = app.listen(3000, '0.0.0.0', async () => {
 /**
  * Start the cron
  */
-cron.start(db, log);
+cron.start();
 
 /**
  * Handle SIGTERM for docker

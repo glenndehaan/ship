@@ -7,6 +7,7 @@ const crypto = require('crypto');
 /**
  * Import own modules
  */
+const db = require('../modules/database');
 const docker = require('../modules/docker');
 const time = require('../modules/time');
 
@@ -29,10 +30,9 @@ const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
  * Returns the base page variables
  *
  * @param req
- * @param db
  * @return {{}}
  */
-module.exports = async (req, db) => {
+module.exports = async (req) => {
     return {
         getTimeAgo: time,
         info: typeof req.query.message === 'string' && req.query.message !== '',

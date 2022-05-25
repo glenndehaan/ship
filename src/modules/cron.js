@@ -4,6 +4,12 @@
 const {CronJob} = require('cron');
 
 /**
+ * Import own modules
+ */
+const log = require('./logger');
+const db = require('./database');
+
+/**
  * Define global variables
  */
 const recordsToKeep = 100;
@@ -15,11 +21,8 @@ const crons = [];
 module.exports = {
     /**
      * Starts all crons
-     *
-     * @param db
-     * @param log
      */
-    start: (db, log) => {
+    start: () => {
         log.info('[CRON] Enabled!');
         log.info(`[CRON] Cleaning up database at 01:00:00, keeping the last ${recordsToKeep} record(s)!`);
 
