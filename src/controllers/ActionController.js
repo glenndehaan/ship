@@ -74,7 +74,7 @@ module.exports = (app) => {
                 email(title, message);
             }
 
-            res.redirect(encodeURI(`/?error=Unable to update service during lockout days/hours!`));
+            res.redirect(encodeURI(`/service/${req.body.service_name}?error=Unable to update service during lockout days/hours!`));
             return;
         }
 
@@ -144,7 +144,7 @@ module.exports = (app) => {
         }
 
         await docker.updateService(req.body.service_name, req.body.service_image, req.body.service_new_image_version);
-        res.redirect(encodeURI(`/?message=Successfully updated the ${req.body.service_name} service!`));
+        res.redirect(encodeURI(`/service/${req.body.service_name}?message=Successfully updated the ${req.body.service_name} service!`));
     });
 
     /**
@@ -199,7 +199,7 @@ module.exports = (app) => {
                 email(title, message);
             }
 
-            res.redirect(encodeURI(`/?error=Unable to force re-deploy service during lockout days/hours!`));
+            res.redirect(encodeURI(`/service/${req.body.service_name}?error=Unable to force re-deploy service during lockout days/hours!`));
             return;
         }
 
@@ -251,7 +251,7 @@ module.exports = (app) => {
         }
 
         await docker.updateServiceForce(req.body.service_name);
-        res.redirect(encodeURI(`/?message=Successfully force updated the ${req.body.service_name} service!`));
+        res.redirect(encodeURI(`/service/${req.body.service_name}?message=Successfully force updated the ${req.body.service_name} service!`));
     });
 
     /**
@@ -306,7 +306,7 @@ module.exports = (app) => {
                 email(title, message);
             }
 
-            res.redirect(encodeURI(`/?error=Unable to scale service during lockout days/hours!`));
+            res.redirect(encodeURI(`/service/${req.body.service_name}?error=Unable to scale service during lockout days/hours!`));
             return;
         }
 
@@ -367,6 +367,6 @@ module.exports = (app) => {
         }
 
         await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
-        res.redirect(encodeURI(`/?message=Successfully scaled the ${req.body.service_name} service!`));
+        res.redirect(encodeURI(`/service/${req.body.service_name}?message=Successfully scaled the ${req.body.service_name} service!`));
     });
 }

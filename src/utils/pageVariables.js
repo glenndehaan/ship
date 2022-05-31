@@ -64,25 +64,10 @@ module.exports = async (req) => {
         edit_service: {},
         edit_service_name: null,
         edit_service_image_tags: [],
-        logs: false,
-        logs_type: '',
-        logs_data: {
-            service: {
-                self: {},
-                logs: ''
-            },
-            task: {
-                self: {},
-                logs: ''
-            }
-        },
         force_update: false,
         force_update_service: {},
         scale: false,
         max_scale: max_scale,
-        scale_service: {},
-        activity: false,
-        activity_service: '',
-        activity_logs: []
+        scale_service: {}
     };
 }

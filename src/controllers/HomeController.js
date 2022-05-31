@@ -13,7 +13,7 @@ module.exports = (app) => {
      * GET / - Homepage
      */
     app.get('/', async (req, res) => {
-        res.render(req.cookies.ship_experimental_ui ? 'home_new' : 'home', {
+        res.render('home', {
             ...await pageVariables(req),
             page_title: 'Service Overview',
             allow_overflow: true

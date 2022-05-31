@@ -8,6 +8,7 @@ const AnsiToHtml = require('ansi-to-html');
  */
 const db = require('../modules/database');
 const docker = require('../modules/docker');
+const registry = require('../modules/registry');
 const demux = require('../modules/demux');
 
 /**
@@ -145,5 +146,91 @@ module.exports = (app) => {
 
             return `[${new Date(item.time).toLocaleTimeString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false })}] ${item.username}: ${message}`;
         }).join('\n'));
+    });
+
+    /**
+     * GET /service/:service/update - Update Service Drawer
+     */
+    app.get('/service/:service/update', async (req, res) => {
+        const service = await docker.getService(req.params.service);
+
+        if(typeof service.Spec === "undefined") {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
+        res.render('service', {
+            ...await pageVariables(req),
+            page_title: `Edit Service: ${req.params.service}`,
+            service,
+            service_logs: db.getData('/logs').filter((item) => {
+                return item.service === req.params.service;
+            }),
+            traefik_url: regex.getTraefikUrlFromLabels(service.Spec.Labels),
+            edit: true,
+            edit_service: service,
+            edit_service_name: req.params.service,
+            edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0])
+        });
+    });
+
+    /**
+     * GET /service/:service/force_update - Force Update Service Drawer
+     */
+    app.get('/service/:service/force_update', async (req, res) => {
+        const service = await docker.getService(req.params.service);
+
+        if(typeof service.Spec === "undefined") {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
+        res.render('service', {
+            ...await pageVariables(req),
+            page_title: `Force Update Service: ${req.params.service}`,
+            service,
+            service_logs: db.getData('/logs').filter((item) => {
+                return item.service === req.params.service;
+            }),
+            traefik_url: regex.getTraefikUrlFromLabels(service.Spec.Labels),
+            force_update: true,
+            force_update_service: service
+        });
+    });
+
+    /**
+     * GET /service/:service/scale - Scale Service Drawer
+     */
+    app.get('/service/:service/scale', async (req, res) => {
+        const service = await docker.getService(req.params.service);
+
+        if(typeof service.Spec === "undefined") {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
+        res.render('service', {
+            ...await pageVariables(req),
+            page_title: `Scale Service: ${req.params.service}`,
+            service,
+            service_logs: db.getData('/logs').filter((item) => {
+                return item.service === req.params.service;
+            }),
+            traefik_url: regex.getTraefikUrlFromLabels(service.Spec.Labels),
+            scale: true,
+            scale_service: service
+        });
     });
 }

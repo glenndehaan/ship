@@ -3,14 +3,12 @@
  */
 const express = require('express');
 const multer = require('multer');
-const cookieParser = require('cookie-parser');
 
 /**
  * Import own modules
  */
 const log = require('./modules/logger');
 const docker = require('./modules/docker');
-const registry = require('./modules/registry');
 const cron = require('./modules/cron');
 const pageVariables = require('./utils/pageVariables');
 
@@ -32,7 +30,6 @@ const app = express();
 /**
  * Define global variables
  */
-const max_scale = process.env.MAX_SCALE || '20';
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 
@@ -51,11 +48,6 @@ app.set('views', `${__dirname}/template`);
  * Enable multer
  */
 app.use(multer().none());
-
-/**
- * Enable cookie parser
- */
-app.use(cookieParser());
 
 /**
  * Request logger
@@ -83,79 +75,6 @@ HomeController(app);
 ServiceController(app);
 TaskController(app);
 ActionController(app);
-
-app.get('/update/:service', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    res.render('home', {
-        ...await pageVariables(req),
-        page_title: `Edit Service: ${req.params.service}`,
-        edit: true,
-        edit_service: service,
-        edit_service_name: req.params.service,
-        edit_service_image_tags: await registry.getImageTags(service.Spec.TaskTemplate.ContainerSpec.Image.split(':')[0])
-    });
-});
-
-app.get('/force_update/:service', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    res.render('home', {
-        ...await pageVariables(req),
-        page_title: `Force Update Service: ${req.params.service}`,
-        force_update: true,
-        force_update_service: service
-    });
-});
-
-app.get('/scale/:service', async (req, res) => {
-    const service = await docker.getService(req.params.service);
-
-    if(typeof service.Spec === "undefined") {
-        res.status(404);
-        res.render('404', {
-            ...await pageVariables(req),
-            page_title: `Not Found`
-        });
-        return;
-    }
-
-    res.render('home', {
-        ...await pageVariables(req),
-        page_title: `Scale Service: ${req.params.service}`,
-        scale: true,
-        max_scale,
-        scale_service: service
-    });
-});
-
-app.get('/enable_experimental_ui', (req, res) => {
-    res.cookie('ship_experimental_ui', true, { httpOnly: true });
-    res.redirect('/');
-});
-
-app.get('/disable_experimental_ui', (req, res) => {
-    res.clearCookie('ship_experimental_ui', { httpOnly: true });
-    res.redirect('/');
-});
 
 /**
  * Setup default 404 message

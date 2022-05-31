@@ -12,7 +12,7 @@
                                         Force Update Service
                                     </h2>
                                     <div class="ml-3 flex h-7 items-center">
-                                        <a href="/" class="rounded-md bg-red-700 text-red-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
+                                        <a href="/service/<%= service.Spec.Name %>" class="rounded-md bg-red-700 text-red-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
                                             <span class="sr-only">Close panel</span>
                                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div class="flex flex-shrink-0 justify-end px-4 py-4">
-                            <a href="/" class="rounded-md border border-gray-300 bg-white dark:bg-gray-300 py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            <a href="/service/<%= service.Spec.Name %>" class="rounded-md border border-gray-300 bg-white dark:bg-gray-300 py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                                 Cancel
                             </a>
                             <button type="submit" class="ml-4 inline-flex justify-center rounded-md border border-transparent bg-red-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-800 focus:ring-offset-2">
