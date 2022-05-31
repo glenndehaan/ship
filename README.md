@@ -2,7 +2,7 @@
 
 [![Image Size](https://img.shields.io/docker/image-size/glenndehaan/ship)](https://hub.docker.com/r/glenndehaan/ship)
 
-![Ship Overview Page](https://user-images.githubusercontent.com/7496187/168587952-73eb2a28-9c53-4015-8cf2-fa061594122a.png)
+![Ship Overview Page](https://user-images.githubusercontent.com/7496187/171136844-261914b2-cdc8-4055-b555-1568345c10eb.png)
 
 ## What is it?
 Ship is a simple stack/service manager for Docker Swarm.
@@ -108,17 +108,23 @@ Below are some options that get send with different events:
 
 ## Screenshots
 
-### Service Logs/Task Logs
-![Service Logs](https://user-images.githubusercontent.com/7496187/168587945-c80d363a-ae16-4f7f-9199-c3a33ac64d0f.png)
+### Service Detail Page
+![Service Detail Page](https://user-images.githubusercontent.com/7496187/171136837-19a37f5a-ec6c-4a8c-a060-5acdeee335b6.png)
+
+### Service Logs
+![Service Logs](https://user-images.githubusercontent.com/7496187/171138033-ed86fd26-8d61-4c50-a5a9-79edce3af9e1.png)
+
+### Task Detail Page
+![Task Detail Page](https://user-images.githubusercontent.com/7496187/171136833-65cfe6c1-813d-496b-a0a6-a2e750ae3c18.png)
 
 ### Update the service image
-![Update Service](https://user-images.githubusercontent.com/7496187/169503983-d3c89ac7-fb43-446b-b486-069dedcb5627.png)
+![Update Service](https://user-images.githubusercontent.com/7496187/171136830-ebaa6a19-c52e-4e2e-9e75-a7163579c6ca.png)
 
 ### Force Update/Re-deploy Service
-![Force Update Service](https://user-images.githubusercontent.com/7496187/169503979-78d86394-1e05-48b8-8f33-65daed1fe58d.png)
+![Force Update Service](https://user-images.githubusercontent.com/7496187/171136828-e49f8088-c84f-48db-b8c8-0d1ed390b1eb.png)
 
 ### Scale Service
-![Scale Service](https://user-images.githubusercontent.com/7496187/169503975-13ba07db-a130-42f3-a1da-51cc1625490a.png)
+![Scale Service](https://user-images.githubusercontent.com/7496187/171136821-c08540c2-d025-40a4-a39f-f67cbb86d5c0.png)
 
 ### Email Notification
 ![Email Notification](https://user-images.githubusercontent.com/7496187/166509782-187f44da-8dde-4dfd-8d54-53f4b0b0f049.png)
