@@ -94,7 +94,7 @@ Below you will find an example payload of what you can expect:
 Below are some options that get send with different events:
 ```text
 {
-  "type": "attempt_update | update | attempt_force_update | force_update | attempt_scale | scale",
+  "type": "attempt_update | update | attempt_force_update | force_update | attempt_scale | scale | attempt_restore | restore",
   "username": "Anonymous | Authenticated User Email/Username",
   "service": "stack_service",
   "params": {
