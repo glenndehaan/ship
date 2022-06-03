@@ -70,6 +70,8 @@ module.exports = async (req) => {
         force_update_service: {},
         scale: false,
         max_scale: max_scale,
-        scale_service: {}
+        scale_service: {},
+        restore: false,
+        restore_service: {}
     };
 }

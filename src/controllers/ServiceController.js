@@ -233,4 +233,32 @@ module.exports = (app) => {
             scale_service: service
         });
     });
+
+    /**
+     * GET /service/:service/restore - Restore Service Drawer
+     */
+    app.get('/service/:service/restore', async (req, res) => {
+        const service = await docker.getService(req.params.service);
+
+        if(typeof service.Spec === "undefined") {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
+        res.render('service', {
+            ...await pageVariables(req),
+            page_title: `Restore Service: ${req.params.service}`,
+            service,
+            service_logs: db.getData('/logs').filter((item) => {
+                return item.service === req.params.service;
+            }),
+            traefik_url: regex.getTraefikUrlFromLabels(service.Spec.Labels),
+            restore: true,
+            restore_service: service
+        });
+    });
 }

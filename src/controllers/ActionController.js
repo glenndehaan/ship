@@ -369,4 +369,111 @@ module.exports = (app) => {
         await docker.updateServiceScale(req.body.service_name, req.body.service_scale);
         res.redirect(encodeURI(`/service/${req.body.service_name}?message=Successfully scaled the ${req.body.service_name} service!`));
     });
+
+    /**
+     * POST /restore - Service Restore
+     */
+    app.post('/restore', async (req, res) => {
+        if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
+            db.push('/logs[]', {
+                type: 'attempt_restore',
+                username: auth_header ? req.get(auth_header) : 'Anonymous',
+                service: req.body.service_name,
+                params: {},
+                time: new Date().getTime()
+            });
+
+            if(custom_webhook) {
+                const webhooks = custom_webhook.split(',');
+                for(let item = 0; item < webhooks.length; item++) {
+                    webhook(webhooks[item], {
+                        type: 'attempt_restore',
+                        username: auth_header ? req.get(auth_header) : 'Anonymous',
+                        service: req.body.service_name,
+                        params: {},
+                        time: new Date().getTime()
+                    });
+                }
+            }
+
+            if(slack_webhook) {
+                slack({
+                    fallback: `Attempt to restore the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                    text: `Attempt to restore the ${req.body.service_name} service during lockout days/hours\n\n---`,
+                    color: 'danger',
+                    fields: [
+                        {
+                            title: 'User',
+                            value: auth_header ? req.get(auth_header) : 'Anonymous',
+                            short: false
+                        },
+                        {
+                            title: 'Service',
+                            value: req.body.service_name,
+                            short: false
+                        }
+                    ]
+                });
+            }
+
+            if(email_smtp_host) {
+                const title = `Ship: Attempt to restore the ${req.body.service_name} service during lockout days/hours`;
+                const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Attempt to restore the ${req.body.service_name} service during lockout days/hours</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
+                email(title, message);
+            }
+
+            res.redirect(encodeURI(`/service/${req.body.service_name}?error=Unable to restore service during lockout days/hours!`));
+            return;
+        }
+
+        db.push('/logs[]', {
+            type: 'restore',
+            username: auth_header ? req.get(auth_header) : 'Anonymous',
+            service: req.body.service_name,
+            params: {},
+            time: new Date().getTime()
+        });
+
+        if(custom_webhook) {
+            const webhooks = custom_webhook.split(',');
+            for(let item = 0; item < webhooks.length; item++) {
+                webhook(webhooks[item], {
+                    type: 'restore',
+                    username: auth_header ? req.get(auth_header) : 'Anonymous',
+                    service: req.body.service_name,
+                    params: {},
+                    time: new Date().getTime()
+                });
+            }
+        }
+
+        if(slack_webhook) {
+            slack({
+                fallback: `Restored the ${req.body.service_name} service\n\n---`,
+                text: `Restored the ${req.body.service_name} service\n\n---`,
+                color: 'good',
+                fields: [
+                    {
+                        title: 'User',
+                        value: auth_header ? req.get(auth_header) : 'Anonymous',
+                        short: false
+                    },
+                    {
+                        title: 'Service',
+                        value: req.body.service_name,
+                        short: false
+                    }
+                ]
+            });
+        }
+
+        if(email_smtp_host) {
+            const title = `Ship: Restored the ${req.body.service_name} service`;
+            const message = `<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">Ship: Restored the ${req.body.service_name} service</p><br/><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>User:</b> ${auth_header ? req.get(auth_header) : 'Anonymous'}</p><p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 5px;"><b>Service:</b> ${req.body.service_name}</p>`;
+            email(title, message);
+        }
+
+        await docker.updateServiceForce(req.body.service_name);
+        res.redirect(encodeURI(`/service/${req.body.service_name}?message=Successfully restored the ${req.body.service_name} service!`));
+    });
 }
