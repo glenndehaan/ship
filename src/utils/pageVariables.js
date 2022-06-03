@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const db = require('../modules/database');
 const docker = require('../modules/docker');
 const time = require('../modules/time');
+const bytes = require('../modules/bytes');
 
 /**
  * Define global variables
@@ -35,6 +36,7 @@ const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
 module.exports = async (req) => {
     return {
         getTimeAgo: time,
+        getBytes: bytes,
         info: typeof req.query.message === 'string' && req.query.message !== '',
         info_text: req.query.message || '',
         error: typeof req.query.error === 'string' && req.query.error !== '',
