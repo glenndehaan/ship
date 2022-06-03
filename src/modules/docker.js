@@ -46,6 +46,16 @@ const mockData = {
                     'TEST123=1'
                 ],
                 Image: 'example_website_2022:v0.1.2.2370295269'
+            },
+            Resources: {
+                Limits: {
+                    MemoryBytes: 367001600,
+                    NanoCPUs: 1000000000
+                },
+                Reservations: {
+                    MemoryBytes: 104857600,
+                    NanoCPUs: 100000000
+                }
             }
         },
         Mode: {

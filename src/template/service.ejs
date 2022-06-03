@@ -225,6 +225,46 @@
                                                         <%= new Date(service.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
                                                     </dd>
                                                 </div>
+                                                <% if(service.Spec.TaskTemplate.Resources.Limits.NanoCPUs) { %>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            CPU Limit
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= (service.Spec.TaskTemplate.Resources.Limits.NanoCPUs * 0.000000001) %>
+                                                        </dd>
+                                                    </div>
+                                                <% } %>
+                                                <% if(service.Spec.TaskTemplate.Resources.Limits.MemoryBytes) { %>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Memory Limit
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= service.Spec.TaskTemplate.Resources.Limits.MemoryBytes %>
+                                                        </dd>
+                                                    </div>
+                                                <% } %>
+                                                <% if(service.Spec.TaskTemplate.Resources.Reservations.NanoCPUs) { %>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            CPU Reservation
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= (service.Spec.TaskTemplate.Resources.Reservations.NanoCPUs * 0.000000001) %>
+                                                        </dd>
+                                                    </div>
+                                                <% } %>
+                                                <% if(service.Spec.TaskTemplate.Resources.Reservations.MemoryBytes) { %>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Memory Reservation
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= service.Spec.TaskTemplate.Resources.Reservations.MemoryBytes %>
+                                                        </dd>
+                                                    </div>
+                                                <% } %>
                                                 <div class="sm:col-span-2">
                                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">Labels</dt>
                                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
