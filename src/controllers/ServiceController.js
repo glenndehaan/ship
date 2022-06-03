@@ -134,6 +134,9 @@ module.exports = (app) => {
             if(item.type === 'attempt_scale') {
                 message = 'Attempted to scale the service during lockout days/hours';
             }
+            if(item.type === 'attempt_restore') {
+                message = 'Attempted to restore the service during lockout days/hours';
+            }
             if(item.type === 'update') {
                 message = `Updated the service image version from ${item.params.old_image_version.split('@')[0]} to ${item.params.new_image_version.split('@')[0]}`;
             }
@@ -142,6 +145,9 @@ module.exports = (app) => {
             }
             if(item.type === 'scale') {
                 message = `Scaled the service to ${item.params.scale} container(s)`;
+            }
+            if(item.type === 'restore') {
+                message = 'Restored the service';
             }
 
             return `[${new Date(item.time).toLocaleTimeString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false })}] ${item.username}: ${message}`;
