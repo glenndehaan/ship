@@ -291,6 +291,37 @@ const dockerModule = {
     },
 
     /**
+     * Restore a service
+     *
+     * @param name
+     * @returns {Promise<unknown>}
+     */
+    restoreService: (name) => {
+        return new Promise(async (resolve) => {
+            const service = await dockerModule.getService(name);
+            console.log('service', service);
+
+            if(typeof service.Spec === "undefined") {
+                resolve();
+                return;
+            }
+
+            const opts = service.Spec;
+            opts.version = parseInt(service.Version.Index);
+            opts.rollback = 'previous';
+
+            console.log('OLD Opts', service.Spec);
+            console.log('NEW Opts', opts);
+
+            const result = await docker.getService(service.ID).update({}, opts);
+
+            console.log('result', result);
+
+            resolve();
+        });
+    },
+
+    /**
      * Get the last logs from a service
      *
      * @param name

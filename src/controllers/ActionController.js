@@ -473,7 +473,7 @@ module.exports = (app) => {
             email(title, message);
         }
 
-        await docker.updateServiceForce(req.body.service_name);
+        await docker.restoreService(req.body.service_name);
         res.redirect(encodeURI(`/service/${req.body.service_name}?message=Successfully restored the ${req.body.service_name} service!`));
     });
 }
