@@ -115,21 +115,35 @@
                     <% } %>
 
                     <main>
-                        <section>
-                            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                                <div class="px-4 py-5 sm:px-6">
-                                    <h2 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Logs</h2>
-                                </div>
-                                <div class="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
-                                    <p class="text-sm text-gray-700 dark:text-gray-400">
-                                        <span>
-                                            Last 250 logged lines from the task:
-                                        </span>
-                                        <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs p-4" style="min-height: calc(100vh - 650px);"><%- task_logs %></pre>
-                                    </p>
-                                </div>
+                        <div class="mx-auto grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+                            <div class="space-y-6 lg:col-start-1 lg:col-span-2">
+                                <section>
+                                    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                                        <div class="px-4 py-5 sm:px-6">
+                                            <h2 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Logs</h2>
+                                        </div>
+                                        <div class="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+                                            <p class="text-sm text-gray-700 dark:text-gray-400">
+                                                <span>
+                                                    Last 250 logged lines from the task:
+                                                </span>
+                                                <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs p-4" style="min-height: calc(100vh - 650px);"><%- task_logs %></pre>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
-                        </section>
+                            <div class="space-y-6 lg:col-start-3 lg:col-span-1">
+                                <section>
+                                    <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Shortcuts</h2>
+                                        <div class="mt-6 flex flex-col justify-stretch space-y-2">
+
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
                     </main>
 
                     <footer class="flex-shrink-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
