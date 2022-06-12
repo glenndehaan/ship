@@ -109,13 +109,13 @@ Below are some options that get send with different events:
 ## Screenshots
 
 ### Service Detail Page
-![Service Detail Page](https://user-images.githubusercontent.com/7496187/171136837-19a37f5a-ec6c-4a8c-a060-5acdeee335b6.png)
+![Service Detail Page](https://user-images.githubusercontent.com/7496187/173221985-9ad74497-61c3-4b61-bfe0-90f74c3e689e.png)
 
 ### Service Logs
 ![Service Logs](https://user-images.githubusercontent.com/7496187/171138033-ed86fd26-8d61-4c50-a5a9-79edce3af9e1.png)
 
 ### Task Detail Page
-![Task Detail Page](https://user-images.githubusercontent.com/7496187/171136833-65cfe6c1-813d-496b-a0a6-a2e750ae3c18.png)
+![Task Detail Page](https://user-images.githubusercontent.com/7496187/173221983-d5d38486-2bc4-486f-823d-45de12bdfce2.png)
 
 ### Update the service image
 ![Update Service](https://user-images.githubusercontent.com/7496187/171136830-ebaa6a19-c52e-4e2e-9e75-a7163579c6ca.png)
@@ -125,6 +125,9 @@ Below are some options that get send with different events:
 
 ### Scale Service
 ![Scale Service](https://user-images.githubusercontent.com/7496187/171136821-c08540c2-d025-40a4-a39f-f67cbb86d5c0.png)
+
+### Restore Service
+![Restore Service](https://user-images.githubusercontent.com/7496187/173221984-de0664ae-e43f-4e60-a460-8144c569877d.png)
 
 ### Email Notification
 ![Email Notification](https://user-images.githubusercontent.com/7496187/166509782-187f44da-8dde-4dfd-8d54-53f4b0b0f049.png)
