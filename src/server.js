@@ -96,6 +96,22 @@ app.disable('x-powered-by');
  * Start listening on port
  */
 const server = app.listen(3000, '0.0.0.0', async () => {
+    log.info('                              ');
+    log.info('            &&&&&&&           ');
+    log.info('                              ');
+    log.info('       &&&&&&&&&&&&&&&&&      ');
+    log.info('       &&&    &&&    &&&      ');
+    log.info('        &&&&&&&&&&&&&&&       ');
+    log.info('    &&&&&&&&&&&&&&&&&&&&&&&   ');
+    log.info('     &&&&&&&&&&&&&&&&&&&&&    ');
+    log.info('      &&&&&&&&&&&&&&&&&&&     ');
+    log.info('       &&&&&&&&&&&&&&&&&      ');
+    log.info('                              ');
+    log.info('             Ship             ');
+    log.info('       By: Glenn de Haan      ');
+    log.info('https://github.com/glenndehaan/ship');
+    log.info('');
+
     log.info(`[WEB] App is running on: 0.0.0.0:3000`);
 
     const dockerInfo = await docker.info();

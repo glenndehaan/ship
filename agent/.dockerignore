@@ -1,0 +1,21 @@
+# PhpStorm
+.idea
+
+# General files
+*~
+*.DS_STORE
+
+# Dependencies
+node_modules
+
+# Build output
+src/public/dist
+
+# Database
+ship.json
+
+# Project Files
+.editorconfig
+docker-compose.yml
+LICENCE
+README.md
