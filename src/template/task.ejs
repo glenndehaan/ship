@@ -134,6 +134,65 @@
                                 </section>
                             </div>
                             <div class="space-y-6 lg:col-start-3 lg:col-span-1">
+                                <% if(typeof agent_data[task.Status.ContainerStatus.ContainerID] === 'object') { %>
+                                    <section>
+                                        <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Usage</h2>
+                                            <div class="mt-6 flex flex-col justify-stretch space-y-2">
+                                                <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                                    <div class="sm:col-span-2">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            CPU Usage
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].precpu_stats.cpu_usage.total_usage) / (agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.system_cpu_usage - agent_data[task.Status.ContainerStatus.ContainerID].precpu_stats.system_cpu_usage)) * agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.online_cpus * 100).toFixed(1) %>%
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            CPU Delta
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].precpu_stats.cpu_usage.total_usage %>
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Available CPU's
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.online_cpus %>
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-2">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Memory Usage
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.stats.cache) / agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.limit) * 100).toFixed(1) %>%
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Used Memory
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.stats.cache) %>
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Available Memory
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.limit) %>
+                                                        </dd>
+                                                    </div>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </section>
+                                <% } %>
                                 <section>
                                     <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Information</h2>

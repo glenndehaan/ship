@@ -8,11 +8,13 @@ const AnsiToHtml = require('ansi-to-html');
  */
 const docker = require('../modules/docker');
 const demux = require('../modules/demux');
+const memory = require('../modules/memory');
 
 /**
  * Import own utils
  */
 const pageVariables = require('../utils/pageVariables');
+const object = require('../utils/object');
 
 /**
  * Create an ansi converter
@@ -60,7 +62,8 @@ module.exports = (app) => {
             allow_overflow: true,
             service,
             task,
-            task_logs
+            task_logs,
+            agent_data: object.convertMemoryToTasksObject(memory.agent)
         });
     });
 
