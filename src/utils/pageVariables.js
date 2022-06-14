@@ -9,6 +9,7 @@ const crypto = require('crypto');
  */
 const db = require('../modules/database');
 const docker = require('../modules/docker');
+const memory = require('../modules/memory');
 const time = require('../modules/time');
 const bytes = require('../modules/bytes');
 
@@ -54,6 +55,7 @@ module.exports = async (req) => {
         logs_activity: db.getData('/logs'),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
+        agent_data: memory.agent,
         lockout_active: (lockout_days && lockout_days.split(',').includes(`${new Date().getDay()}`)) || (lockout_after_hour && new Date().getHours() >= parseInt(lockout_after_hour)),
         lockout_rule: lockout_service_regex,
         allow_overflow: false,
