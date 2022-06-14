@@ -68,7 +68,7 @@ services:
       # LOCKOUT_EXCEPTIONS: 'user@example.com' # Specifies usernames who can bypass the lockout rules
       # LOCKOUT_SERVICE_REGEX: '.*-live' # Specifies which services are affected by the lockout rules
       # LOCKOUT_DAYS: '0,5,6' # Disallow specific days: 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
-      # LOCKOUT_AFTER_HOUR: '' # Disallow modifications after a specified hour
+      # LOCKOUT_AFTER_HOUR: '' # Disallow modifications after a specified hour, note: we are using the UTC timezone
       # Can be enabled to include debug data as JS window parameters
       # DEBUG_DOCKER: 'true'
     volumes:
