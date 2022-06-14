@@ -169,7 +169,7 @@
                                                             Memory Usage
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.cache) / agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.limit) * 100).toFixed(1) %>%
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.inactive_file) / agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.limit) * 100).toFixed(1) %>%
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
@@ -177,7 +177,7 @@
                                                             Used Memory
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.cache) %>
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.inactive_file) %>
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
