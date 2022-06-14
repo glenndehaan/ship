@@ -19,6 +19,7 @@ const HomeController = require('./controllers/HomeController');
 const ServiceController = require('./controllers/ServiceController');
 const TaskController = require('./controllers/TaskController');
 const ActionController = require('./controllers/ActionController');
+const AgentController = require('./controllers/AgentController');
 
 /**
  * Create express app
@@ -75,6 +76,7 @@ HomeController(app);
 ServiceController(app);
 TaskController(app);
 ActionController(app);
+AgentController(app);
 
 /**
  * Setup default 404 message

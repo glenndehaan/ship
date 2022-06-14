@@ -145,7 +145,7 @@
                                                             CPU Usage
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].precpu_stats.cpu_usage.total_usage) / (agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.system_cpu_usage - agent_data[task.Status.ContainerStatus.ContainerID].precpu_stats.system_cpu_usage)) * agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.online_cpus * 100).toFixed(1) %>%
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.cpu_usage.total_usage) / (agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.system_cpu_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.system_cpu_usage)) * agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.online_cpus * 100).toFixed(1) %>%
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
@@ -153,7 +153,7 @@
                                                             CPU Delta
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].precpu_stats.cpu_usage.total_usage %>
+                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.cpu_usage.total_usage %>
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
@@ -161,7 +161,7 @@
                                                             Available CPU's
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].cpu_stats.online_cpus %>
+                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.online_cpus %>
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-2">
@@ -169,7 +169,7 @@
                                                             Memory Usage
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.stats.cache) / agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.limit) * 100).toFixed(1) %>%
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.cache) / agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.limit) * 100).toFixed(1) %>%
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
@@ -177,7 +177,7 @@
                                                             Used Memory
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.stats.cache) %>
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.cache) %>
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
@@ -185,7 +185,7 @@
                                                             Available Memory
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].memory_stats.limit) %>
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.limit) %>
                                                         </dd>
                                                     </div>
                                                 </dl>
