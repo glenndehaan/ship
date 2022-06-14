@@ -70,7 +70,6 @@ const dockerModule = {
         return new Promise(async (resolve) => {
             const processes = await docker.getContainer(id).top().catch((e) => {
                 console.error(e);
-                process.exit(1);
             });
 
             resolve(processes || {});

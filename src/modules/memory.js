@@ -102,7 +102,7 @@ const mockData = {
  *
  * @type {{}}
  */
-const data = {};
+const storage = {};
 
 /**
  * Get data from the memory storage
@@ -115,7 +115,7 @@ const get = (key) => {
         return mockData[key];
     }
 
-    return data[key] || {};
+    return storage[key] || {};
 }
 
 /**
@@ -126,11 +126,11 @@ const get = (key) => {
  * @param data
  */
 const set = (key, id, data) => {
-    if(typeof data[key] === 'undefined') {
-        data[key] = {};
+    if(typeof storage[key] === 'undefined') {
+        storage[key] = {};
     }
 
-    data[key][id] = data;
+    storage[key][id] = data;
 }
 
 /**
