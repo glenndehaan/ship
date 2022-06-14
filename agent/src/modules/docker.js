@@ -44,9 +44,32 @@ const dockerModule = {
         });
     },
 
+    /**
+     * Get container resource statistics
+     *
+     * @param id
+     * @return {Promise<unknown>}
+     */
     getContainerResources: (id) => {
         return new Promise(async (resolve) => {
             const containers = await docker.getContainer(id).stats({stream: false, 'one-shot': true}).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            resolve(containers);
+        });
+    },
+
+    /**
+     * Get active processes from a container
+     *
+     * @param id
+     * @return {Promise<unknown>}
+     */
+    getContainerProcesses: (id) => {
+        return new Promise(async (resolve) => {
+            const containers = await docker.getContainer(id).top().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });

@@ -5,6 +5,11 @@ const log = require('./modules/logger');
 const docker = require('./modules/docker');
 
 /**
+ * Global variables
+ */
+let updater = null;
+
+/**
  * Main application routine
  */
 const run = async () => {
@@ -27,13 +32,36 @@ const run = async () => {
     const dockerInfo = await docker.info();
     log.info(`[DOCKER] Connected! ID: ${dockerInfo.ID}, Hostname: ${dockerInfo.Name}`);
 
-    const containers = await docker.getContainers();
-    console.log('containers', containers);
+    update();
+    updater = setInterval(update, 10 * 1000);
+}
 
-    containers.forEach(async (container) => {
-        const stats = await docker.getContainerResources(container.Id);
-        console.log('stats', stats);
-    });
+/**
+ * Update cycle
+ */
+const update = async () => {
+    const nextUpdate = new Date().getTime() + (10 * 1000);
+    log.info('');
+    log.info(`[UPDATE] Started at: ${new Date()}`);
+
+    const data = {};
+    const containers = await docker.getContainers();
+
+    log.info(`[UPDATE] Found ${containers.length} container(s)`);
+
+    for(let item = 0; item < containers.length; item++) {
+        const stats = await docker.getContainerResources(containers[item].Id);
+        const processes = await docker.getContainerProcesses(containers[item].Id);
+
+        data[containers[item].Id] = {};
+        data[containers[item].Id].info = containers[item];
+        data[containers[item].Id].stats = stats;
+        data[containers[item].Id].processes = processes;
+    }
+
+    log.info(`[UPDATE] Completed at: ${new Date()}`);
+    log.info(`[UPDATE] Next update at: ${new Date(nextUpdate)}`);
+    log.info('');
 }
 
 /**
