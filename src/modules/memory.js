@@ -126,6 +126,10 @@ const get = (key) => {
  * @param data
  */
 const set = (key, id, data) => {
+    if(typeof data[key] === 'undefined') {
+        data[key] = {};
+    }
+
     data[key][id] = data;
 }
 

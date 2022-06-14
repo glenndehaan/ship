@@ -52,12 +52,11 @@ const dockerModule = {
      */
     getContainerResources: (id) => {
         return new Promise(async (resolve) => {
-            const containers = await docker.getContainer(id).stats({stream: false, 'one-shot': true}).catch((e) => {
+            const resources = await docker.getContainer(id).stats({stream: false, 'one-shot': true}).catch((e) => {
                 console.error(e);
-                process.exit(1);
             });
 
-            resolve(containers);
+            resolve(resources || {});
         });
     },
 
@@ -69,12 +68,12 @@ const dockerModule = {
      */
     getContainerProcesses: (id) => {
         return new Promise(async (resolve) => {
-            const containers = await docker.getContainer(id).top().catch((e) => {
+            const processes = await docker.getContainer(id).top().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            resolve(containers);
+            resolve(processes || {});
         });
     }
 };
