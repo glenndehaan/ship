@@ -51,6 +51,12 @@ app.set('views', `${__dirname}/template`);
 app.use(multer().none());
 
 /**
+ * Enable additional body parsers
+ */
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+
+/**
  * Request logger
  */
 app.use((req, res, next) => {
