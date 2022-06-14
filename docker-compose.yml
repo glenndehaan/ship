@@ -6,7 +6,7 @@ services:
       - '3000:3000'
     environment:
       # Can be used to hide specific services from the ship overview page
-      HIDDEN_SERVICES: 'ship_ship,traefik_traefik,portainer_agent,portainer_portainer,traefik_socket-proxy'
+      HIDDEN_SERVICES: 'ship_ship,ship_ship-agent,traefik_traefik,portainer_agent,portainer_portainer,traefik_socket-proxy'
       # Defines the maximum allowed scale. This means you can't scale a service with more containers then this amount
       MAX_SCALE: '20'
       # Can be used to instruct Ship to use an SSO providers username header
