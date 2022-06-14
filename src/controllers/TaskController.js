@@ -63,7 +63,7 @@ module.exports = (app) => {
             service,
             task,
             task_logs,
-            agent_data: object.convertMemoryToTasksObject(memory.agent)
+            agent_data: object.convertMemoryToTasksObject(memory.get('agent'))
         });
     });
 

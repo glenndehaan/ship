@@ -15,7 +15,7 @@ module.exports = (app) => {
      */
     app.post('/agent/:id', async (req, res) => {
         const agentId = req.params.id;
-        memory.agent[agentId] = req.body;
+        memory.set('agent', agentId, req.body)
 
         log.info(`[AGENT] Stored agent data for ID: ${agentId}`);
 
