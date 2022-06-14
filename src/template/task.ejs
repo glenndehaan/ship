@@ -145,7 +145,7 @@
                                                             CPU Usage
                                                         </dt>
                                                         <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
-                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.cpu_usage.total_usage) / (agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.system_cpu_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.system_cpu_usage)) * agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.online_cpus * 100).toFixed(1) %>%
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.cpu_usage.total_usage || 0 - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.cpu_usage.total_usage || 0) / (agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.system_cpu_usage || 0 - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.system_cpu_usage || 0)) * agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.online_cpus || 0 * 100).toFixed(1) %>%
                                                         </dd>
                                                     </div>
                                                     <div class="sm:col-span-1">
