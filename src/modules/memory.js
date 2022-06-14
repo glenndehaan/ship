@@ -115,7 +115,7 @@ const get = (key) => {
         return mockData[key];
     }
 
-    return data[key] || null;
+    return data[key] || {};
 }
 
 /**
