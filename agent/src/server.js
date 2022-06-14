@@ -74,5 +74,6 @@ run();
  */
 process.on('SIGTERM', () => {
     console.log('SIGTERM signal received');
+    clearInterval(updater);
     process.exit(0);
 });
