@@ -35,7 +35,7 @@ const dockerModule = {
      */
     getContainers: () => {
         return new Promise(async (resolve) => {
-            const containers = await docker.listContainers().catch((e) => {
+            const containers = await docker.listContainers({status: ["running"]}).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
