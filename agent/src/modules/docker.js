@@ -52,7 +52,7 @@ const dockerModule = {
      */
     getContainerResources: (id) => {
         return new Promise(async (resolve) => {
-            const resources = await docker.getContainer(id).stats({stream: false, 'one-shot': true}).catch((e) => {
+            const resources = await docker.getContainer(id).stats({stream: false}).catch((e) => {
                 console.error(e);
             });
 
