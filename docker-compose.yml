@@ -31,3 +31,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /opt/ship_data:/data
+  ship-agent:
+    build: agent/.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
