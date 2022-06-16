@@ -199,7 +199,7 @@
                                 <% if(typeof agent_data[task.Status.ContainerStatus.ContainerID] === 'object') { %>
                                     <section>
                                         <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                                            <div class="grid grid-cols-2">
+                                            <div class="grid grid-cols-2 items-center">
                                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Usage</h2>
                                                 <div class="text-right">
                                                     <svg class="mr-1 w-7 h-7 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -263,6 +263,51 @@
                                                         </dd>
                                                     </div>
                                                 </dl>
+                                            </div>
+                                        </div>
+                                    </section>
+                                <% } %>
+                                <% if(typeof agent_data[task.Status.ContainerStatus.ContainerID] === 'object') { %>
+                                    <section>
+                                        <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                            <div class="grid grid-cols-2 items-center">
+                                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Ports</h2>
+                                                <div class="text-right">
+                                                    <svg class="mr-1 w-7 h-7 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                                                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                                                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                                                    </svg>
+                                                    <span class="inline-block align-middle text-xs font-semibold italic">
+                                                    Agent
+                                                </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-6 flex flex-col justify-stretch space-y-2">
+                                                <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
+                                                    <thead class="bg-gray-50 dark:bg-black">
+                                                        <tr>
+                                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 sm:pl-6 lg:pl-8">
+                                                                Port
+                                                            </th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                                                Type
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-200 bg-white dark:bg-gray-900">
+                                                        <% agent_data[task.Status.ContainerStatus.ContainerID].info.Ports.forEach((port) => { %>
+                                                            <tr>
+                                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-gray-100 sm:pl-6 lg:pl-8">
+                                                                    <%= port.PrivatePort %>
+                                                                </td>
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                                    <%= port.Type %>
+                                                                </td>
+                                                            </tr>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </section>
