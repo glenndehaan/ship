@@ -2,7 +2,7 @@
 
 [![Image Size](https://img.shields.io/docker/image-size/glenndehaan/ship)](https://hub.docker.com/r/glenndehaan/ship)
 
-![Ship Overview Page](https://user-images.githubusercontent.com/7496187/171136844-261914b2-cdc8-4055-b555-1568345c10eb.png)
+![Ship Overview Page](https://user-images.githubusercontent.com/7496187/174246485-ed4f3c51-e621-462c-a933-460ab9c871b6.png)
 
 ## What is it?
 Ship is a simple stack/service manager for Docker Swarm.
@@ -115,25 +115,25 @@ Below are some options that get send with different events:
 ## Screenshots
 
 ### Service Detail Page
-![Service Detail Page](https://user-images.githubusercontent.com/7496187/173221985-9ad74497-61c3-4b61-bfe0-90f74c3e689e.png)
+![Service Detail Page](https://user-images.githubusercontent.com/7496187/174246464-3dc60337-8aae-4a3b-8023-4de3dc0c4c1f.png)
 
 ### Service Logs
-![Service Logs](https://user-images.githubusercontent.com/7496187/171138033-ed86fd26-8d61-4c50-a5a9-79edce3af9e1.png)
+![Service Logs](https://user-images.githubusercontent.com/7496187/174246481-eac592ee-977d-4097-9315-7a2c255dba44.png)
 
 ### Task Detail Page
-![Task Detail Page](https://user-images.githubusercontent.com/7496187/173221983-d5d38486-2bc4-486f-823d-45de12bdfce2.png)
+![Task Detail Page](https://user-images.githubusercontent.com/7496187/174246462-aff056ce-80e9-404b-8dbb-9eb34ce076c0.png)
 
 ### Update the service image
-![Update Service](https://user-images.githubusercontent.com/7496187/171136830-ebaa6a19-c52e-4e2e-9e75-a7163579c6ca.png)
+![Update Service](https://user-images.githubusercontent.com/7496187/174246476-201846b8-4d5e-4980-b220-fb70c3ac3d2f.png)
 
 ### Force Update/Re-deploy Service
-![Force Update Service](https://user-images.githubusercontent.com/7496187/171136828-e49f8088-c84f-48db-b8c8-0d1ed390b1eb.png)
+![Force Update Service](https://user-images.githubusercontent.com/7496187/174246472-90461d5a-820d-461d-ad87-41fa867e1eae.png)
 
 ### Scale Service
-![Scale Service](https://user-images.githubusercontent.com/7496187/171136821-c08540c2-d025-40a4-a39f-f67cbb86d5c0.png)
+![Scale Service](https://user-images.githubusercontent.com/7496187/174246469-565396e4-781e-4853-85b7-aa0ef3dc88b0.png)
 
 ### Restore Service
-![Restore Service](https://user-images.githubusercontent.com/7496187/173221984-de0664ae-e43f-4e60-a460-8144c569877d.png)
+![Restore Service](https://user-images.githubusercontent.com/7496187/174246466-179b1a9a-0c97-4727-b4e1-a9a389e7a268.png)
 
 ### Email Notification
 ![Email Notification](https://user-images.githubusercontent.com/7496187/166509782-187f44da-8dde-4dfd-8d54-53f4b0b0f049.png)
