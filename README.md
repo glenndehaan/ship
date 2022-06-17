@@ -2,7 +2,7 @@
 
 [![Image Size](https://img.shields.io/docker/image-size/glenndehaan/ship)](https://hub.docker.com/r/glenndehaan/ship)
 
-![Ship Overview Page](https://user-images.githubusercontent.com/7496187/174246485-ed4f3c51-e621-462c-a933-460ab9c871b6.png)
+![Ship Overview Page](https://user-images.githubusercontent.com/7496187/174260829-6f9e3bfe-bc4f-436f-a88f-61832068eb77.png)
 
 ## What is it?
 Ship is a simple stack/service manager for Docker Swarm.
