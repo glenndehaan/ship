@@ -12,6 +12,9 @@ const fetch = require('node-fetch');
 module.exports = (webhook, payload) => {
     fetch(webhook, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(payload)
     }).catch(() => {});
 }
