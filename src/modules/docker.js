@@ -30,11 +30,20 @@ const docker = new Docker({
 const mock = dev;
 
 /**
- * Mock data
+ * Node Mock data
+ *
+ * @type {{}}
+ */
+const nodeMockData = {
+
+}
+
+/**
+ * Service Mock data
  *
  * @type {{__tasks: [{Status: {ContainerStatus: {ContainerID: string}, State: string}, CreatedAt: number, Slot: number, ID: string, Spec: {ContainerSpec: {Image: string}}, UpdatedAt: number}], UpdateStatus: {State: string}, Version: {Index: number}, ServiceStatus: {RunningTasks: number, DesiredTasks: number}, CreatedAt: number, ID: string, Spec: {TaskTemplate: {ContainerSpec: {Env: [string], Image: string}}, Mode: {Replicated: {Replicas: number}}, Labels: {"com.docker.stack.image": string, "com.docker.stack.namespace": string, "traefik.http.routers.example-website-2022-staging.rule": string}, Name: string}, UpdatedAt: number}}
  */
-const mockData = {
+const serviceMockData = {
     ID: '00000000000000000',
     CreatedAt: 0,
     UpdatedAt: 0,
@@ -130,6 +139,26 @@ const dockerModule = {
     },
 
     /**
+     * Get all docker nodes
+     *
+     * @return {Promise<unknown>}
+     */
+    getNodes: () => {
+        if(mock) {
+            return new Promise((resolve) => {
+                resolve([nodeMockData]);
+            });
+        }
+
+        return new Promise(async (resolve) => {
+            resolve(await docker.listNodes({}).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            }));
+        });
+    },
+
+    /**
      * Get all docker services
      *
      * @param search
@@ -138,7 +167,7 @@ const dockerModule = {
     getServices: (search = '') => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([mockData].filter((item) => {
+                resolve([serviceMockData].filter((item) => {
                     return item.Spec.Name.includes(search);
                 }).sort((a, b) => a.Spec.Name.localeCompare(b.Spec.Name)));
             });
@@ -178,7 +207,7 @@ const dockerModule = {
     getService: (name) => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve(mockData);
+                resolve(serviceMockData);
             });
         }
 
@@ -367,7 +396,7 @@ const dockerModule = {
     getTasks: () => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([mockData.__tasks[0]]);
+                resolve([serviceMockData.__tasks[0]]);
             });
         }
 
@@ -386,7 +415,7 @@ const dockerModule = {
     getTask: (id) => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve(mockData.__tasks[0]);
+                resolve(serviceMockData.__tasks[0]);
             });
         }
 

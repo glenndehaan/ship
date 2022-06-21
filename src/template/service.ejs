@@ -601,6 +601,7 @@
         </main>
         <% if(debug_docker) { %>
             <script>
+                window.__ship_docker_nodes = <%- JSON.stringify(docker_nodes) %>;
                 window.__ship_docker_services = <%- JSON.stringify(docker_services) %>;
                 window.__ship_docker_tasks = <%- JSON.stringify(docker_tasks) %>;
                 window.__ship_agent = <%- JSON.stringify(agent_data) %>;

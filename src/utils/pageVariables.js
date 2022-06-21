@@ -53,6 +53,7 @@ module.exports = async (req) => {
         username: auth_header ? typeof req.get(auth_header) !== "undefined" ? req.get(auth_header) : false : false,
         username_md5: auth_header ? typeof req.get(auth_header) !== "undefined" ? crypto.createHash('md5').update(req.get(auth_header)).digest("hex") : false : false,
         logs_activity: db.getData('/logs'),
+        docker_nodes: await docker.getNodes(),
         docker_services: await docker.getServices(req.query.search || ''),
         docker_tasks: await docker.getTasks(),
         agent_data: memory.get('agent'),
