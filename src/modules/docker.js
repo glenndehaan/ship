@@ -424,7 +424,7 @@ const dockerModule = {
         return docker.getTask(id).logs({
             stdout: true,
             stderr: true,
-            details: detail,
+            details: details,
             timestamps: timestamps,
             tail: amount
         });
