@@ -410,11 +410,11 @@ const dockerModule = {
      *
      * @param id
      * @param amount
-     * @param detail
+     * @param details
      * @param timestamps
      * @returns {*}
      */
-    getTaskLogs: (id, detail = false, timestamps = false, amount = 250) => {
+    getTaskLogs: (id, details = false, timestamps = false, amount = 250) => {
         if(mock) {
             return new Promise((resolve) => {
                 resolve([]);
