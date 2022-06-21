@@ -97,7 +97,7 @@ module.exports = (app) => {
             return;
         }
 
-        const logs = await docker.getTaskLogs(req.params.task);
+        const logs = await docker.getTaskLogs(req.params.task, true, true);
         const task_logs = logs.length > 0 ? demux(logs).join('').replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
 
         res.set('Content-Type', 'text/plain');
