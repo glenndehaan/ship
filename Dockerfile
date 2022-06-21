@@ -92,8 +92,8 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # Setup healthcheck
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+HEALTHCHECK --interval=5s --timeout=3s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/_health || exit 1
 
 # Run app
 CMD ["node", "/app/src/server.js"]

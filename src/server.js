@@ -15,6 +15,7 @@ const pageVariables = require('./utils/pageVariables');
 /**
  * Import controllers
  */
+const HealthController = require('./controllers/HealthController');
 const HomeController = require('./controllers/HomeController');
 const ServiceController = require('./controllers/ServiceController');
 const TaskController = require('./controllers/TaskController');
@@ -38,6 +39,11 @@ const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
  * Trust proxy
  */
 app.enable('trust proxy');
+
+/**
+ * Implement health check before other modules
+ */
+HealthController(app);
 
 /**
  * Set template engine
