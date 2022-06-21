@@ -53,7 +53,7 @@ module.exports = (app) => {
             return;
         }
 
-        const logs = await docker.getTaskLogs(req.params.task);
+        const logs = await docker.getTaskLogs(req.params.task, req.query.detail, req.query.timestamps);
         const task_logs = logs.length > 0 ? convertAnsi.toHtml(demux(logs).join('')) : '1:M 04 May 2022 09:26:00.642 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add \'vm.overcommit_memory = 1\' to /etc/sysctl.conf and then reboot or run the command \'sysctl vm.overcommit_memory=1\' for this to take effect.';
 
         res.render('task', {
@@ -63,7 +63,11 @@ module.exports = (app) => {
             service,
             task,
             task_logs,
-            agent_data: object.convertMemoryToTasksObject(memory.get('agent'))
+            agent_data: object.convertMemoryToTasksObject(memory.get('agent')),
+            log_label_detail: req.query.detail ? 'Hide Detail' : 'Show Detail',
+            log_label_timestamps: req.query.timestamps ? 'Hide Timestamps' : 'Show Timestamps',
+            log_url_detail: req.query.detail ? `/service/${service.Spec.Name}/task/${task.ID}${req.query.timestamps ? '?timestamps=true' : ''}` : `/service/${service.Spec.Name}/task/${task.ID}?detail=true${req.query.timestamps ? '&timestamps=true' : ''}`,
+            log_url_timestamps: req.query.timestamps ? `/service/${service.Spec.Name}/task/${task.ID}${req.query.detail ? '?detail=true' : ''}` : `/service/${service.Spec.Name}/task/${task.ID}?timestamps=true${req.query.detail ? '&detail=true' : ''}`
         });
     });
 

@@ -410,9 +410,11 @@ const dockerModule = {
      *
      * @param id
      * @param amount
+     * @param detail
+     * @param timestamps
      * @returns {*}
      */
-    getTaskLogs: (id, amount = 250) => {
+    getTaskLogs: (id, detail = false, timestamps = false, amount = 250) => {
         if(mock) {
             return new Promise((resolve) => {
                 resolve([]);
@@ -422,6 +424,8 @@ const dockerModule = {
         return docker.getTask(id).logs({
             stdout: true,
             stderr: true,
+            details: detail,
+            timestamps: timestamps,
             tail: amount
         });
     }
