@@ -341,8 +341,10 @@
                                                                                                 <%= new Date(task.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
                                                                                             </p>
                                                                                             <p class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
-                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                                                                    <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/>
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                    <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
+                                                                                                    <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
+                                                                                                    <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
                                                                                                 </svg>
                                                                                                 <span class="truncate"><%= task.Spec.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %></span>
                                                                                             </p>
