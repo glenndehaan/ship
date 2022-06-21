@@ -69,47 +69,61 @@
                             </div>
                             <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
                                 <ul class="divide-y divide-gray-200 dark:divide-gray-600">
-                                    <% docker_services.forEach((service) => { %>
+                                    <% docker_nodes.forEach((node) => { %>
                                         <li>
-                                            <a href="/service/<%= service.Spec.Name %>" class="block hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <div class="px-4 py-4 flex items-center sm:px-6">
-                                                    <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                                                        <div class="truncate">
-                                                            <div class="flex">
-                                                                <p class="font-medium text-purple-600 dark:text-purple-400 truncate"><%= service.Spec.Name %></p>
-                                                            </div>
-                                                            <div class="mt-2 sm:flex sm:justify-between">
-                                                                <div class="sm:flex">
-                                                                    <p class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                                            <path d="M21,10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-0.1c-2.73,2.71-2.73,7.08,0,9.79s7.15,2.71,9.88,0 C18.32,15.65,19,14.08,19,12.1h2c0,1.98-0.88,4.55-2.64,6.29c-3.51,3.48-9.21,3.48-12.72,0c-3.5-3.47-3.53-9.11-0.02-12.58 s9.14-3.47,12.65,0L21,3V10.12z M12.5,8v4.25l3.5,2.08l-0.72,1.21L11,13V8H12.5z"/>
-                                                                        </svg>
-                                                                        <%= new Date(service.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
-                                                                    </p>
-                                                                    <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
-                                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                                                            <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
-                                                                            <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
-                                                                            <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
-                                                                        </svg>
-                                                                        <span class="truncate"><%= service.Spec.TaskTemplate.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %></span>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
+                                            <div class="px-4 py-4 flex items-center sm:px-6">
+                                                <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                                                    <div class="truncate">
+                                                        <div class="flex">
+                                                            <p class="font-medium text-purple-600 dark:text-purple-400 truncate"><%= node.ID %></p>
+                                                            <p class="ml-1 flex-shrink-0 font-normal text-gray-500 dark:text-gray-400">- <%= node.Description.Hostname %></p>
                                                         </div>
-                                                        <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-                                                            <span class="whitespace-nowrap px-2 py-1 text-sm font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= service.ServiceStatus.RunningTasks === service.ServiceStatus.DesiredTasks && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= service.ServiceStatus.RunningTasks !== service.ServiceStatus.DesiredTasks && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
-                                                                <%= service.ServiceStatus.RunningTasks %> / <%= service.ServiceStatus.DesiredTasks %>
-                                                            </span>
+                                                        <div class="mt-2 sm:flex sm:justify-between">
+                                                            <div class="sm:flex">
+                                                                <p class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 48 48">
+                                                                        <path d="M47.527,19.847c-0.13-0.102-1.345-1.007-3.908-1.007c-0.677,0.003-1.352,0.06-2.019,0.171 c-0.496-3.354-3.219-4.93-3.345-5.003l-0.688-0.392l-0.453,0.644c-0.567,0.866-1.068,1.76-1.311,2.763 c-0.459,1.915-0.18,3.713,0.806,5.25C35.417,22.928,33.386,22.986,33,23H1.582c-0.826,0.001-1.496,0.66-1.501,1.474 c-0.037,2.733,0.353,5.553,1.306,8.119c1.089,2.818,2.71,4.894,4.818,6.164C8.567,40.184,12.405,41,16.756,41 c1.965,0.006,3.927-0.169,5.859-0.524c2.686-0.487,5.271-1.413,7.647-2.74c1.958-1.119,3.72-2.542,5.219-4.215 c2.505-2.798,3.997-5.913,5.107-8.682c0.149,0,0.298,0,0.442,0c2.743,0,4.429-1.083,5.359-1.99 c0.618-0.579,1.101-1.284,1.414-2.065L48,20.216L47.527,19.847z"/>
+                                                                        <path d="M8,22H5c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C9,21.552,8.552,22,8,22z"/>
+                                                                        <path d="M14,22h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C15,21.552,14.552,22,14,22z"/>
+                                                                        <path d="M20,22h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C21,21.552,20.552,22,20,22z"/>
+                                                                        <path d="M26,22h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C27,21.552,26.552,22,26,22z"/>
+                                                                        <path d="M14,16h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C15,15.552,14.552,16,14,16z"/>
+                                                                        <path d="M20,16h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C21,15.552,20.552,16,20,16z"/>
+                                                                        <path d="M26,16h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C27,15.552,26.552,16,26,16z"/>
+                                                                        <path d="M26,10h-3c-0.552,0-1-0.448-1-1V6c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C27,9.552,26.552,10,26,10z"/>
+                                                                        <path d="M32,22h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C33,21.552,32.552,22,32,22z"/>
+                                                                    </svg>
+                                                                    <%= node.Description.Engine.EngineVersion %> (<%= node.Spec.Role %>)
+                                                                </p>
+                                                                <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M13 7H7v6h6V7z" />
+                                                                        <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd" />
+                                                                    </svg>
+                                                                    <%= (node.Description.Resources.NanoCPUs * 0.000000001) %> Core(s)
+                                                                </p>
+                                                                <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 16 16">
+                                                                        <path d="M1 3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.586a1 1 0 0 0 .707-.293l.353-.353a.5.5 0 0 1 .708 0l.353.353a1 1 0 0 0 .707.293H15a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H1Zm.5 1h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5Zm5 0h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5Zm4.5.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4ZM2 10v2H1v-2h1Zm2 0v2H3v-2h1Zm2 0v2H5v-2h1Zm3 0v2H8v-2h1Zm2 0v2h-1v-2h1Zm2 0v2h-1v-2h1Zm2 0v2h-1v-2h1Z"/>
+                                                                    </svg>
+                                                                    <%= getBytes(node.Description.Resources.MemoryBytes) %>
+                                                                </p>
+                                                                <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                        <path d="M3 22V15H6V11H11V9H8V2H16V9H13V11H18V15H21V22H13V15H16V13H8V15H11V22ZM10 7H14V4H10ZM5 20H9V17H5ZM15 20H19V17H15ZM12 7ZM9 17ZM15 17Z"/>
+                                                                    </svg>
+                                                                    <%= node.Status.Addr %>
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="ml-5 flex-shrink-0">
-                                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                                        </svg>
+                                                    <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+                                                        <span class="whitespace-nowrap px-2 py-1 text-sm font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= node.Status.State === 'ready' && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= (node.Status.State === 'down' || node.Status.State === 'disconnected') && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
+                                                            <%= node.Status.State %>
+                                                        </span>
                                                     </div>
                                                 </div>
-                                            </a>
+                                            </div>
                                         </li>
                                     <% }); %>
                                 </ul>

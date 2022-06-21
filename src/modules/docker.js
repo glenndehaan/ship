@@ -32,10 +32,43 @@ const mock = dev;
 /**
  * Node Mock data
  *
- * @type {{}}
+ * @type {{Status: {State: string, Addr: string}, Description: {Platform: {Architecture: string, OS: string}, Hostname: string, Resources: {NanoCPUs: number, MemoryBytes: number}, Engine: {EngineVersion: string}}, Version: {Index: number}, ManagerStatus: {Leader: boolean, Addr: string, Reachability: string}, CreatedAt: number, ID: string, Spec: {Role: string, Availability: string, Labels: {}}, UpdatedAt: number}}
  */
 const nodeMockData = {
-
+    ID: '00000000000000000',
+    Version: {
+        Index: 2590
+    },
+    CreatedAt: 0,
+    UpdatedAt: 0,
+    Spec: {
+        Labels: {},
+        Role: 'manager',
+        Availability: 'active'
+    },
+    Description: {
+        Hostname: 'docker-swarm-test',
+        Platform: {
+            Architecture: 'aarch64',
+            OS: 'linux'
+        },
+        Resources: {
+            NanoCPUs: 4000000000,
+            MemoryBytes: 1939763200
+        },
+        Engine: {
+            EngineVersion: '20.10.12'
+        }
+    },
+    Status: {
+        State: 'ready',
+        Addr: '192.168.11.180'
+    },
+    ManagerStatus: {
+        Leader: true,
+        Reachability: 'reachable',
+        Addr: '192.168.11.180:2377'
+    }
 }
 
 /**
