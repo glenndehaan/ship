@@ -338,10 +338,12 @@ const dockerModule = {
      * Get the last logs from a service
      *
      * @param name
+     * @param details
+     * @param timestamps
      * @param amount
      * @returns {*}
      */
-    getServiceLogs: (name, amount = 250) => {
+    getServiceLogs: (name, details = false, timestamps = false, amount = 250) => {
         if(mock) {
             return new Promise((resolve) => {
                 resolve([]);
@@ -349,9 +351,10 @@ const dockerModule = {
         }
 
         return docker.getService(name).logs({
-            details: true,
             stdout: true,
             stderr: true,
+            details: details,
+            timestamps: timestamps,
             tail: amount
         });
     },
