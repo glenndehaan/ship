@@ -179,15 +179,17 @@ const dockerModule = {
     getNodes: () => {
         if(mock) {
             return new Promise((resolve) => {
-                resolve([nodeMockData]);
+                resolve([nodeMockData].sort((a, b) => a.Description.Hostname.localeCompare(b.Description.Hostname)));
             });
         }
 
         return new Promise(async (resolve) => {
-            resolve(await docker.listNodes({}).catch((e) => {
+            const nodes = await docker.listNodes({}).catch((e) => {
                 console.error(e);
                 process.exit(1);
-            }));
+            });
+
+            resolve(nodes.sort((a, b) => a.Description.Hostname.localeCompare(b.Description.Hostname)));
         });
     },
 
