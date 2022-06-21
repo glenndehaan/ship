@@ -19,4 +19,15 @@ module.exports = (app) => {
             allow_overflow: true
         });
     });
+
+    /**
+     * GET /nodes - Nodes Overview
+     */
+    app.get('/nodes', async (req, res) => {
+        res.render('nodes', {
+            ...await pageVariables(req),
+            page_title: 'Nodes Overview',
+            allow_overflow: true
+        });
+    });
 };
