@@ -217,8 +217,10 @@ const dockerModule = {
                 process.exit(1);
             });
 
+            let services = allServices;
+
             if(!getAll) {
-                const services = allServices.filter((service) => {
+                services = allServices.filter((service) => {
                     return !hiddenServices.includes(service.Spec.Name);
                 });
             }
