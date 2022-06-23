@@ -124,6 +124,8 @@ const serviceMockData = {
     __tasks: [
         {
             ID: '00000000000000000',
+            NodeID: '00000000000000000',
+            ServiceID: '00000000000000000',
             Slot: 1,
             CreatedAt: 0,
             UpdatedAt: 0,
