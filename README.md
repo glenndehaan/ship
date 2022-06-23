@@ -2,7 +2,7 @@
 
 [![Image Size](https://img.shields.io/docker/image-size/glenndehaan/ship)](https://hub.docker.com/r/glenndehaan/ship)
 
-![Ship Service Overview Page](https://user-images.githubusercontent.com/7496187/174819455-f50880cf-40b7-4e2f-bc32-dc82a571a8ba.png)
+![Ship Service Overview Page](https://user-images.githubusercontent.com/7496187/175276979-89797d2f-bf71-4042-8c76-abdbb95314a1.png)
 
 ## What is it?
 Ship is a simple stack/service manager for Docker Swarm.
@@ -115,7 +115,10 @@ Below are some options that get send with different events:
 ## Screenshots
 
 ### Nodes Page
-![Nodes Page](https://user-images.githubusercontent.com/7496187/174819452-81c4d84d-5099-4a4a-baee-8954ab351968.png)
+![Nodes Page](https://user-images.githubusercontent.com/7496187/175276977-3bf251f4-5ae2-4730-862a-c73d7498577f.png)
+
+### Allocation Page
+![Allocation Page](https://user-images.githubusercontent.com/7496187/175276972-75b5d9d1-f644-4572-9a07-e935fbbaa78b.png)
 
 ### Service Detail Page
 ![Service Detail Page](https://user-images.githubusercontent.com/7496187/174819447-d0e8ad9b-8242-4e2d-b423-65aa2eb938f8.png)
