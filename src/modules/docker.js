@@ -199,9 +199,10 @@ const dockerModule = {
      * Get all docker services
      *
      * @param search
+     * @param getAll
      * @returns {Promise<unknown>}
      */
-    getServices: (search = '') => {
+    getServices: (search = '', getAll = false) => {
         if(mock) {
             return new Promise((resolve) => {
                 resolve([serviceMockData].filter((item) => {
@@ -216,9 +217,11 @@ const dockerModule = {
                 process.exit(1);
             });
 
-            const services = allServices.filter((service) => {
-                return !hiddenServices.includes(service.Spec.Name);
-            });
+            if(!getAll) {
+                const services = allServices.filter((service) => {
+                    return !hiddenServices.includes(service.Spec.Name);
+                });
+            }
 
             for(let item = 0; item < services.length; item++) {
                 const service = services[item];

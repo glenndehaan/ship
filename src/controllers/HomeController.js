@@ -42,7 +42,7 @@ module.exports = (app) => {
     app.get('/allocation', async (req, res) => {
         const nodes = await docker.getNodes();
         const tasks = await docker.getTasks();
-        const services = await docker.getServices();
+        const services = await docker.getServices('', true);
 
         const extendedNodes = nodes.map((node) => {
             const tasksFiltered = tasks.filter((task) => {
