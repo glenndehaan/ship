@@ -77,12 +77,12 @@ module.exports = (app) => {
                 return node.ID === task.NodeID;
             });
             const cpuUsage = tasksFiltered.filter((task) => {
-                return typeof task.Spec.Resources.Limits.NanoCPUs !== "undefined";
+                return typeof task.Spec.Resources !== "undefined" && typeof task.Spec.Resources.Limits !== "undefined" && typeof task.Spec.Resources.Limits.NanoCPUs !== "undefined";
             }).map((task) => {
                 return task.Spec.Resources.Limits.NanoCPUs;
             }).reduce((partialSum, a) => partialSum + a, 0);
             const memoryUsage = tasksFiltered.filter((task) => {
-                return typeof task.Spec.Resources.Limits.NanoCPUs !== "undefined";
+                return typeof task.Spec.Resources !== "undefined" && typeof task.Spec.Resources.Limits !== "undefined" && typeof task.Spec.Resources.Limits.MemoryBytes !== "undefined";
             }).map((task) => {
                 return task.Spec.Resources.Limits.MemoryBytes;
             }).reduce((partialSum, a) => partialSum + a, 0);
