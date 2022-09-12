@@ -1,0 +1,52 @@
+<div class="fixed bottom-0 lg:border-r top-16 left-0 p-6 lg:w-80 border-gray-200 bg-gray-100 w-full overflow-auto lg:block hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 text-gray-800 <%= lockout_active ? 'mt-16' : '' %>">
+    <div class="font-bold text-xl tracking-tight mb-8">Activity</div>
+    <% if(logs_activity.length < 1) { %>
+        <div class="flex justify-center items-center h-auto" style="height: calc(100% - 1.75rem - 2rem);">
+            <div class="text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-100" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No activity</h3>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Logs will appear here once changes have been made to the services</p>
+            </div>
+        </div>
+    <% } %>
+    <div class="grid gap-y-4">
+        <% logs_activity.sort((a, b) => b.time - a.time).slice(0, 25).forEach((log) => { %>
+            <div class="dark:text-gray-400 text-gray-500 text-sm gap-y-1 grid border-b border-gray-200 dark:border-gray-600 pb-4 relative">
+                <h2 class="font-medium text-gray-900 pr-8 dark:text-gray-100 text-base">
+                    <%= log.username %>
+                </h2>
+                <h3 class="text-xs mb-2 break-all">
+                    <%= log.service %>
+                </h3>
+                <% if(log.type === 'attempt_update') { %>
+                    <span class="text-red-800 dark:text-red-400">Attempt to update the service during lockout days/hours</span>
+                <% } %>
+                <% if(log.type === 'attempt_force_update') { %>
+                    <span class="text-red-800 dark:text-red-400">Attempt to force re-deploy the service during lockout days/hours</span>
+                <% } %>
+                <% if(log.type === 'attempt_scale') { %>
+                    <span class="text-red-800 dark:text-red-400">Attempt to scale the service during lockout days/hours</span>
+                <% } %>
+                <% if(log.type === 'attempt_restore') { %>
+                    <span class="text-red-800 dark:text-red-400">Attempt to restore the service during lockout days/hours</span>
+                <% } %>
+
+                <% if(log.type === 'update') { %>
+                    <span>Updated the service image version from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %></span>
+                <% } %>
+                <% if(log.type === 'force_update') { %>
+                    <span>Force re-deployed the service</span>
+                <% } %>
+                <% if(log.type === 'scale') { %>
+                    <span>Scaled the service to <%= log.params.scale %> container(s)</span>
+                <% } %>
+                <% if(log.type === 'restore') { %>
+                    <span>Restored the service</span>
+                <% } %>
+                <div class="absolute top-0 right-0"><%= getTimeAgo(log.time) %></div>
+            </div>
+        <% }); %>
+    </div>
+</div>

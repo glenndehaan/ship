@@ -9,6 +9,7 @@ const crypto = require('crypto');
  */
 const db = require('../modules/database');
 const docker = require('../modules/docker');
+const kubernetes = require('../modules/kubernetes');
 const memory = require('../modules/memory');
 const time = require('../modules/time');
 const bytes = require('../modules/bytes');
@@ -18,6 +19,7 @@ const bytes = require('../modules/bytes');
  */
 const app_title = process.env.APP_TITLE || 'Ship';
 const max_scale = process.env.MAX_SCALE || '20';
+const use_kubernetes = process.env.KUBERNETES || false;
 const auth_header = process.env.AUTH_HEADER || false;
 const debug_docker = process.env.DEBUG_DOCKER || false;
 const custom_webhook = process.env.CUSTOM_WEBHOOK || false;
@@ -35,6 +37,9 @@ const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
  * @return {{}}
  */
 module.exports = async (req) => {
+    const k8_nodes = await kubernetes.getNodes();
+    console.log(k8_nodes);
+
     return {
         getTimeAgo: time,
         getBytes: bytes,
@@ -53,9 +58,10 @@ module.exports = async (req) => {
         username: auth_header ? typeof req.get(auth_header) !== "undefined" ? req.get(auth_header) : false : false,
         username_md5: auth_header ? typeof req.get(auth_header) !== "undefined" ? crypto.createHash('md5').update(req.get(auth_header)).digest("hex") : false : false,
         logs_activity: db.getData('/logs'),
-        docker_nodes: await docker.getNodes(),
-        docker_services: await docker.getServices(req.query.search || ''),
-        docker_tasks: await docker.getTasks(),
+        docker_nodes: !use_kubernetes ? await docker.getNodes() : [],
+        docker_services: !use_kubernetes ? await docker.getServices(req.query.search || '') : [],
+        docker_tasks: !use_kubernetes ? await docker.getTasks() : [],
+        kubernetes_nodes: use_kubernetes ? await kubernetes.getNodes() : [],
         agent_data: memory.get('agent'),
         lockout_active: (lockout_days && lockout_days.split(',').includes(`${new Date().getDay()}`)) || (lockout_after_hour && new Date().getHours() >= parseInt(lockout_after_hour)),
         lockout_rule: lockout_service_regex,

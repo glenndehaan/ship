@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+    <head>
+        <title><%= page_title %> | <%= app_title %></title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
+
+        <meta name="description" content="A docker swarm service updater/deployment manager">
+        <link rel="shortcut icon" href="/images/favicon.svg">
+
+        <link rel="preload" href="/dist/style.css" as="style">
+        <link href="/dist/style.css" rel="stylesheet">
+    </head>
+    <body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200 <%= !allow_overflow ? 'overflow-hidden' : '' %>">
+        <div class="min-h-full pt-16 pb-12 flex flex-col">
+            <main class="flex-grow flex flex-col justify-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex-shrink-0 flex justify-center">
+                    <a href="/" class="inline-flex">
+                        <svg class="md:mr-2 w-20 h-20 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                            <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                            <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                        </svg>
+                    </a>
+                </div>
+                <div class="py-16">
+                    <div class="text-center">
+                        <p class="text-sm font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">404 error</p>
+                        <h1 class="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">Page not found.</h1>
+                        <p class="mt-2 text-base text-gray-500 dark:text-gray-400">Sorry, we couldn’t find the page you’re looking for.</p>
+                        <div class="mt-6">
+                            <a href="/" class="text-base font-medium text-purple-600 dark:text-purple-400 dark:hover:text-purple-200 hover:text-purple-400">Go back home<span aria-hidden="true"> &rarr;</span></a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="flex-shrink-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <nav class="flex justify-center space-x-4 mb-2">
+                    <a href="https://github.com/glenndehaan/ship" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">GitHub</a>
+                    <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                    <a href="https://github.com/glenndehaan/ship/issues" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Issues</a>
+                    <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                    <a href="https://github.com/glenndehaan/ship/blob/master/README.md" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Documentation</a>
+                </nav>
+                <div class="flex justify-center text-xs italic mb-1">Host: <%= hostname %></div>
+                <div class="flex justify-center text-xs italic">By:&nbsp;<a href="https://github.com/glenndehaan" target="_blank" rel="noopener noreferrer" class="font-medium hover:text-gray-400">Glenn de Haan</a></div>
+            </footer>
+        </div>
+        <script>
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                const newColorScheme = event.matches ? "dark" : "light";
+
+                if(newColorScheme === 'light') {
+                    document.querySelector('html').removeAttribute('style');
+                } else {
+                    document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
+                }
+            });
+        </script>
+    </body>
+</html>

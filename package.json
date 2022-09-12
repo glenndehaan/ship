@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "dev": "nodemon --ignore ship.json --watch . --exec 'node ./src/server.js'",
+    "dev": "nodemon --ignore ship.json --watch . --exec 'KUBERNETES=true node ./src/server.js'",
     "tailwind": "tailwindcss -i ./src/css/style.css -o ./src/public/dist/style.css --watch",
     "build": "tailwindcss -i ./src/css/style.css -o ./src/public/dist/style.css --minify"
   },
@@ -19,6 +19,7 @@
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "js-logger": "^1.6.1",
+    "kubernetes-client": "^9.0.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^2.6.7",
     "node-json-db": "^1.5.0",

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><%= page_title %> | <%= app_title %></title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
+
+        <meta name="description" content="A docker swarm service updater/deployment manager">
+        <link rel="shortcut icon" href="/images/favicon.svg">
+
+        <link rel="preload" href="/dist/style.css" as="style">
+        <link href="/dist/style.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50 dark:bg-gray-900 <%= !allow_overflow ? 'overflow-hidden' : '' %>">
+        <% if(lockout_active) { %>
+            <%- include('partials/lockout_banner') %>
+        <% } %>
+        <%- include('partials/header') %>
+        <%- include('partials/activity') %>
+
+        <main class="h-full overflow-y-auto mb-12 mt-8 pt-16 lg:pl-80 <%= lockout_active ? 'mt-24' : '' %>">
+            <nav class="flex">
+                <ol class="flex items-center container px-6 mx-auto mb-4 space-x-4">
+                    <li class="md:hidden">
+                        <div class="flex items-center">
+                            <a href="/service/<%= service.Spec.Name %>" class="font-medium text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300">
+                                &#8592; Back
+                            </a>
+                        </div>
+                    </li>
+                    <li class="hidden md:contents">
+                        <div>
+                            <a href="/" class="text-gray-400 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-300">
+                                <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                </svg>
+                                <span class="sr-only">Home</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="hidden md:block">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 h-5 w-5 text-gray-400 dark:text-gray-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <a href="/service/<%= service.Spec.Name %>" class="ml-4 text-sm font-medium text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300">
+                                <%= service.Spec.Name %>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="hidden md:block">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 h-5 w-5 text-gray-400 dark:text-gray-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <a href="/service/<%= service.Spec.Name %>/task/<%= task.ID %>" class="ml-4 text-sm font-medium text-gray-500 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300">
+                                <%= task.ID %>
+                            </a>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="flex flex-col flex-1 w-full gap-10">
+                <div class="container px-6 mx-auto flex flex-col gap-10">
+                    <div class="lg:flex lg:items-center lg:justify-between">
+                        <div class="flex-1 min-w-0">
+                            <h2 class="text-xl font-bold leading-7 text-gray-900 dark:text-gray-100 sm:truncate">
+                                <%= task.ID %>
+                            </h2>
+                        </div>
+                        <div class="mt-4 flex lg:mt-0 lg:ml-4">
+                            <span>
+                                <a href="/service/<%= service.Spec.Name %>/task/<%= task.ID %>" aria-label="Refresh Data" title="Refresh Data" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    <svg class="hidden sm:block -ml-1 mr-2 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm6 10c0 3.31-2.69 6-6 6s-6-2.69-6-6h2c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4v3L8 7l4-4v3c3.31 0 6 2.69 6 6z" fill-rule="evenodd"/>
+                                    </svg>
+                                    Refresh Data
+                                </a>
+                            </span>
+                        </div>
+                        <div class="mt-4 flex lg:mt-0 lg:ml-4">
+                            <span>
+                                <a href="/service/<%= service.Spec.Name %>/task/<%= task.ID %>/logs/download" download="<%= service.Spec.Name %>_<%= task.ID %>_<%= new Date().getTime() %>.log" aria-label="Download Logs" title="Download Logs" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                    <svg class="hidden sm:block -ml-1 mr-2 h-5 w-5 text-purple-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                                    </svg>
+                                    Download Logs
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+
+                    <% if(error) { %>
+                        <div class="bg-red-600 text-white p-3 rounded shadow-lg flex items-center">
+                            <div>
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div><%= error_text %></div>
+                        </div>
+                    <% } %>
+
+                    <% if(info) { %>
+                        <div class="bg-blue-500 text-white p-3 rounded shadow-lg flex items-center">
+                            <div>
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div><%= info_text %></div>
+                        </div>
+                    <% } %>
+
+                    <main>
+                        <div class="mx-auto grid grid-cols-1 gap-6 lg:grid-flow-col-dense lg:grid-cols-3">
+                            <div class="space-y-6 lg:col-start-1 lg:col-span-2">
+                                <% if(typeof agent_data[task.Status.ContainerStatus.ContainerID] === 'object') { %>
+                                    <section>
+                                        <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg sm:overflow-hidden">
+                                            <div class="divide-y divide-gray-200 dark:divide-gray-600">
+                                                <div class="px-4 py-5 sm:px-6">
+                                                    <div class="grid grid-cols-2 items-center">
+                                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Network Configuration</h2>
+                                                        <div class="text-right">
+                                                            <svg class="mr-1 w-7 h-7 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                                                                <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                                                                <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                                                            </svg>
+                                                            <span class="inline-block align-middle text-xs font-semibold italic">
+                                                                Agent
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="px-4 py-6 sm:px-6">
+                                                    <div class="bg-white dark:bg-gray-900 shadow overflow-hidden sm:rounded-md">
+                                                        <ul class="divide-y divide-gray-200 dark:divide-gray-600">
+                                                            <% Object.keys(agent_data[task.Status.ContainerStatus.ContainerID].info.NetworkSettings.Networks).forEach((network) => { %>
+                                                                <li>
+                                                                    <span class="block">
+                                                                        <div class="px-4 py-4 flex items-center sm:px-6">
+                                                                            <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                                                                                <div class="truncate">
+                                                                                    <div class="flex">
+                                                                                        <p class="font-medium text-sm text-purple-600 dark:text-purple-400 truncate"><%= agent_data[task.Status.ContainerStatus.ContainerID].info.NetworkSettings.Networks[network].NetworkID %></p>
+                                                                                        <p class="ml-1 flex-shrink-0 font-normal text-sm text-gray-500 dark:text-gray-400">- <%= network %></p>
+                                                                                    </div>
+                                                                                    <div class="mt-2 sm:flex sm:justify-between">
+                                                                                        <div class="sm:flex">
+                                                                                            <p class="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path d="M3 22V15H6V11H11V9H8V2H16V9H13V11H18V15H21V22H13V15H16V13H8V15H11V22ZM10 7H14V4H10ZM5 20H9V17H5ZM15 20H19V17H15ZM12 7ZM9 17ZM15 17Z"/>
+                                                                                                </svg>
+                                                                                                <%= agent_data[task.Status.ContainerStatus.ContainerID].info.NetworkSettings.Networks[network].IPAddress %>
+                                                                                            </p>
+                                                                                            <p class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path d="M2 20V17H4V6Q4 5.175 4.588 4.588Q5.175 4 6 4H21V6H6Q6 6 6 6Q6 6 6 6V17H12V20ZM15 20Q14.575 20 14.288 19.712Q14 19.425 14 19V9Q14 8.575 14.288 8.287Q14.575 8 15 8H21Q21.425 8 21.712 8.287Q22 8.575 22 9V19Q22 19.425 21.712 19.712Q21.425 20 21 20ZM16 17H20V10H16Z"/>
+                                                                                                </svg>
+                                                                                                <span class="truncate"><%= agent_data[task.Status.ContainerStatus.ContainerID].info.NetworkSettings.Networks[network].MacAddress %></span>
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </span>
+                                                                </li>
+                                                            <% }); %>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                <% } %>
+
+                                <section>
+                                    <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                                        <div class="px-4 py-5 sm:px-6">
+                                            <div class="grid grid-cols-2">
+                                                <h2 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 self-center">Logs</h2>
+                                                <span class="relative z-0 inline-flex shadow-sm rounded-md justify-self-end">
+                                                    <a href="<%= log_url_details %>" class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 bg-white dark:border-white dark:bg-gray-300 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"><%= log_label_details %></a>
+                                                    <a href="<%= log_url_timestamps %>" class="-ml-px relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 bg-white dark:border-white dark:bg-gray-300 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"><%= log_label_timestamps %></a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+                                            <p class="text-sm text-gray-700 dark:text-gray-400">
+                                                <span>
+                                                    Last 250 logged lines from the task:
+                                                </span>
+                                                <pre class="w-full mt-4 overflow-auto text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-black dark:bg-opacity-50 text-xs p-4" style="min-height: 350px;"><%- task_logs %></pre>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="space-y-6 lg:col-start-3 lg:col-span-1">
+                                <% if(typeof agent_data[task.Status.ContainerStatus.ContainerID] === 'object') { %>
+                                    <section>
+                                        <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                            <div class="grid grid-cols-2 items-center">
+                                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Usage</h2>
+                                                <div class="text-right">
+                                                    <svg class="mr-1 w-7 h-7 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                                                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                                                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                                                    </svg>
+                                                    <span class="inline-block align-middle text-xs font-semibold italic">
+                                                        Agent
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-6 flex flex-col justify-stretch space-y-2">
+                                                <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                                    <div class="sm:col-span-2">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            CPU Usage
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.cpu_usage.total_usage) / (agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.system_cpu_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.system_cpu_usage)) * agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.online_cpus * 100).toFixed(1) %>%
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            CPU Delta
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.cpu_usage.total_usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.precpu_stats.cpu_usage.total_usage %>
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Available CPU's
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= agent_data[task.Status.ContainerStatus.ContainerID].stats.cpu_stats.online_cpus %>
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-2">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Memory Usage
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= (((agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.inactive_file) / agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.limit) * 100).toFixed(1) %>%
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Used Memory
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.usage - agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.stats.inactive_file) %>
+                                                        </dd>
+                                                    </div>
+                                                    <div class="sm:col-span-1">
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                            Available Memory
+                                                        </dt>
+                                                        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                            <%= getBytes(agent_data[task.Status.ContainerStatus.ContainerID].stats.memory_stats.limit) %>
+                                                        </dd>
+                                                    </div>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </section>
+                                <% } %>
+                                <% if(typeof agent_data[task.Status.ContainerStatus.ContainerID] === 'object') { %>
+                                    <section>
+                                        <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                            <div class="grid grid-cols-2 items-center">
+                                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Ports</h2>
+                                                <div class="text-right">
+                                                    <svg class="mr-1 w-7 h-7 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                                                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                                                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                                                    </svg>
+                                                    <span class="inline-block align-middle text-xs font-semibold italic">
+                                                    Agent
+                                                </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-6 flex flex-col justify-stretch space-y-2">
+                                                <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
+                                                    <thead class="bg-gray-50 dark:bg-black">
+                                                        <tr>
+                                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 sm:pl-6 lg:pl-8">
+                                                                Port
+                                                            </th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                                                Type
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-200 bg-white dark:bg-gray-900">
+                                                        <% agent_data[task.Status.ContainerStatus.ContainerID].info.Ports.forEach((port) => { %>
+                                                            <tr>
+                                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-gray-100 sm:pl-6 lg:pl-8">
+                                                                    <%= port.PrivatePort %>
+                                                                </td>
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                                                    <%= port.Type %>
+                                                                </td>
+                                                            </tr>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </section>
+                                <% } %>
+                                <section>
+                                    <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
+                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Task Information</h2>
+                                        <div class="mt-6 flex flex-col justify-stretch space-y-2">
+                                            <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                                                <div class="sm:col-span-2">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        ID
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                        <%= task.ID %>
+                                                    </dd>
+                                                </div>
+                                                <div class="sm:col-span-2">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        Status
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900">
+                                                        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= (task.Status.State === 'running' || task.Status.State === 'complete') && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= (task.Status.State === 'new' || task.Status.State === 'allocated' || task.Status.State === 'pending' || task.Status.State === 'assigned' || task.Status.State === 'accepted' || task.Status.State === 'preparing' || task.Status.State === 'ready' || task.Status.State === 'starting') && 'text-blue-800 bg-blue-200 dark:text-blue-50 dark:bg-blue-600' %> <%= (task.Status.State === 'shutdown' || task.Status.State === 'failed' || task.Status.State === 'rejected' || task.Status.State === 'remove' || task.Status.State === 'orphaned') && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
+                                                            <%= task.Status.State %>
+                                                        </span>
+                                                    </dd>
+                                                </div>
+                                                <div class="sm:col-span-1">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        Slot
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                        <%= task.Slot %>
+                                                    </dd>
+                                                </div>
+                                                <div class="sm:col-span-1">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        Version
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                        <%= task.Version.Index %>
+                                                    </dd>
+                                                </div>
+                                                <div class="sm:col-span-1">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        Created
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                        <%= new Date(task.CreatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                    </dd>
+                                                </div>
+                                                <div class="sm:col-span-1">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        Updated
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                        <%= new Date(task.UpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC', timeZoneName: 'short', hour12: false }) %>
+                                                    </dd>
+                                                </div>
+                                                <% if(task.Spec.Resources.Limits) { %>
+                                                    <% if(task.Spec.Resources.Limits.NanoCPUs) { %>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                                CPU Limit
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                                <%= (task.Spec.Resources.Limits.NanoCPUs * 0.000000001) %>
+                                                            </dd>
+                                                        </div>
+                                                    <% } %>
+                                                    <% if(task.Spec.Resources.Limits.MemoryBytes) { %>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                                Memory Limit
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                                <%= getBytes(task.Spec.Resources.Limits.MemoryBytes) %>
+                                                            </dd>
+                                                        </div>
+                                                    <% } %>
+                                                <% } %>
+                                                <% if(task.Spec.Resources.Reservations) { %>
+                                                    <% if(task.Spec.Resources.Reservations.NanoCPUs) { %>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                                CPU Reservation
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                                <%= (task.Spec.Resources.Reservations.NanoCPUs * 0.000000001) %>
+                                                            </dd>
+                                                        </div>
+                                                    <% } %>
+                                                    <% if(task.Spec.Resources.Reservations.MemoryBytes) { %>
+                                                        <div class="sm:col-span-1">
+                                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                                Memory Reservation
+                                                            </dt>
+                                                            <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400">
+                                                                <%= getBytes(task.Spec.Resources.Reservations.MemoryBytes) %>
+                                                            </dd>
+                                                        </div>
+                                                    <% } %>
+                                                <% } %>
+                                                <div class="sm:col-span-2">
+                                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-100">
+                                                        Image
+                                                    </dt>
+                                                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-400 truncate">
+                                                        <%= task.Spec.ContainerSpec.Image.replace(/^.*\//, '').split('@')[0] %>
+                                                    </dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer class="flex-shrink-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+                        <nav class="flex justify-center space-x-4 mb-2">
+                            <a href="https://github.com/glenndehaan/ship" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">GitHub</a>
+                            <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                            <a href="https://github.com/glenndehaan/ship/issues" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Issues</a>
+                            <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                            <a href="https://github.com/glenndehaan/ship/blob/master/README.md" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Documentation</a>
+                        </nav>
+                        <div class="flex justify-center text-xs italic mb-1">Host: <%= hostname %></div>
+                        <div class="flex justify-center text-xs italic">By:&nbsp;<a href="https://github.com/glenndehaan" target="_blank" rel="noopener noreferrer" class="font-medium hover:text-gray-400">Glenn de Haan</a></div>
+                    </footer>
+                </div>
+            </div>
+        </main>
+        <script>
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                const newColorScheme = event.matches ? "dark" : "light";
+
+                if(newColorScheme === 'light') {
+                    document.querySelector('html').removeAttribute('style');
+                } else {
+                    document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
+                }
+            });
+        </script>
+        <script>
+            const params = new URLSearchParams(window.location.search);
+
+            if(params.has('error') || params.has('message')) {
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+        </script>
+    </body>
+</html>

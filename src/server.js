@@ -8,7 +8,6 @@ const multer = require('multer');
  * Import own modules
  */
 const log = require('./modules/logger');
-const docker = require('./modules/docker');
 const cron = require('./modules/cron');
 const pageVariables = require('./utils/pageVariables');
 
@@ -34,6 +33,7 @@ const app = express();
  */
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
+const use_kubernetes = process.env.KUBERNETES || false;
 
 /**
  * Trust proxy
@@ -49,7 +49,7 @@ HealthController(app);
  * Set template engine
  */
 app.set('view engine', 'ejs');
-app.set('views', `${__dirname}/template`);
+app.set('views', `${__dirname}/template/${use_kubernetes ? 'kubernetes' : 'docker'}`);
 
 /**
  * Enable multer
@@ -80,6 +80,11 @@ app.use(express.static(`${__dirname}/public`));
  */
 log.info(slack_webhook ? '[SLACK] Enabled!' : '[SLACK] Disabled!');
 log.info(email_smtp_host ? '[EMAIL] Enabled!' : '[EMAIL] Disabled!');
+
+/**
+ * Output which infrastructure is in use
+ */
+log.info(use_kubernetes ? '[INFRASTRUCTURE] Using: Kubernetes!' : '[INFRASTRUCTURE] Using: Docker Swarm!');
 
 /**
  * Configure routers/controllers
@@ -128,8 +133,15 @@ const server = app.listen(3000, '0.0.0.0', async () => {
 
     log.info(`[WEB] App is running on: 0.0.0.0:3000`);
 
-    const dockerInfo = await docker.info();
-    log.info(`[DOCKER] Connected! ID: ${dockerInfo.ID}, Hostname: ${dockerInfo.Name}`);
+    if(!use_kubernetes) {
+        const docker = require('./modules/docker');
+        const dockerInfo = await docker.info();
+        log.info(`[DOCKER] Connected! ID: ${dockerInfo.ID}, Hostname: ${dockerInfo.Name}`);
+    } else {
+        const kubernetes = require('./modules/kubernetes');
+        const kubernetesInfo = await kubernetes.info();
+        log.info(`[KUBERNETES] Connected! Amount: ${kubernetesInfo.items.length}, Hostname(s): ${kubernetesInfo.items.map((e) => e.metadata.name).join(',')}`);
+    }
 });
 
 /**

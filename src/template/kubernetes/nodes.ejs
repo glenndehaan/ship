@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><%= page_title %> | <%= app_title %></title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
+
+        <meta name="description" content="A docker swarm service updater/deployment manager">
+        <link rel="shortcut icon" href="/images/favicon.svg">
+
+        <link rel="preload" href="/dist/style.css" as="style">
+        <link href="/dist/style.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50 dark:bg-gray-900 <%= !allow_overflow ? 'overflow-hidden' : '' %>">
+        <% if(lockout_active) { %>
+            <%- include('partials/lockout_banner') %>
+        <% } %>
+        <%- include('partials/header') %>
+        <%- include('partials/activity') %>
+
+        <main class="h-full overflow-y-auto mb-12 mt-8 pt-16 lg:pl-80 <%= lockout_active ? 'mt-24' : '' %>">
+            <div class="flex flex-col flex-1 w-full gap-10">
+                <div class="container px-6 mx-auto grid gap-10">
+                    <%- include('partials/stats') %>
+
+                    <% if(error) { %>
+                        <div class="bg-red-600 text-white p-3 rounded shadow-lg flex items-center">
+                            <div>
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div><%= error_text %></div>
+                        </div>
+                    <% } %>
+
+                    <% if(info) { %>
+                        <div class="bg-blue-500 text-white p-3 rounded shadow-lg flex items-center">
+                            <div>
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div><%= info_text %></div>
+                        </div>
+                    <% } %>
+
+                    <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                        <div class="w-full overflow-x-auto">
+                            <div class="border-b border-gray-200 dark:border-gray-600 mb-4">
+                                <nav class="-mb-px flex space-x-8">
+                                    <a href="/" aria-label="Deployment Overview" title="Deployment Overview" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm">
+                                        <svg class="text-gray-400 group-hover:text-gray-500 dark:text-gray-300 dark:group-hover:text-gray-100 sm:-ml-0.5 sm:mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M14.17,13.71l1.4-2.42c0.09-0.15,0.05-0.34-0.08-0.45l-1.48-1.16c0.03-0.22,0.05-0.45,0.05-0.68s-0.02-0.46-0.05-0.69 l1.48-1.16c0.13-0.11,0.17-0.3,0.08-0.45l-1.4-2.42c-0.09-0.15-0.27-0.21-0.43-0.15L12,4.83c-0.36-0.28-0.75-0.51-1.18-0.69 l-0.26-1.85C10.53,2.13,10.38,2,10.21,2h-2.8C7.24,2,7.09,2.13,7.06,2.3L6.8,4.15C6.38,4.33,5.98,4.56,5.62,4.84l-1.74-0.7 c-0.16-0.06-0.34,0-0.43,0.15l-1.4,2.42C1.96,6.86,2,7.05,2.13,7.16l1.48,1.16C3.58,8.54,3.56,8.77,3.56,9s0.02,0.46,0.05,0.69 l-1.48,1.16C2,10.96,1.96,11.15,2.05,11.3l1.4,2.42c0.09,0.15,0.27,0.21,0.43,0.15l1.74-0.7c0.36,0.28,0.75,0.51,1.18,0.69 l0.26,1.85C7.09,15.87,7.24,16,7.41,16h2.8c0.17,0,0.32-0.13,0.35-0.3l0.26-1.85c0.42-0.18,0.82-0.41,1.18-0.69l1.74,0.7 C13.9,13.92,14.08,13.86,14.17,13.71z M8.81,11c-1.1,0-2-0.9-2-2c0-1.1,0.9-2,2-2s2,0.9,2,2C10.81,10.1,9.91,11,8.81,11z"/>
+                                            <path d="M21.92,18.67l-0.96-0.74c0.02-0.14,0.04-0.29,0.04-0.44c0-0.15-0.01-0.3-0.04-0.44l0.95-0.74 c0.08-0.07,0.11-0.19,0.05-0.29l-0.9-1.55c-0.05-0.1-0.17-0.13-0.28-0.1l-1.11,0.45c-0.23-0.18-0.48-0.33-0.76-0.44l-0.17-1.18 C18.73,13.08,18.63,13,18.53,13h-1.79c-0.11,0-0.21,0.08-0.22,0.19l-0.17,1.18c-0.27,0.12-0.53,0.26-0.76,0.44l-1.11-0.45 c-0.1-0.04-0.22,0-0.28,0.1l-0.9,1.55c-0.05,0.1-0.04,0.22,0.05,0.29l0.95,0.74c-0.02,0.14-0.03,0.29-0.03,0.44 c0,0.15,0.01,0.3,0.03,0.44l-0.95,0.74c-0.08,0.07-0.11,0.19-0.05,0.29l0.9,1.55c0.05,0.1,0.17,0.13,0.28,0.1l1.11-0.45 c0.23,0.18,0.48,0.33,0.76,0.44l0.17,1.18c0.02,0.11,0.11,0.19,0.22,0.19h1.79c0.11,0,0.21-0.08,0.22-0.19l0.17-1.18 c0.27-0.12,0.53-0.26,0.75-0.44l1.12,0.45c0.1,0.04,0.22,0,0.28-0.1l0.9-1.55C22.03,18.86,22,18.74,21.92,18.67z M17.63,18.83 c-0.74,0-1.35-0.6-1.35-1.35s0.6-1.35,1.35-1.35s1.35,0.6,1.35,1.35S18.37,18.83,17.63,18.83z"/>
+                                        </svg>
+                                        <span class="hidden sm:block">Deployments</span>
+                                    </a>
+
+                                    <a href="/nodes" aria-label="Nodes Overview" title="Nodes Overview" class="border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400 group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm">
+                                        <svg class="text-purple-500 dark:text-purple-400 sm:-ml-0.5 sm:mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M13 7H7v6h6V7z" />
+                                            <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span class="hidden sm:block">Nodes</span>
+                                    </a>
+
+                                    <a href="/allocation" aria-label="Allocation Overview" title="Allocation Overview" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm">
+                                        <svg class="text-gray-400 group-hover:text-gray-500 dark:text-gray-300 dark:group-hover:text-gray-100 sm:-ml-0.5 sm:mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M13 13v8h8v-8h-8zM3 21h8v-8H3v8zM3 3v8h8V3H3zm13.66-1.31L11 7.34 16.66 13l5.66-5.66-5.66-5.65z"/>
+                                        </svg>
+                                        <span class="hidden sm:block">Allocation</span>
+                                    </a>
+
+                                    <a href="/usage" aria-label="Usage Overview" title="Usage Overview" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm">
+                                        <svg class="text-gray-400 group-hover:text-gray-500 dark:text-gray-300 dark:group-hover:text-gray-100 sm:-ml-0.5 sm:mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+                                            <path d="M42.15 32.55 37.75 30.1Q38.35 28.55 38.65 27.025Q38.95 25.5 38.95 24Q38.95 18.2 35.125 13.95Q31.3 9.7 25.6 9.2V4.1Q33.45 4.65 38.75 10.325Q44.05 16 44.05 23.8Q44.05 26.05 43.575 28.225Q43.1 30.4 42.15 32.55ZM24.05 44Q19.95 44 16.3 42.425Q12.65 40.85 9.925 38.15Q7.2 35.45 5.625 31.8Q4.05 28.15 4.05 24.05Q4.05 16.15 9.375 10.45Q14.7 4.75 22.6 4.15V9.25Q16.85 9.8 13 14.025Q9.15 18.25 9.15 24.05Q9.15 30.25 13.5 34.575Q17.85 38.9 24.05 38.9Q27.65 38.9 30.85 37.275Q34.05 35.65 36.3 32.7L40.7 35.25Q37.8 39.4 33.425 41.7Q29.05 44 24.05 44Z"/>
+                                        </svg>
+                                        <span class="hidden sm:block">Usage</span>
+                                    </a>
+                                </nav>
+                            </div>
+                            <div class="px-4">
+                                <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+                                    <ul class="divide-y divide-gray-200 dark:divide-gray-600">
+                                        <% kubernetes_nodes.forEach((node) => { %>
+                                            <li>
+                                                <div class="px-4 py-4 flex items-center sm:px-6">
+                                                    <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                                                        <div class="truncate">
+                                                            <div class="flex">
+                                                                <p class="font-medium text-purple-600 dark:text-purple-400 truncate"><%= node.metadata.uid %></p>
+                                                                <p class="ml-1 flex-shrink-0 font-normal text-gray-500 dark:text-gray-400">- <%= node.metadata.name %></p>
+                                                            </div>
+                                                            <div class="mt-2 sm:flex sm:justify-between">
+                                                                <div class="sm:flex">
+                                                                    <p class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 512 512">
+                                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.8002262,309.8923035l43.9221573-191.0728455c2.2659149-9.8478012,9.2421684-18.5207672,18.4169388-22.9041367l178.0283203-85.0611115c9.162323-4.4253368,18.8868713-4.2012329,29.5525208,0l178.0492859,85.0146942c9.1747437,4.3833694,16.1510315,13.0563354,18.4214783,22.907753l43.9850159,191.0700989c2.2704163,9.854187-0.2240906,20.6764832-6.5773315,28.5744019L381.4212646,491.6528015c-6.3578491,7.8869934-16.4360962,12.6893311-26.6181335,12.6820374l-197.6046143,0.0464478c-10.1856995,0.0036316-20.263916-4.8096008-26.6181488-12.7038879L7.3566275,338.4667053C0.4271332,329.8007507-1.2119793,320.1770325,0.8002262,309.8923035z M246.7908478,327.4226379l-29.9634857,54.1347656c26.5865173,8.5083313,52.7902527,8.9454041,78.5525513,0.0746765l-30.0133972-54.232666C259.9699707,319.7934265,250.8058167,320.5657043,246.7908478,327.4226379z M202.0333557,297.0080261l-60.8836517,10.3323975c9.3949432,25.9963989,26.9610596,47.1853943,49.015976,61.3372803l23.5861359-57.0057068C216.3495483,303.169342,210.7651062,296.2111816,202.0333557,297.0080261z M298.2266235,311.3211975l23.8421936,57.5843506c22.9803162-14.639801,40.1764526-36.5173035,49.1661682-61.7697449l-61.415863-10.3797913C300.8644409,295.899231,295.505127,303.3179016,298.2266235,311.3211975z M234.6686707,260.9705505l4.2368011,18.396759l17.0862579,8.2145081l17.0338745-8.1903381l4.2327881-18.396759l-11.7930908-14.7425842h-18.9753571L234.6686707,260.9705505z M318.0094299,261.1207581l59.6750183,17.1870728c2.7200623-27.3953552-3.9840393-52.782608-17.7667236-76.6615143l-46.0664673,41.2268677C308.4487,249.1948395,308.8798218,257.0343628,318.0094299,261.1207581z M198.052597,243.0505981l-46.3184662-41.4284668c-13.7466431,22.393631-20.2595978,49.2559204-17.239502,76.8872986l59.3755951-17.1366882C201.8505707,258.1444397,204.4632416,249.9580994,198.052597,243.0505981z M291.044342,214.2700195l50.4020386-35.7340393c-19.014679-18.6215057-43.8305969-30.7694397-70.6616211-34.0727692l3.5009155,61.7697144C275.6146851,216.6031342,283.5397339,218.2578125,291.044342,214.2700195z M170.1308594,178.511795l50.728653,35.9628601c8.2972717,5.1307983,16.1743164-0.3522491,16.8605042-8.1429443l3.5009155-61.8684998C213.4891968,148.2541351,189.0535278,159.7226562,170.1308594,178.511795z M444.8219604,320.897583c-5.0469055-1.6317444-20.7459412-8.5874634-31.1474609-10.1308289c-3.200531-0.2519836-4.8315125,1.275177-6.6036377,2.444519l-5.0402222-0.8820496c-11.3001404,35.5142822-35.3671265,66.2676392-67.991333,85.5302429l1.9646606,4.7650452c-0.7479553,1.987854-1.8658752,3.894043-0.9092407,6.9534302c4.4415283,10.7107544,11.0513306,19.1382446,16.7858887,28.1263733c10.6455688,17.8268127-10.2826843,30.1829834-20.553772,12.2665405c-3.9439087-11.0152893-7.3485107-24.7470398-12.2075195-32.6793213c-1.7993774-2.657196-4.0039673-2.9959106-6.0240784-3.6541748l-2.5201416-4.5361938c-36.7866821,13.5519409-73.0581055,13.2178345-108.8411407-0.2792358l-2.6733246,4.8395996c-1.9888611,0.5312195-3.9061584,1.0745544-5.0835571,2.4768066c-5.5699158,7.0865479-10.1005096,26.4445496-13.9946136,34.9981689c-8.1739502,15.7394104-28.410614,4.976532-21.3180695-10.0572815c4.698288-9.6661377,10.8059387-14.6474304,18.5146942-31.7844849c0.574585-1.9727783,0.0745239-4.9916687-1.0513916-6.6702271l2.1420898-5.1430664c-31.3954315-18.6013184-56.1861572-48.2478333-68.0155182-84.9274292l-5.1420288,0.8820496c-1.1999435-1.3040771-4.1500931-2.5987244-6.7810822-2.394104c-6.2962189,0.9132996-13.4451752,1.7973022-20.5620117,6.0482483c-32.8491211,19.6211243-44.6738281-22.4781799-4.5361862-19.8574219c15.6425247,1.0213928,21.9873123-1.3021851,26.209053-8.5925293l4.9373932-1.4364624c-5.532135-38.3297424,3.8315582-75.9458008,24.0669708-106.3997345l-3.7801514-3.3749084c-0.2399216-1.4727478-0.5554428-4.8748932-2.36689-6.8042755c-14.8753433-12.7072144-21.0864182-12.6812286-29.7644043-20.0106049c-13.6674194-10.7004089,0.8745651-29.2745819,14.5419846-18.5741882c8.0941925,6.4007568,12.5733109,14.4322662,26.2836609,24.6970062c2.77211,1.6138916,4.9020844,0.9647217,7.0089111,0.6814575l4.2569427,3.0241089c21.9705963-23.1391144,55.3659973-43.2722321,98.3858032-47.3033447l0.2761841-4.9887695c1.5715179-1.5201187,3.3315735-3.7055893,3.831543-6.099678c1.2021637-12.1556931-2.8962402-26.6172409-2.922287-35.9628372c0.2112427-16.9591484,22.9543304-17.9244766,23.5871429,0c0.2657776,10.4563904-3.1790466,16.0211334-2.9223022,35.9628372c0.4646912,3.1733246,2.3194885,4.4293747,3.8547363,5.8980637l0.2762146,5.2650146c37.5021362,3.3315735,72.3269043,20.4793396,97.9059448,47.303299l4.4847717-3.2015076c1.5201111,0.0906982,4.8708496,0.5513916,7.1590881-0.7792206c5.9284973-3.8070374,14.7999268-13.2020416,23.6889648-22.6305389c13.197937-13.6151199,31.9387512,2.4880981,17.3141174,16.3534851c-7.3193665,6.2936249-16.6999512,8.8239136-29.9388123,20.1375885c-2.1934814,2.3426819-2.0271912,4.5634003-2.2207031,6.6782684l-4.1813965,3.7559814c21.6262817,33.6914978,30.0501709,67.2161713,24.5710144,106.1437073l4.7640076,1.3860474c0.8548279,1.212677,2.6148682,4.1581421,5.0875549,5.1188354c10.2700195,3.2744141,20.5796814,3.3516541,34.1751099,4.7866516C472.3372192,300.4338989,464.5526733,326.9841003,444.8219604,320.897583z"/>
+                                                                        </svg>
+                                                                        <%= node.status.nodeInfo.kubeletVersion %>
+                                                                    </p>
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                                                            <path d="M13 7H7v6h6V7z" />
+                                                                            <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd" />
+                                                                        </svg>
+                                                                        <%= node.status.capacity.cpu %> Core(s)
+                                                                    </p>
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 16 16">
+                                                                            <path d="M1 3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.586a1 1 0 0 0 .707-.293l.353-.353a.5.5 0 0 1 .708 0l.353.353a1 1 0 0 0 .707.293H15a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H1Zm.5 1h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5Zm5 0h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5Zm4.5.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4ZM2 10v2H1v-2h1Zm2 0v2H3v-2h1Zm2 0v2H5v-2h1Zm3 0v2H8v-2h1Zm2 0v2h-1v-2h1Zm2 0v2h-1v-2h1Zm2 0v2h-1v-2h1Z"/>
+                                                                        </svg>
+                                                                        <%= getBytes(parseInt(node.status.capacity.memory.replace('Ki', '')) * 1024) %>
+                                                                    </p>
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 sm:ml-6">
+                                                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                            <path d="M3 22V15H6V11H11V9H8V2H16V9H13V11H18V15H21V22H13V15H16V13H8V15H11V22ZM10 7H14V4H10ZM5 20H9V17H5ZM15 20H19V17H15ZM12 7ZM9 17ZM15 17Z"/>
+                                                                        </svg>
+                                                                        <%= node.status.addresses.find((e) => e.type === "InternalIP").address %>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+                                                            <span class="whitespace-nowrap px-2 py-1 text-sm font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700 <%= node.status.conditions.find((e) => e.type === "Ready").status === "True" && 'text-green-700 bg-green-100 dark:text-green-100 dark:bg-green-700' %> <%= node.status.conditions.find((e) => e.type === "Ready").status !== "True" && 'text-red-800 bg-red-200 dark:text-red-50 dark:bg-red-700' %>">
+                                                                <%= node.status.conditions.find((e) => e.type === "Ready").status === "True" ? 'Ready' : 'NotReady' %>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="flex-shrink-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+                        <nav class="flex justify-center space-x-4 mb-2">
+                            <a href="https://github.com/glenndehaan/ship" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">GitHub</a>
+                            <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                            <a href="https://github.com/glenndehaan/ship/issues" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Issues</a>
+                            <span class="inline-block border-l border-gray-300" aria-hidden="true"></span>
+                            <a href="https://github.com/glenndehaan/ship/blob/master/README.md" target="_blank" rel="noopener noreferrer" class="text-sm font-medium hover:text-gray-400">Documentation</a>
+                        </nav>
+                        <div class="flex justify-center text-xs italic mb-1">Host: <%= hostname %></div>
+                        <div class="flex justify-center text-xs italic">By:&nbsp;<a href="https://github.com/glenndehaan" target="_blank" rel="noopener noreferrer" class="font-medium hover:text-gray-400">Glenn de Haan</a></div>
+                    </footer>
+                </div>
+            </div>
+        </main>
+        <script>
+            window.__ship_kubernetes_nodes = <%- JSON.stringify(kubernetes_nodes) %>;
+        </script>
+        <script>
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                const newColorScheme = event.matches ? "dark" : "light";
+
+                if(newColorScheme === 'light') {
+                    document.querySelector('html').removeAttribute('style');
+                } else {
+                    document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
+                }
+            });
+        </script>
+        <script>
+            const params = new URLSearchParams(window.location.search);
+
+            if(params.has('error') || params.has('message')) {
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+        </script>
+    </body>
+</html>
