@@ -37,9 +37,6 @@ const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
  * @return {{}}
  */
 module.exports = async (req) => {
-    const k8_nodes = await kubernetes.getNodes();
-    console.log(k8_nodes);
-
     return {
         getTimeAgo: time,
         getBytes: bytes,

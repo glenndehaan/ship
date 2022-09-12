@@ -140,7 +140,7 @@ const server = app.listen(3000, '0.0.0.0', async () => {
     } else {
         const kubernetes = require('./modules/kubernetes');
         const kubernetesInfo = await kubernetes.info();
-        log.info(`[KUBERNETES] Connected! Amount: ${kubernetesInfo.items.length}, Hostname(s): ${kubernetesInfo.items.map((e) => e.metadata.name).join(',')}`);
+        log.info(`[KUBERNETES] Connected! Node(s): ${kubernetesInfo.items.length}, Hostname(s): ${kubernetesInfo.items.map((e) => e.metadata.name).join(',')}`);
     }
 });
 
