@@ -60,31 +60,31 @@ const kubernetesModule = {
      */
     getServices: (search = '', getAll = false) => {
         return new Promise(async (resolve) => {
-            const allServices = await docker.listServices({status: true}).catch((e) => {
+            const allServices = await kubernetes.api.v1.services.get().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            let services = allServices;
+            let services = allServices.body.items;
 
             if(!getAll) {
-                services = allServices.filter((service) => {
-                    return !hiddenServices.includes(service.Spec.Name);
+                services = allServices.body.items.filter((service) => {
+                    return !hiddenServices.includes(service.metadata.name);
                 });
             }
 
-            for(let item = 0; item < services.length; item++) {
-                const service = services[item];
-
-                services[item].__tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
-                    console.error(e);
-                    process.exit(1);
-                });
-            }
+            // for(let item = 0; item < services.length; item++) {
+            //     const service = services[item];
+            //
+            //     services[item].__tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
+            //         console.error(e);
+            //         process.exit(1);
+            //     });
+            // }
 
             resolve(services.filter((item) => {
-                return item.Spec.Name.includes(search);
-            }).sort((a, b) => a.Spec.Name.localeCompare(b.Spec.Name)));
+                return item.metadata.name.includes(search);
+            }).sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)));
         });
     },
 
