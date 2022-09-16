@@ -20,7 +20,7 @@ const kubernetes = new Kubernetes({
  */
 const kubernetesModule = {
     /**
-     * Return docker info
+     * Return kubernetes info
      *
      * @returns {Promise<*>}
      */
@@ -36,7 +36,7 @@ const kubernetesModule = {
     },
 
     /**
-     * Get all docker nodes
+     * Get all kubernetes nodes
      *
      * @return {Promise<unknown>}
      */
@@ -52,7 +52,44 @@ const kubernetesModule = {
     },
 
     /**
-     * Get all docker services
+     * Get all kubernetes deployments
+     *
+     * @param search
+     * @param getAll
+     * @returns {Promise<unknown>}
+     */
+    getDeployments: (search = '', getAll = false) => {
+        return new Promise(async (resolve) => {
+            const allDeployments = await kubernetes.apis.apps.v1.deployments.get().catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            let deployments = allDeployments.body.items;
+
+            if(!getAll) {
+                deployments = allDeployments.body.items.filter((deployment) => {
+                    return !hiddenServices.includes(deployment.metadata.name);
+                });
+            }
+
+            // for(let item = 0; item < services.length; item++) {
+            //     const service = services[item];
+            //
+            //     services[item].__tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
+            //         console.error(e);
+            //         process.exit(1);
+            //     });
+            // }
+
+            resolve(deployments.filter((item) => {
+                return item.metadata.name.includes(search);
+            }).sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)));
+        });
+    },
+
+    /**
+     * Get all kubernetes services
      *
      * @param search
      * @param getAll
