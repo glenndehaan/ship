@@ -9,6 +9,11 @@ const docker = require('../modules/docker');
 const pageVariables = require('../utils/pageVariables');
 
 /**
+ * Define global variables
+ */
+const use_kubernetes = process.env.KUBERNETES || false;
+
+/**
  * Exports all home controller endpoints
  *
  * @param app
@@ -20,7 +25,7 @@ module.exports = (app) => {
     app.get('/', async (req, res) => {
         res.render('home', {
             ...await pageVariables(req),
-            page_title: 'Service Overview',
+            page_title: `${use_kubernetes ? 'Deployment' : 'Service'} Overview`,
             allow_overflow: true
         });
     });

@@ -18,6 +18,11 @@ const pageVariables = require('../utils/pageVariables');
 const regex = require('../utils/regex');
 
 /**
+ * Define global variables
+ */
+const use_kubernetes = process.env.KUBERNETES || false;
+
+/**
  * Create an ansi converter
  */
 const convertAnsi = new AnsiToHtml();
@@ -28,6 +33,26 @@ const convertAnsi = new AnsiToHtml();
  * @param app
  */
 module.exports = (app) => {
+    /**
+     * GET /service - Service Overview (Kubernetes Only)
+     */
+    app.get('/service', async (req, res) => {
+        if(!use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
+        res.render('service_overview', {
+            ...await pageVariables(req),
+            page_title: 'Service Overview',
+            allow_overflow: true
+        });
+    });
+
     /**
      * GET /service/:service - Service Detail Page
      */
