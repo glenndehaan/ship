@@ -10,7 +10,7 @@
                 Total deployments
             </p>
             <p class="text-base font-semibold text-gray-700 dark:text-gray-200">
-                <%= docker_services.map(e => e.ServiceStatus.RunningTasks).reduce((partialSum, a) => partialSum + a, 0) %>
+                <%= !use_kubernetes ? docker_services.map(e => e.ServiceStatus.RunningTasks).reduce((partialSum, a) => partialSum + a, 0) : kubernetes_deployments.length %>
             </p>
         </div>
     </div>
@@ -26,7 +26,7 @@
                 Total services
             </p>
             <p class="text-base font-semibold text-gray-700 dark:text-gray-200">
-                <%= docker_services.length %>
+                <%= !use_kubernetes ? docker_services.length : kubernetes_services.length %>
             </p>
         </div>
     </div>
