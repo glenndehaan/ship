@@ -67,6 +67,8 @@ module.exports = async (req) => {
         lockout_active: (lockout_days && lockout_days.split(',').includes(`${new Date().getDay()}`)) || (lockout_after_hour && new Date().getHours() >= parseInt(lockout_after_hour)),
         lockout_rule: lockout_service_regex,
         allow_overflow: false,
+        deployment: {},
+        deployment_logs: [],
         service: {},
         service_logs: [],
         task: {},

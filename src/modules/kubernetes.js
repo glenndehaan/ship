@@ -131,29 +131,30 @@ const kubernetesModule = {
     },
 
     /**
-     * Get a docker service
+     * Get a kubernetes deployment
      *
+     * @param namespace
      * @param name
      * @returns {Promise<unknown>}
      */
-    getService: (name) => {
+    getDeployment: (namespace, name) => {
         return new Promise(async (resolve) => {
-            const services = await docker.listServices({filters: {name: [name]}, status: true}).catch((e) => {
+            const deployment = await kubernetesDeploymentApi.readNamespacedDeployment(name, namespace).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            const service = services.find((service) => {
-                return service.Spec.Name === name;
-            });
+            // const service = services.find((service) => {
+            //     return service.Spec.Name === name;
+            // });
 
-            if(typeof service !== "undefined") {
-                service.__tasks = await docker.listTasks({filters: {service: [name]}}).catch((e) => {
-                    console.error(e);
-                    process.exit(1);
-                });
+            if(typeof deployment !== "undefined") {
+                // service.__tasks = await docker.listTasks({filters: {service: [name]}}).catch((e) => {
+                //     console.error(e);
+                //     process.exit(1);
+                // });
 
-                resolve(service);
+                resolve(deployment.body);
             }
 
             resolve({});

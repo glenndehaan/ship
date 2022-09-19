@@ -16,6 +16,7 @@ const pageVariables = require('./utils/pageVariables');
  */
 const HealthController = require('./controllers/HealthController');
 const HomeController = require('./controllers/HomeController');
+const DeploymentController = require('./controllers/DeploymentController');
 const ServiceController = require('./controllers/ServiceController');
 const TaskController = require('./controllers/TaskController');
 const ActionController = require('./controllers/ActionController');
@@ -90,6 +91,7 @@ log.info(use_kubernetes ? '[INFRASTRUCTURE] Using: Kubernetes!' : '[INFRASTRUCTU
  * Configure routers/controllers
  */
 HomeController(app);
+DeploymentController(app);
 ServiceController(app);
 TaskController(app);
 ActionController(app);
