@@ -1,7 +1,7 @@
 /**
  * Import vendor modules
  */
-const Kubernetes = require('kubernetes-client').Client;
+const kubernetes = require('@kubernetes/client-node');
 
 /**
  * Define hidden services
@@ -11,9 +11,15 @@ const hiddenServices = typeof process.env.HIDDEN_SERVICES === "undefined" ? [] :
 /**
  * Create kubernetes connection
  */
-const kubernetes = new Kubernetes({
-    version: '1.13'
-});
+const kubernetesConnection = new kubernetes.KubeConfig();
+kubernetesConnection.loadFromDefault();
+
+/**
+ * Create kubernetes apis
+ */
+const kubernetesCoreApi = kubernetesConnection.makeApiClient(kubernetes.CoreV1Api);
+const kubernetesDeploymentApi = kubernetesConnection.makeApiClient(kubernetes.AppsV1Api);
+const kubernetesNetworkingApi = kubernetesConnection.makeApiClient(kubernetes.NetworkingV1Api);
 
 /**
  * Kubernetes module functions
@@ -26,7 +32,7 @@ const kubernetesModule = {
      */
     info: () => {
         return new Promise(async (resolve) => {
-            const nodes = await kubernetes.api.v1.nodes.get().catch((e) => {
+            const nodes = await kubernetesCoreApi.listNode().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
@@ -42,7 +48,7 @@ const kubernetesModule = {
      */
     getNodes: () => {
         return new Promise(async (resolve) => {
-            const nodes = await kubernetes.api.v1.nodes.get().catch((e) => {
+            const nodes = await kubernetesCoreApi.listNode().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
@@ -60,7 +66,7 @@ const kubernetesModule = {
      */
     getDeployments: (search = '', getAll = false) => {
         return new Promise(async (resolve) => {
-            const allDeployments = await kubernetes.apis.apps.v1.deployments.get().catch((e) => {
+            const allDeployments = await kubernetesDeploymentApi.listDeploymentForAllNamespaces().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
@@ -83,7 +89,7 @@ const kubernetesModule = {
             // }
 
             resolve(deployments.filter((item) => {
-                return item.metadata.name.includes(search);
+                return item.metadata.name.includes(search) || item.metadata.namespace.includes(search);
             }).sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
         });
     },
@@ -95,7 +101,7 @@ const kubernetesModule = {
      */
     getServices: () => {
         return new Promise(async (resolve) => {
-            const allServices = await kubernetes.api.v1.services.get().catch((e) => {
+            const allServices = await kubernetesCoreApi.listServiceForAllNamespaces().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
@@ -105,6 +111,22 @@ const kubernetesModule = {
             });
 
             resolve(services.sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
+        });
+    },
+
+    /**
+     * Get all kubernetes ingress objects
+     *
+     * @returns {Promise<unknown>}
+     */
+    getIngress: () => {
+        return new Promise(async (resolve) => {
+            const ingress = await kubernetesNetworkingApi.listIngressForAllNamespaces().catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            resolve(ingress.body.items.sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
         });
     },
 

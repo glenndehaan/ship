@@ -42,9 +42,29 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /allocation - Allocation Overview
+     * GET /ingress - Ingress Overview (Kubernetes Only)
+     */
+    app.get('/ingress', async (req, res) => {
+        res.render('ingress', {
+            ...await pageVariables(req),
+            page_title: 'Ingress Overview',
+            allow_overflow: true
+        });
+    });
+
+    /**
+     * GET /allocation - Allocation Overview (Docker Swarm Only)
      */
     app.get('/allocation', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const nodes = await docker.getNodes();
         const tasks = await docker.getTasks();
         const services = await docker.getServices('', true);
@@ -71,9 +91,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /usage - Usage Overview
+     * GET /usage - Usage Overview (Docker Swarm Only)
      */
     app.get('/usage', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const nodes = await docker.getNodes();
         const tasks = await docker.getTasks();
 

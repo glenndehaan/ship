@@ -34,9 +34,9 @@ const convertAnsi = new AnsiToHtml();
  */
 module.exports = (app) => {
     /**
-     * GET /service - Service Overview (Kubernetes Only)
+     * GET /services - Service Overview (Kubernetes Only)
      */
-    app.get('/service', async (req, res) => {
+    app.get('/services', async (req, res) => {
         if(!use_kubernetes) {
             res.status(404);
             res.render('404', {
@@ -46,7 +46,7 @@ module.exports = (app) => {
             return;
         }
 
-        res.render('service_overview', {
+        res.render('services', {
             ...await pageVariables(req),
             page_title: 'Service Overview',
             allow_overflow: true
@@ -54,9 +54,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service - Service Detail Page
+     * GET /service/:service - Service Detail Page (Docker Swarm Only)
      */
     app.get('/service/:service', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -81,9 +90,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/logs - Service Docker Logs Page
+     * GET /service/:service/logs - Service Docker Logs Page (Docker Swarm Only)
      */
     app.get('/service/:service/logs', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -112,9 +130,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/logs/download - Service Docker Logs Downloads Export Button
+     * GET /service/:service/logs/download - Service Docker Logs Downloads Export Button (Docker Swarm Only)
      */
     app.get('/service/:service/logs/download', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -134,9 +161,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/history/download - Service Docker History Downloads Export Button
+     * GET /service/:service/history/download - Service Docker History Downloads Export Button (Docker Swarm Only)
      */
     app.get('/service/:service/history/download', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -184,9 +220,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/update - Update Service Drawer
+     * GET /service/:service/update - Update Service Drawer (Docker Swarm Only)
      */
     app.get('/service/:service/update', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -214,9 +259,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/force_update - Force Update Service Drawer
+     * GET /service/:service/force_update - Force Update Service Drawer (Docker Swarm Only)
      */
     app.get('/service/:service/force_update', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -242,9 +296,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/scale - Scale Service Drawer
+     * GET /service/:service/scale - Scale Service Drawer (Docker Swarm Only)
      */
     app.get('/service/:service/scale', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -270,9 +333,18 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /service/:service/restore - Restore Service Drawer
+     * GET /service/:service/restore - Restore Service Drawer (Docker Swarm Only)
      */
     app.get('/service/:service/restore', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {

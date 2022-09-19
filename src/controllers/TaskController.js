@@ -17,6 +17,11 @@ const pageVariables = require('../utils/pageVariables');
 const object = require('../utils/object');
 
 /**
+ * Define global variables
+ */
+const use_kubernetes = process.env.KUBERNETES || false;
+
+/**
  * Create an ansi converter
  */
 const convertAnsi = new AnsiToHtml();
@@ -28,9 +33,18 @@ const convertAnsi = new AnsiToHtml();
  */
 module.exports = (app) => {
     /**
-     * GET /service/:service/task/:task - Task Detail Page
+     * GET /service/:service/task/:task - Task Detail Page (Docker Swarm Only)
      */
     app.get('/service/:service/task/:task', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
@@ -72,9 +86,18 @@ module.exports = (app) => {
     });
 
     /**
-     * /service/:service/task/:task/logs/download - Task Docker Logs Downloads Export Button
+     * /service/:service/task/:task/logs/download - Task Docker Logs Downloads Export Button (Docker Swarm Only)
      */
     app.get('/service/:service/task/:task/logs/download', async (req, res) => {
+        if(use_kubernetes) {
+            res.status(404);
+            res.render('404', {
+                ...await pageVariables(req),
+                page_title: `Not Found`
+            });
+            return;
+        }
+
         const service = await docker.getService(req.params.service);
 
         if(typeof service.Spec === "undefined") {
