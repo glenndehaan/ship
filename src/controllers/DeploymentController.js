@@ -44,8 +44,6 @@ module.exports = (app) => {
             return;
         }
 
-        console.log(deployment)
-
         res.render('deployment', {
             ...await pageVariables(req),
             page_title: `Deployment: ${req.params.namespace}/${req.params.deployment}`,

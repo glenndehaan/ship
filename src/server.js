@@ -19,6 +19,7 @@ const HomeController = require('./controllers/HomeController');
 const DeploymentController = require('./controllers/DeploymentController');
 const ServiceController = require('./controllers/ServiceController');
 const TaskController = require('./controllers/TaskController');
+const PodController = require('./controllers/PodController');
 const ActionController = require('./controllers/ActionController');
 const AgentController = require('./controllers/AgentController');
 
@@ -94,6 +95,7 @@ HomeController(app);
 DeploymentController(app);
 ServiceController(app);
 TaskController(app);
+PodController(app);
 ActionController(app);
 AgentController(app);
 

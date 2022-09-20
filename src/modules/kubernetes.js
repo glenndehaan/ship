@@ -15,6 +15,11 @@ const kubernetesConnection = new kubernetes.KubeConfig();
 kubernetesConnection.loadFromDefault();
 
 /**
+ * Create kubernetes metrics client
+ */
+const metricsClient = new kubernetes.Metrics(kubernetesConnection);
+
+/**
  * Create kubernetes apis
  */
 const kubernetesCoreApi = kubernetesConnection.makeApiClient(kubernetes.CoreV1Api);
@@ -144,15 +149,17 @@ const kubernetesModule = {
                 process.exit(1);
             });
 
-            // const service = services.find((service) => {
-            //     return service.Spec.Name === name;
-            // });
-
             if(typeof deployment !== "undefined") {
-                // service.__tasks = await docker.listTasks({filters: {service: [name]}}).catch((e) => {
-                //     console.error(e);
-                //     process.exit(1);
-                // });
+                const labels = Object.keys(deployment.body.spec.selector.matchLabels).map((key) => {
+                    return `${key}=${deployment.body.spec.selector.matchLabels[key]}`;
+                });
+
+                const pods = await kubernetesCoreApi.listNamespacedPod(namespace, undefined, undefined, undefined, undefined, labels.join(',')).catch((e) => {
+                    console.error(e);
+                    process.exit(1);
+                });
+
+                deployment.body.__pods = pods.body.items;
 
                 resolve(deployment.body);
             }
@@ -310,36 +317,22 @@ const kubernetesModule = {
     },
 
     /**
-     * Get all docker tasks
+     * Get a kubernetes pod
      *
-     * @returns {*}
-     */
-    getTasks: () => {
-        return docker.listTasks({}).catch((e) => {
-            console.error(e);
-            process.exit(1);
-        });
-    },
-
-    /**
-     * Get a docker task
-     *
-     * @param id
+     * @param namespace
+     * @param deployment
+     * @param name
      * @returns {Promise<unknown>}
      */
-    getTask: (id) => {
+    getPod: (namespace, deployment, name) => {
         return new Promise(async (resolve) => {
-            const tasks = await docker.listTasks({filters: {id: [id]}}).catch((e) => {
+            const task = await kubernetesCoreApi.readNamespacedPod(name, namespace).catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            const task = tasks.find((task) => {
-                return task.ID === id;
-            });
-
             if(typeof task !== "undefined") {
-                resolve(task);
+                resolve(task.body);
             }
 
             resolve({});
@@ -347,21 +340,60 @@ const kubernetesModule = {
     },
 
     /**
-     * Get the last logs from a task
+     * Get the last logs from a pod
      *
-     * @param id
+     * @param namespace
+     * @param deployment
+     * @param container
+     * @param name
      * @param amount
-     * @param details
      * @param timestamps
-     * @returns {*}
+     * @returns {Promise<unknown>}
      */
-    getTaskLogs: (id, details = false, timestamps = false, amount = 250) => {
-        return docker.getTask(id).logs({
-            stdout: true,
-            stderr: true,
-            details: details,
-            timestamps: timestamps,
-            tail: amount
+    getPodLogs: (namespace, deployment, container, name, timestamps = false, amount = 250) => {
+        return new Promise(async (resolve) => {
+            const logs = await kubernetesCoreApi.readNamespacedPodLog(name, namespace, container, undefined, undefined, undefined, undefined, undefined, undefined, amount, timestamps).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            if(typeof logs !== "undefined") {
+                resolve(logs.body);
+            }
+
+            resolve('');
+        });
+    },
+
+    /**
+     * Get the pod metrics
+     *
+     * @param namespace
+     * @param deployment
+     * @param container
+     * @param name
+     * @returns {Promise<unknown>}
+     */
+    getPodMetrics: (namespace, deployment, container, name) => {
+        return new Promise(async (resolve) => {
+            const metrics = await metricsClient.getPodMetrics(namespace, name).catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            if(typeof metrics !== "undefined") {
+                const containerMetrics = metrics.containers.find((item) => {
+                    return item.name === container;
+                });
+
+                if(containerMetrics) {
+                    resolve(containerMetrics.usage);
+                }
+
+                resolve({});
+            }
+
+            resolve({});
         });
     }
 };
