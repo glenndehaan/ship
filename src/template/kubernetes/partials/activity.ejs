@@ -21,29 +21,29 @@
                     <%= log.service %>
                 </h3>
                 <% if(log.type === 'attempt_update') { %>
-                    <span class="text-red-800 dark:text-red-400">Attempt to update the service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to update the deployment during lockout days/hours</span>
                 <% } %>
                 <% if(log.type === 'attempt_force_update') { %>
-                    <span class="text-red-800 dark:text-red-400">Attempt to force re-deploy the service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to force re-deploy the deployment during lockout days/hours</span>
                 <% } %>
                 <% if(log.type === 'attempt_scale') { %>
-                    <span class="text-red-800 dark:text-red-400">Attempt to scale the service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to scale the deployment during lockout days/hours</span>
                 <% } %>
                 <% if(log.type === 'attempt_restore') { %>
-                    <span class="text-red-800 dark:text-red-400">Attempt to restore the service during lockout days/hours</span>
+                    <span class="text-red-800 dark:text-red-400">Attempt to restore the deployment during lockout days/hours</span>
                 <% } %>
 
                 <% if(log.type === 'update') { %>
-                    <span>Updated the service image version from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %></span>
+                    <span>Updated the deployment image version from <%= log.params.old_image_version.split('@')[0] %> to <%= log.params.new_image_version.split('@')[0] %></span>
                 <% } %>
                 <% if(log.type === 'force_update') { %>
-                    <span>Force re-deployed the service</span>
+                    <span>Force re-deployed the deployment</span>
                 <% } %>
                 <% if(log.type === 'scale') { %>
-                    <span>Scaled the service to <%= log.params.scale %> container(s)</span>
+                    <span>Scaled the deployment to <%= log.params.scale %> replica(s)</span>
                 <% } %>
                 <% if(log.type === 'restore') { %>
-                    <span>Restored the service</span>
+                    <span>Restored the deployment</span>
                 <% } %>
                 <div class="absolute top-0 right-0"><%= getTimeAgo(log.time) %></div>
             </div>

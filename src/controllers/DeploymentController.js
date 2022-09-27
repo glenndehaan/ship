@@ -51,7 +51,7 @@ module.exports = (app) => {
             allow_overflow: true,
             deployment,
             deployment_logs: db.getData('/logs').filter((item) => {
-                return item.service === req.params.deployment;
+                return item.service === `${req.params.namespace}/${req.params.deployment}`;
             })
         });
     });
@@ -85,7 +85,7 @@ module.exports = (app) => {
             page_title: `Edit Deployment: ${req.params.namespace}/${req.params.deployment}`,
             deployment,
             deployment_logs: db.getData('/logs').filter((item) => {
-                return item.service === req.params.deployment;
+                return item.service === `${req.params.namespace}/${req.params.deployment}`;
             }),
             edit: true,
             edit_service: deployment,
@@ -123,7 +123,7 @@ module.exports = (app) => {
             page_title: `Rollout Restart Deployment: ${req.params.namespace}/${req.params.deployment}`,
             deployment,
             deployment_logs: db.getData('/logs').filter((item) => {
-                return item.service === req.params.deployment;
+                return item.service === `${req.params.namespace}/${req.params.deployment}`;
             }),
             force_update: true,
             force_update_service: deployment
@@ -159,7 +159,7 @@ module.exports = (app) => {
             page_title: `Scale Deployment: ${req.params.namespace}/${req.params.deployment}`,
             deployment,
             deployment_logs: db.getData('/logs').filter((item) => {
-                return item.service === req.params.deployment;
+                return item.service === `${req.params.namespace}/${req.params.deployment}`;
             }),
             scale: true,
             scale_service: deployment
@@ -195,7 +195,7 @@ module.exports = (app) => {
             page_title: `Rollback Deployment: ${req.params.namespace}/${req.params.deployment}`,
             deployment,
             deployment_logs: db.getData('/logs').filter((item) => {
-                return item.service === req.params.deployment;
+                return item.service === `${req.params.namespace}/${req.params.deployment}`;
             }),
             restore: true,
             restore_service: deployment

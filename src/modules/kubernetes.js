@@ -84,15 +84,6 @@ const kubernetesModule = {
                 });
             }
 
-            // for(let item = 0; item < services.length; item++) {
-            //     const service = services[item];
-            //
-            //     services[item].__tasks = await docker.listTasks({filters: {service: [service.Spec.Name]}}).catch((e) => {
-            //         console.error(e);
-            //         process.exit(1);
-            //     });
-            // }
-
             resolve(deployments.filter((item) => {
                 return item.metadata.name.includes(search) || item.metadata.namespace.includes(search);
             }).sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
@@ -169,33 +160,32 @@ const kubernetesModule = {
     },
 
     /**
-     * Updates a service image version
+     * Updates a deployment image version
      *
+     * @param namespace
      * @param name
      * @param image
      * @param version
      * @returns {Promise<unknown>}
      */
-    updateService: (name, image, version) => {
+    updateDeployment: (namespace, name, image, version) => {
         return new Promise(async (resolve) => {
-            const service = await dockerModule.getService(name);
-            console.log('service', service);
+            const res = await kubernetesDeploymentApi.readNamespacedDeployment(name, namespace);
+            const deployment = res.body;
 
-            if(typeof service.Spec === "undefined") {
+            if(typeof deployment.spec === "undefined") {
                 resolve();
                 return;
             }
 
-            const opts = service.Spec;
-            opts.version = parseInt(service.Version.Index);
-            opts.TaskTemplate.ForceUpdate = 0;
-            opts.TaskTemplate.ContainerSpec.Image = `${image}:${version}`;
-            opts.Labels['com.docker.stack.image'] = `${image}:${version}`;
+            deployment.spec.template.spec.containers[0].image = `${image}:${version}`;
 
-            console.log('OLD Opts', service.Spec);
-            console.log('NEW Opts', opts);
+            console.log('OLD Opts', res.body);
+            console.log('NEW Opts', deployment);
 
-            const result = await docker.getService(service.ID).update({}, opts);
+            const result = await kubernetesDeploymentApi.replaceNamespacedDeployment(name, namespace, deployment).catch((e) => {
+               console.log(e)
+            });
 
             console.log('result', result);
 
@@ -204,29 +194,33 @@ const kubernetesModule = {
     },
 
     /**
-     * Force update a service
+     * Force update a deployment
      *
+     * @param namespace
      * @param name
      * @returns {Promise<unknown>}
      */
-    updateServiceForce: (name) => {
+    updateDeploymentForce: (namespace, name) => {
         return new Promise(async (resolve) => {
-            const service = await dockerModule.getService(name);
-            console.log('service', service);
+            const opts = {
+                spec: {
+                    template: {
+                        metadata: {
+                            annotations: {
+                                'ship.glenndehaan.com/restartedAt': `${new Date().toISOString()}`
+                            }
+                        }
+                    }
+                }
+            };
 
-            if(typeof service.Spec === "undefined") {
-                resolve();
-                return;
-            }
-
-            const opts = service.Spec;
-            opts.version = parseInt(service.Version.Index);
-            opts.TaskTemplate.ForceUpdate = typeof opts.TaskTemplate.ForceUpdate !== "number" ? 1 : opts.TaskTemplate.ForceUpdate + 1;
-
-            console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);
 
-            const result = await docker.getService(service.ID).update({}, opts);
+            const result = await kubernetesDeploymentApi.patchNamespacedDeployment(name, namespace, opts, undefined, undefined, undefined, undefined, undefined, {
+                headers: {
+                    'Content-type': kubernetes.PatchUtils.PATCH_FORMAT_JSON_MERGE_PATCH
+                }
+            });
 
             console.log('result', result);
 
@@ -235,84 +229,32 @@ const kubernetesModule = {
     },
 
     /**
-     * Updates a service scale
+     * Updates a deployment scale
      *
+     * @param namespace
      * @param name
      * @param scale
      * @returns {Promise<unknown>}
      */
-    updateServiceScale: (name, scale) => {
+    updateDeploymentScale: (namespace, name, scale) => {
         return new Promise(async (resolve) => {
-            const service = await dockerModule.getService(name);
-            console.log('service', service);
+            const opts = {
+                spec: {
+                    replicas: parseInt(scale)
+                }
+            };
 
-            if(typeof service.Spec === "undefined") {
-                resolve();
-                return;
-            }
-
-            const opts = service.Spec;
-            opts.version = parseInt(service.Version.Index);
-            opts.Mode.Replicated.Replicas = parseInt(scale);
-
-            console.log('OLD Opts', service.Spec);
             console.log('NEW Opts', opts);
 
-            const result = await docker.getService(service.ID).update({}, opts);
+            const result = await kubernetesDeploymentApi.patchNamespacedDeployment(name, namespace, opts, undefined, undefined, undefined, undefined, undefined, {
+                headers: {
+                    'Content-type': kubernetes.PatchUtils.PATCH_FORMAT_JSON_MERGE_PATCH
+                }
+            });
 
             console.log('result', result);
 
             resolve();
-        });
-    },
-
-    /**
-     * Restore a service
-     *
-     * @param name
-     * @returns {Promise<unknown>}
-     */
-    restoreService: (name) => {
-        return new Promise(async (resolve) => {
-            const service = await dockerModule.getService(name);
-            console.log('service', service);
-
-            if(typeof service.Spec === "undefined") {
-                resolve();
-                return;
-            }
-
-            const opts = service.Spec;
-            opts.version = parseInt(service.Version.Index);
-            opts.rollback = 'previous';
-
-            console.log('OLD Opts', service.Spec);
-            console.log('NEW Opts', opts);
-
-            const result = await docker.getService(service.ID).update({}, opts);
-
-            console.log('result', result);
-
-            resolve();
-        });
-    },
-
-    /**
-     * Get the last logs from a service
-     *
-     * @param name
-     * @param details
-     * @param timestamps
-     * @param amount
-     * @returns {*}
-     */
-    getServiceLogs: (name, details = false, timestamps = false, amount = 250) => {
-        return docker.getService(name).logs({
-            stdout: true,
-            stderr: true,
-            details: details,
-            timestamps: timestamps,
-            tail: amount
         });
     },
 

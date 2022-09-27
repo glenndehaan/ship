@@ -302,6 +302,7 @@
                                                                             <div class="truncate">
                                                                                 <div class="flex">
                                                                                     <p class="font-medium text-sm text-purple-600 dark:text-purple-400 truncate"><%= pod.metadata.name %></p>
+                                                                                    <p class="ml-1 flex-shrink-0 font-normal text-sm text-gray-500 dark:text-gray-400">- Node: <%= pod.spec.nodeName %></p>
                                                                                 </div>
                                                                                 <div class="mt-2 sm:flex sm:justify-between">
                                                                                     <div class="sm:flex">
@@ -347,22 +348,8 @@
 
                             <div class="space-y-6 lg:col-start-3 lg:col-span-1">
                                 <section>
-                                    <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Shortcuts</h2>
-                                        <div class="mt-6 flex flex-col justify-stretch space-y-2">
-                                            <a href="/deployment/<%= deployment.metadata.namespace %>/<%= deployment.metadata.name %>/restore" class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white dark:bg-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                                                <svg class="-ml-1 mr-2 h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
-                                                </svg>
-                                                Rollback Deployment
-                                            </a>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section>
                                     <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                                        <div class="mt-6 flow-root px-4 py-5 sm:px-6">
+                                        <div class="flow-root px-4 py-5 sm:px-6">
                                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">History</h2>
                                             <ul class="-mb-8 mt-6">
                                                 <% if(deployment_logs.length < 1) { %>
@@ -436,7 +423,7 @@
                                                                             <p class="text-xs text-gray-500 dark:text-gray-400">Force re-deployed by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                         <% if(log.type === 'scale') { %>
-                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Scaled to <%= log.params.scale %> container(s) by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
+                                                                            <p class="text-xs text-gray-500 dark:text-gray-400">Scaled to <%= log.params.scale %> replica(s) by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
                                                                         <% } %>
                                                                         <% if(log.type === 'restore') { %>
                                                                             <p class="text-xs text-gray-500 dark:text-gray-400">Restored by <span class="font-medium text-gray-900 dark:text-gray-100"><%= log.username %></span></p>
