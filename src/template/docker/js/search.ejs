@@ -1,0 +1,7 @@
+<script>
+    const params = new URLSearchParams(window.location.search);
+
+    if(params.has('error') || params.has('message')) {
+        window.history.replaceState({}, '', window.location.pathname);
+    }
+</script>

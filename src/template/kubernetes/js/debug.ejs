@@ -1,0 +1,8 @@
+<% if(debug_kubernetes) { %>
+    <script>
+        window.__ship_kubernetes_nodes = <%- JSON.stringify(kubernetes_nodes) %>;
+        window.__ship_kubernetes_ingress = <%- JSON.stringify(kubernetes_ingress) %>;
+        window.__ship_kubernetes_services = <%- JSON.stringify(kubernetes_services) %>;
+        window.__ship_kubernetes_deployments = <%- JSON.stringify(kubernetes_deployments) %>;
+    </script>
+<% } %>

@@ -1,7 +1,6 @@
 /**
  * Import own modules
  */
-const db = require('../../modules/database');
 const kubernetes = require('../../modules/kubernetes');
 const lockout = require('../../modules/lockout');
 const webhook = require('../../modules/webhook');
@@ -27,11 +26,11 @@ module.exports = (app) => {
      */
     app.post('/update', async (req, res) => {
         if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
-            db.push('/logs[]', {
+            kubernetes.createEvent({
                 type: 'attempt_update',
                 username: auth_header ? req.get(auth_header) : 'Anonymous',
                 service: req.body.service_name,
-                params: {},
+                parameters: {},
                 time: new Date().getTime()
             });
 
@@ -78,11 +77,11 @@ module.exports = (app) => {
             return;
         }
 
-        db.push('/logs[]', {
+        kubernetes.createEvent({
             type: 'update',
             username: auth_header ? req.get(auth_header) : 'Anonymous',
             service: req.body.service_name,
-            params: {
+            parameters: {
                 image: req.body.service_image,
                 old_image_version: req.body.service_old_image_version,
                 new_image_version: req.body.service_new_image_version
@@ -152,11 +151,11 @@ module.exports = (app) => {
      */
     app.post('/force_update', async (req, res) => {
         if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
-            db.push('/logs[]', {
+            kubernetes.createEvent({
                 type: 'attempt_force_update',
                 username: auth_header ? req.get(auth_header) : 'Anonymous',
                 service: req.body.service_name,
-                params: {},
+                parameters: {},
                 time: new Date().getTime()
             });
 
@@ -203,11 +202,11 @@ module.exports = (app) => {
             return;
         }
 
-        db.push('/logs[]', {
+        kubernetes.createEvent({
             type: 'force_update',
             username: auth_header ? req.get(auth_header) : 'Anonymous',
             service: req.body.service_name,
-            params: {},
+            parameters: {},
             time: new Date().getTime()
         });
 
@@ -259,11 +258,11 @@ module.exports = (app) => {
      */
     app.post('/scale', async (req, res) => {
         if(!lockout(auth_header ? req.get(auth_header) : 'Anonymous', req.body.service_name)) {
-            db.push('/logs[]', {
+            kubernetes.createEvent({
                 type: 'attempt_scale',
                 username: auth_header ? req.get(auth_header) : 'Anonymous',
                 service: req.body.service_name,
-                params: {},
+                parameters: {},
                 time: new Date().getTime()
             });
 
@@ -310,11 +309,11 @@ module.exports = (app) => {
             return;
         }
 
-        db.push('/logs[]', {
+        kubernetes.createEvent({
             type: 'scale',
             username: auth_header ? req.get(auth_header) : 'Anonymous',
             service: req.body.service_name,
-            params: {
+            parameters: {
                 scale: req.body.service_scale
             },
             time: new Date().getTime()

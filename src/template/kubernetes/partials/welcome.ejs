@@ -1,0 +1,128 @@
+<div id="welcome"></div>
+
+<template id="welcome">
+    <div class="relative z-10">
+        <div class="fixed inset-0 bg-black bg-opacity-75"></div>
+    </div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
+        <div class="mx-auto max-w-4xl transform overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-900 shadow-2xl ring-1 ring-black ring-opacity-5">
+            <div class="flex divide-x divide-gray-100">
+                <div class="bg-gray-50 dark:bg-gray-900">
+                    <div class="mx-auto max-w-7xl py-10 px-6">
+                        <div class="mx-auto max-w-3xl text-center">
+                            <svg class="w-20 h-20 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                                <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                                <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                            </svg>
+                            <h2 class="text-3xl font-bold tracking-tight text-gray-700 dark:text-gray-200">Welcome to Ship</h2>
+                            <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">You have successfully installed the latest release of Ship! Below is an overview of all the new features and improvements packed into this version.</p>
+                        </div>
+                        <dl class="mt-12 space-y-10 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-12 sm:space-y-0">
+                            <div class="relative">
+                                <dt>
+                                    <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    <p class="ml-9 text-lg font-medium leading-6 text-gray-700 dark:text-gray-200">
+                                        Kubernetes
+                                    </p>
+                                </dt>
+                                <dd class="mt-2 ml-9 text-base text-gray-600 dark:text-gray-400">
+                                    The latest version of Ship now as the option to work with Kubernetes clusters. You can use the provided Helm chart to install Ship on to a Kubernetes cluster. This gives the same functionality as the Docker Swarm version of Ship.
+                                </dd>
+                            </div>
+
+                            <div class="relative">
+                                <dt>
+                                    <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    <p class="ml-9 text-lg font-medium leading-6 text-gray-700 dark:text-gray-200">
+                                        Helm Chart
+                                    </p>
+                                </dt>
+                                <dd class="mt-2 ml-9 text-base text-gray-600 dark:text-gray-400">
+                                    A newly released Helm chart is now available to simplify the installation of Ship onto your Kubernetes cluster. <a href="https://artifacthub.io/packages/helm/glenndehaan/ship" target="_blank" rel="noopener noreferrer" class="font-medium underline hover:text-gray-200">View the chart now on ArtifactHub</a>
+                                </dd>
+                            </div>
+
+                            <div class="relative">
+                                <dt>
+                                    <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    <p class="ml-9 text-lg font-medium leading-6 text-gray-700 dark:text-gray-200">
+                                        Security Improvements
+                                    </p>
+                                </dt>
+                                <dd class="mt-2 ml-9 text-base text-gray-600 dark:text-gray-400">
+                                    The latest version of Ship fixes some important open Security Vulnerabilities that where present in the previous version. These Security Vulnerabilities where caused by an underlying dependencies used by Ship, these dependencies have been removed from the project. In the future Ship will try to depend less on dependencies and will implement its own functions.
+                                </dd>
+                            </div>
+
+                            <div class="relative">
+                                <dt>
+                                    <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    <p class="ml-9 text-lg font-medium leading-6 text-gray-700 dark:text-gray-200">
+                                        Speed Optimization
+                                    </p>
+                                </dt>
+                                <dd class="mt-2 ml-9 text-base text-gray-600 dark:text-gray-400">
+                                    By removing a lot of dependencies from the project, optimizing functions and reducing the amount of repetitive code we were able to improve the overall speed of Ship by 1.5x of the original speed. Next to the application speed this will also improve the code development in terms of future development speed.
+                                </dd>
+                            </div>
+
+                            <div class="relative">
+                                <dt>
+                                    <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                    <p class="ml-9 text-lg font-medium leading-6 text-gray-700 dark:text-gray-200">
+                                        Smaller Image Size
+                                    </p>
+                                </dt>
+                                <dd class="mt-2 ml-9 text-base text-gray-600 dark:text-gray-400">
+                                    Even after adding all these new features to Ship we were able to shave down the overall container image size by almost half of its previous version. This was mainly accomplished by removing large and underutilized dependencies from the project.
+                                </dd>
+                            </div>
+                        </dl>
+                        <button id="continue-ship" class="w-full mt-10 inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white dark:bg-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            <svg class="-ml-1 mr-2 h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                                <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                                <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                            </svg>
+                            Start using Ship
+                        </button>
+                        <div class="text-center text-xs italic text-gray-600 dark:text-gray-400 mt-4">
+                            * When clicking the 'Start using Ship' button you agree to the applicable <a href="https://github.com/glenndehaan/ship/blob/master/LICENCE" target="_blank" rel="noopener noreferrer" class="font-medium underline hover:text-gray-200">licence information</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    const version = '1';
+    const template = document.querySelector('template#welcome');
+    const templateDiv = document.querySelector('#welcome');
+
+    const closeWelcome = () => {
+        const continueButton = document.querySelector('#continue-ship');
+        continueButton.removeEventListener('click', closeWelcome);
+        localStorage.setItem('ship_welcome_v' + version, '1');
+        templateDiv.innerHTML = '';
+    };
+
+    if(!localStorage.getItem('ship_welcome_v' + version)) {
+        templateDiv.innerHTML = template.innerHTML;
+        const continueButton = document.querySelector('#continue-ship');
+        continueButton.addEventListener('click', closeWelcome);
+    }
+</script>

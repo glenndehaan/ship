@@ -25,6 +25,7 @@ const metricsClient = new kubernetes.Metrics(kubernetesConnection);
 const kubernetesCoreApi = kubernetesConnection.makeApiClient(kubernetes.CoreV1Api);
 const kubernetesDeploymentApi = kubernetesConnection.makeApiClient(kubernetes.AppsV1Api);
 const kubernetesNetworkingApi = kubernetesConnection.makeApiClient(kubernetes.NetworkingV1Api);
+const kubernetesCustomObjectsApi = kubernetesConnection.makeApiClient(kubernetes.CustomObjectsApi);
 
 /**
  * Kubernetes module functions
@@ -336,6 +337,57 @@ const kubernetesModule = {
             }
 
             resolve({});
+        });
+    },
+
+    /**
+     * Creates a ship event in kubernetes
+     *
+     * @param data
+     */
+    createEvent: (data) => {
+        kubernetesCustomObjectsApi.createClusterCustomObject('ship.glenndehaan.com', 'v1', 'shipevents', {
+            apiVersion: 'ship.glenndehaan.com/v1',
+            kind: 'ShipEvent',
+            metadata: {
+                name: `${Date.now()}`
+            },
+            spec: data
+        }).catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
+    },
+
+    /**
+     * Remove a ship event in kubernetes
+     *
+     * @param name
+     */
+    deleteEvent: (name) => {
+        kubernetesCustomObjectsApi.deleteClusterCustomObject('ship.glenndehaan.com', 'v1', 'shipevents', name).catch((e) => {
+            console.error(e);
+            process.exit(1);
+        });
+    },
+
+    /**
+     * Get ship events from kubernetes
+     *
+     * @returns {Promise<unknown>}
+     */
+    getEvents: () => {
+        return new Promise(async (resolve) => {
+            const events = await kubernetesCustomObjectsApi.listClusterCustomObject('ship.glenndehaan.com', 'v1', 'shipevents').catch((e) => {
+                console.error(e);
+                process.exit(1);
+            });
+
+            if(typeof events !== "undefined") {
+                resolve(events.body.items);
+            }
+
+            resolve([]);
         });
     }
 };

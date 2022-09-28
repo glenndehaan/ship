@@ -144,27 +144,9 @@
                 </div>
             </div>
         </main>
-        <script>
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
-            }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-                const newColorScheme = event.matches ? "dark" : "light";
-
-                if(newColorScheme === 'light') {
-                    document.querySelector('html').removeAttribute('style');
-                } else {
-                    document.querySelector('html').setAttribute('style', 'color-scheme: dark;');
-                }
-            });
-        </script>
-        <script>
-            const params = new URLSearchParams(window.location.search);
-
-            if(params.has('error') || params.has('message')) {
-                window.history.replaceState({}, '', window.location.pathname);
-            }
-        </script>
+        <%- include('js/debug') %>
+        <%- include('js/color') %>
+        <%- include('js/search') %>
+        <%- include('partials/welcome') %>
     </body>
 </html>

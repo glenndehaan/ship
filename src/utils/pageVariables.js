@@ -22,6 +22,7 @@ const max_scale = process.env.MAX_SCALE || '20';
 const use_kubernetes = process.env.KUBERNETES || false;
 const auth_header = process.env.AUTH_HEADER || false;
 const debug_docker = process.env.DEBUG_DOCKER || false;
+const debug_kubernetes = process.env.DEBUG_KUBERNETES || false;
 const custom_webhook = process.env.CUSTOM_WEBHOOK || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
@@ -47,6 +48,7 @@ module.exports = async (req) => {
         search: req.query.search || '',
         app_title,
         debug_docker,
+        debug_kubernetes,
         custom_webhook,
         slack_webhook,
         email_smtp_host,
@@ -55,7 +57,7 @@ module.exports = async (req) => {
         hostname: os.hostname(),
         username: auth_header ? typeof req.get(auth_header) !== "undefined" ? req.get(auth_header) : false : false,
         username_md5: auth_header ? typeof req.get(auth_header) !== "undefined" ? crypto.createHash('md5').update(req.get(auth_header)).digest("hex") : false : false,
-        logs_activity: db.getData('/logs'),
+        logs_activity: !use_kubernetes ? db.getData('/logs') : await kubernetes.getEvents(),
         docker_nodes: !use_kubernetes ? await docker.getNodes() : [],
         docker_services: !use_kubernetes ? await docker.getServices(req.query.search || '') : [],
         docker_tasks: !use_kubernetes ? await docker.getTasks() : [],
