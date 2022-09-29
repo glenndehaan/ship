@@ -110,19 +110,19 @@
 
 <script>
     const version = '1';
-    const template = document.querySelector('template#welcome');
-    const templateDiv = document.querySelector('#welcome');
+    const welcomeTemplate = document.querySelector('template#welcome');
+    const welcomeTemplateDiv = document.querySelector('#welcome');
 
     const closeWelcome = () => {
-        const continueButton = document.querySelector('#continue-ship');
-        continueButton.removeEventListener('click', closeWelcome);
+        const welcomeContinueButton = document.querySelector('#continue-ship');
+        welcomeContinueButton.removeEventListener('click', closeWelcome);
         localStorage.setItem('ship_welcome_v' + version, '1');
-        templateDiv.innerHTML = '';
+        welcomeTemplateDiv.innerHTML = '';
     };
 
     if(!localStorage.getItem('ship_welcome_v' + version)) {
-        templateDiv.innerHTML = template.innerHTML;
-        const continueButton = document.querySelector('#continue-ship');
-        continueButton.addEventListener('click', closeWelcome);
+        welcomeTemplateDiv.innerHTML = welcomeTemplate.innerHTML;
+        const welcomeContinueButton = document.querySelector('#continue-ship');
+        welcomeContinueButton.addEventListener('click', closeWelcome);
     }
 </script>

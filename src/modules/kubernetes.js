@@ -4,9 +4,10 @@
 const kubernetes = require('@kubernetes/client-node');
 
 /**
- * Define hidden services
+ * Define hidden deployments and namespaces
  */
-const hiddenServices = typeof process.env.HIDDEN_SERVICES === "undefined" ? [] : process.env.HIDDEN_SERVICES.split(',');
+const hiddenDeployments = typeof process.env.HIDDEN_DEPLOYMENTS === "undefined" ? [] : process.env.HIDDEN_DEPLOYMENTS.split(',');
+const hiddenNamespaces = typeof process.env.HIDDEN_NAMESPACES === "undefined" ? [] : process.env.HIDDEN_NAMESPACES.split(',');
 
 /**
  * Create kubernetes connection
@@ -81,7 +82,7 @@ const kubernetesModule = {
 
             if(!getAll) {
                 deployments = allDeployments.body.items.filter((deployment) => {
-                    return !hiddenServices.includes(deployment.metadata.name);
+                    return !hiddenDeployments.includes(`${deployment.metadata.namespace}/${deployment.metadata.name}`) && !hiddenNamespaces.includes(deployment.metadata.namespace);
                 });
             }
 
@@ -104,7 +105,7 @@ const kubernetesModule = {
             });
 
             const services = allServices.body.items.filter((service) => {
-                return !hiddenServices.includes(service.metadata.name);
+                return !hiddenNamespaces.includes(service.metadata.namespace);
             });
 
             resolve(services.sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
@@ -118,12 +119,16 @@ const kubernetesModule = {
      */
     getIngress: () => {
         return new Promise(async (resolve) => {
-            const ingress = await kubernetesNetworkingApi.listIngressForAllNamespaces().catch((e) => {
+            const allIngress = await kubernetesNetworkingApi.listIngressForAllNamespaces().catch((e) => {
                 console.error(e);
                 process.exit(1);
             });
 
-            resolve(ingress.body.items.sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
+            const ingress = allIngress.body.items.filter((service) => {
+                return !hiddenNamespaces.includes(service.metadata.namespace);
+            });
+
+            resolve(ingress.sort((a, b) => a.metadata.namespace.localeCompare(b.metadata.namespace)));
         });
     },
 

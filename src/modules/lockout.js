@@ -1,8 +1,9 @@
 /**
  * Define global variables
  */
+const use_kubernetes = process.env.KUBERNETES || false;
 const lockout_exceptions = process.env.LOCKOUT_EXCEPTIONS || '';
-const lockout_service_regex = process.env.LOCKOUT_SERVICE_REGEX || '';
+const lockout_service_regex = use_kubernetes ? (process.env.LOCKOUT_DEPLOYMENT_REGEX || '') : (process.env.LOCKOUT_SERVICE_REGEX || '');
 const lockout_days = process.env.LOCKOUT_DAYS || '';
 const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
 

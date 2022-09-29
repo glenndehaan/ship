@@ -25,6 +25,11 @@ module.exports = {
             const parsedImage = image.match(/^(?<Name>(?<=^)(?:(?<Domain>(?:(?:localhost|[\w-]+(?:\.[\w-]+)+)(?::\d+)?)|[\w]+:\d+)\/)?\/?(?<Namespace>(?:(?:[a-z0-9]+(?:(?:[._]|__|[-]*)[a-z0-9]+)*)\/)*)(?<Repo>[a-z0-9-_]+))[:@]?(?<Reference>(?<=:)(?<Tag>[\w][\w.-]{0,127})|(?<=@)(?<Digest>[A-Za-z][A-Za-z0-9]*(?:[-_+.][A-Za-z][A-Za-z0-9]*)*[:][0-9A-Fa-f]{32,}))?/);
 
             if(typeof parsedImage.groups.Domain === "undefined") {
+                // Check if we need to force the library namespace on top level docker hub images
+                if(parsedImage.groups.Namespace === '') {
+                    parsedImage.groups.Namespace = 'library/';
+                }
+
                 // Use Default Docker Registry
                 fetch(`https://${DOCKER_DEFAULT_AUTH}/token?service=${DOCKER_DEFAULT_SERVICE}&scope=repository:${parsedImage.groups.Namespace}${parsedImage.groups.Repo}:pull`, {
                     method: 'GET',

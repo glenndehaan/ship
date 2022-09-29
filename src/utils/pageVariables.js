@@ -27,7 +27,7 @@ const custom_webhook = process.env.CUSTOM_WEBHOOK || false;
 const slack_webhook = process.env.SLACK_WEBHOOK || false;
 const email_smtp_host = process.env.EMAIL_SMTP_HOST || false;
 const email_to = process.env.EMAIL_TO || false;
-const lockout_service_regex = process.env.LOCKOUT_SERVICE_REGEX || '';
+const lockout_service_regex = use_kubernetes ? (process.env.LOCKOUT_DEPLOYMENT_REGEX || '') : (process.env.LOCKOUT_SERVICE_REGEX || '');
 const lockout_days = process.env.LOCKOUT_DAYS || '';
 const lockout_after_hour = process.env.LOCKOUT_AFTER_HOUR || false;
 

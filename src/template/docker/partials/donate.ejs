@@ -1,0 +1,61 @@
+<div id="donate"></div>
+
+<template id="donate">
+    <div class="relative z-10">
+        <div class="fixed inset-0 bg-black bg-opacity-75"></div>
+    </div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
+        <div class="mx-auto max-w-3xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-900 shadow-2xl ring-1 ring-black ring-opacity-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 divide-gray-100">
+                <div class="min-w-0 flex-auto scroll-py-4 overflow-y-auto px-6 py-4 text-center m-auto">
+                    <svg class="w-20 h-20 align-middle inline" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" height="3" width="6" y="3" x="9"></rect>
+                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M5 21H19L22 13L12 9L2 13L5 21Z"></path>
+                        <path stroke-linejoin="round" stroke-width="1" stroke="#FFFFFF" fill="#1f2937" d="M19 6H5V11.8L12 9L19 11.8V6Z"></path>
+                    </svg>
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-700 dark:text-gray-200">Support Ship</h2>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+                        Hi there, sorry for the interruption.<br/><br/>
+                        Ship has been built on open source principles and that means that a lot of spare time goes into maintaining my projects.<br/><br/>
+                        Please consider donating me a coffee to allow me to continue working on these side projects.
+                    </p>
+                    <button id="donate-ship" class="w-full mt-10 inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white dark:bg-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        <svg class="-ml-1 mr-2 h-6 w-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+                            <path d="M22.55 38.35h2.75v-2.6q3.05-.35 4.75-1.875 1.7-1.525 1.7-4.075 0-2.55-1.45-4.15-1.45-1.6-4.9-3.05-2.9-1.2-4.2-2.15-1.3-.95-1.3-2.55 0-1.55 1.125-2.45 1.125-.9 3.075-.9 1.5 0 2.6.7t1.85 2.1l2.4-1.15q-.85-1.75-2.25-2.75t-3.3-1.2V9.7h-2.75v2.55q-2.55.35-4.025 1.875Q17.15 15.65 17.15 17.9q0 2.45 1.5 3.9 1.5 1.45 4.5 2.7 3.35 1.4 4.6 2.525Q29 28.15 29 29.8q0 1.6-1.325 2.575-1.325.975-3.325.975-1.95 0-3.475-1.1-1.525-1.1-2.125-3l-2.55.85q1.05 2.3 2.575 3.625Q20.3 35.05 22.55 35.65ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"/>
+                        </svg>
+                        I will donate later
+                    </button>
+                </div>
+
+                <div class="overflow-y-auto flex" style="height: 38rem">
+                    <iframe class="bg-gray-50 dark:bg-gray-900 w-full" src="https://ko-fi.com/glenndehaan/?hidefeed=true&widget=true&embed=true&preview=true" title="glenndehaan ko-fi"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    const donateTemplate = document.querySelector('template#donate');
+    const donateTemplateDiv = document.querySelector('#donate');
+
+    const closeDonate = () => {
+        const donateContinueButton = document.querySelector('#donate-ship');
+        donateContinueButton.removeEventListener('click', closeWelcome);
+        localStorage.setItem('ship_donate', '1');
+        donateTemplateDiv.innerHTML = '';
+    };
+
+    if(!localStorage.getItem('ship_donate')) {
+        localStorage.setItem('ship_donate', '1');
+    } else {
+        if(parseInt(localStorage.getItem('ship_donate')) < 15) {
+            localStorage.setItem('ship_donate', `${parseInt(localStorage.getItem('ship_donate')) + 1}`);
+        } else {
+            donateTemplateDiv.innerHTML = donateTemplate.innerHTML;
+            const donateContinueButton = document.querySelector('#donate-ship');
+            donateContinueButton.addEventListener('click', closeDonate);
+        }
+    }
+</script>
