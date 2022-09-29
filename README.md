@@ -5,11 +5,11 @@
 ![Ship Service Overview Page](https://user-images.githubusercontent.com/7496187/176439619-eb5e8cf1-b0f8-481c-8ec1-bb0ae7a5a45b.png)
 
 ## What is it?
-Ship is a simple stack/service manager for Docker Swarm.
-It allows for example: Development teams to deploy new image version to a Docker Swarm Cluster.
-Developers are then also able to see the logs for either the service or connected tasks for easy debugging.
+Ship is a simple stack/service manager for Kubernetes/Docker Swarm.
+It allows for example: Development teams to deploy new image version to a Kubernetes or Docker Swarm Cluster.
+Developers are then also able to see the logs for either the deployment/service or connected pods/tasks for easy debugging.
 
-It also provides an option to scale services and force re-deploy services.
+It also provides an option to scale deployments/services and force re-deploy deployments/services.
 
 ## Development Usage
 Make sure you have Node.JS 16.x installed then run the following commands in your terminal:
@@ -19,9 +19,38 @@ npm run tailwind
 npm run dev
 ```
 
-> Please note that not all functions are available when running locally. Some functions are only available on a docker swarm instance
+> Please note that not all functions are available when running locally. Some functions are only available on a docker swarm instance when running in swarm mode
 
 ## Run ship in production
+### Kubernetes
+Ship is available for your own kubernetes cluster.
+Follow the guide below to install the app onto your own cluster:
+
+> We recommend you to use an ingress controller like Traefik or Nginx in front of Ship
+
+> Please note that right now Ship does not have built-in user management! So don't open up Ship to the outside world unless you are using for example an IP Whitelist
+
+[Helm](https://helm.sh) must be installed to use the ship chart.
+Please refer to Helm's [documentation](https://helm.sh/docs) to get started.
+
+Once Helm has been set up correctly, add the repo as follows:
+
+```shell
+helm repo add glenndehaan https://glenndehaan.github.io/charts
+```
+
+If you had already added this repo earlier, run `helm repo update` to retrieve the latest versions of the packages.
+You can then run `helm search repo glenndehaan` to see the charts.
+
+To install the ship chart:
+```shell
+helm install ship glenndehaan/ship
+```
+
+You can refer to the `values.yaml` to customize the deployment:
+https://github.com/glenndehaan/charts/blob/master/charts/ship/values.yaml
+
+### Docker Swarm
 Ship is available for your own docker swarm cluster.
 Follow the guide below to install the app onto your own cluster:
 
@@ -112,7 +141,7 @@ Below are some options that get send with different events:
 }
 ```
 
-## Screenshots
+## Screenshots (Docker Swarm Mode)
 
 ### Nodes Page
 ![Nodes Page](https://user-images.githubusercontent.com/7496187/176439623-ce246c1a-f7ed-4b4b-95a0-5739c6ab8550.png)
@@ -143,6 +172,16 @@ Below are some options that get send with different events:
 
 ### Restore Service
 ![Restore Service](https://user-images.githubusercontent.com/7496187/174246466-179b1a9a-0c97-4727-b4e1-a9a389e7a268.png)
+
+## Screenshots (Kubernetes Mode)
+
+### Deployment Detail Page
+![Deployment Detail Page](https://user-images.githubusercontent.com/7496187/193122188-d88538b9-aca4-4ba1-af21-fd1a7b9cc782.png)
+
+### Pod Detail Page
+![Pod Detail Page](https://user-images.githubusercontent.com/7496187/193122182-cc5b621d-ce7a-4104-87b8-c9d5cc778abd.png)
+
+## Screenshots (Notifications)
 
 ### Email Notification
 ![Email Notification](https://user-images.githubusercontent.com/7496187/166509782-187f44da-8dde-4dfd-8d54-53f4b0b0f049.png)
