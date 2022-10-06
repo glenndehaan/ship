@@ -326,7 +326,7 @@ const kubernetesModule = {
         return new Promise(async (resolve) => {
             const metrics = await metricsClient.getPodMetrics(namespace, name).catch((e) => {
                 console.error(e);
-                process.exit(1);
+                resolve({});
             });
 
             if(typeof metrics !== "undefined") {

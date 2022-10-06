@@ -139,7 +139,7 @@
                                 </section>
                             </div>
                             <div class="space-y-6 lg:col-start-3 lg:col-span-1">
-                                <% if(pod_metrics) { %>
+                                <% if(pod_metrics.cpu && pod_metrics.memory) { %>
                                     <section>
                                         <div class="bg-white dark:bg-gray-800 px-4 py-5 shadow sm:rounded-lg sm:px-6">
                                             <div class="grid grid-cols-2 items-center">
