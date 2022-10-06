@@ -62,6 +62,7 @@ module.exports = async (req) => {
         docker_services: !use_kubernetes ? await docker.getServices(req.query.search || '') : [],
         docker_tasks: !use_kubernetes ? await docker.getTasks() : [],
         kubernetes_nodes: use_kubernetes ? await kubernetes.getNodes() : [],
+        kubernetes_nodes_metrics: use_kubernetes ? await kubernetes.getNodeMetrics() : [],
         kubernetes_ingress: use_kubernetes ? await kubernetes.getIngress() : [],
         kubernetes_services: use_kubernetes ? await kubernetes.getServices() : [],
         kubernetes_deployments: use_kubernetes ? await kubernetes.getDeployments(req.query.search || '') : [],

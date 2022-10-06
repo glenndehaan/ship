@@ -91,44 +91,44 @@ module.exports = (app) => {
     });
 
     /**
-     * GET /usage - Usage Overview (Docker Swarm Only)
+     * GET /usage - Usage Overview
      */
     app.get('/usage', async (req, res) => {
-        if(use_kubernetes) {
-            res.status(404);
-            res.render('404', {
+        if(!use_kubernetes) {
+            const nodes = await docker.getNodes();
+            const tasks = await docker.getTasks();
+
+            const extendedNodes = nodes.map((node) => {
+                const tasksFiltered = tasks.filter((task) => {
+                    return node.ID === task.NodeID;
+                });
+                const cpuUsage = tasksFiltered.filter((task) => {
+                    return typeof task.Spec.Resources !== "undefined" && typeof task.Spec.Resources.Limits !== "undefined" && typeof task.Spec.Resources.Limits.NanoCPUs !== "undefined";
+                }).map((task) => {
+                    return task.Spec.Resources.Limits.NanoCPUs;
+                }).reduce((partialSum, a) => partialSum + a, 0);
+                const memoryUsage = tasksFiltered.filter((task) => {
+                    return typeof task.Spec.Resources !== "undefined" && typeof task.Spec.Resources.Limits !== "undefined" && typeof task.Spec.Resources.Limits.MemoryBytes !== "undefined";
+                }).map((task) => {
+                    return task.Spec.Resources.Limits.MemoryBytes;
+                }).reduce((partialSum, a) => partialSum + a, 0);
+
+                return {...node, __tasks: tasksFiltered, __task_cpu_usage: cpuUsage, __task_memory_usage: memoryUsage};
+            });
+
+            res.render('usage', {
                 ...await pageVariables(req),
-                page_title: `Not Found`
+                page_title: 'Usage Overview',
+                allow_overflow: true,
+                docker_extended_nodes: extendedNodes
             });
-            return;
+        } else {
+            res.render('usage', {
+                ...await pageVariables(req),
+                page_title: 'Usage Overview',
+                allow_overflow: true,
+                docker_extended_nodes: []
+            });
         }
-
-        const nodes = await docker.getNodes();
-        const tasks = await docker.getTasks();
-
-        const extendedNodes = nodes.map((node) => {
-            const tasksFiltered = tasks.filter((task) => {
-                return node.ID === task.NodeID;
-            });
-            const cpuUsage = tasksFiltered.filter((task) => {
-                return typeof task.Spec.Resources !== "undefined" && typeof task.Spec.Resources.Limits !== "undefined" && typeof task.Spec.Resources.Limits.NanoCPUs !== "undefined";
-            }).map((task) => {
-                return task.Spec.Resources.Limits.NanoCPUs;
-            }).reduce((partialSum, a) => partialSum + a, 0);
-            const memoryUsage = tasksFiltered.filter((task) => {
-                return typeof task.Spec.Resources !== "undefined" && typeof task.Spec.Resources.Limits !== "undefined" && typeof task.Spec.Resources.Limits.MemoryBytes !== "undefined";
-            }).map((task) => {
-                return task.Spec.Resources.Limits.MemoryBytes;
-            }).reduce((partialSum, a) => partialSum + a, 0);
-
-            return {...node, __tasks: tasksFiltered, __task_cpu_usage: cpuUsage, __task_memory_usage: memoryUsage};
-        });
-
-        res.render('usage', {
-            ...await pageVariables(req),
-            page_title: 'Usage Overview',
-            allow_overflow: true,
-            docker_extended_nodes: extendedNodes
-        });
     });
 };

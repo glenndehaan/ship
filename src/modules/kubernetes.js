@@ -65,6 +65,22 @@ const kubernetesModule = {
     },
 
     /**
+     * Get metrics for all kubernetes nodes
+     *
+     * @returns {Promise<unknown>}
+     */
+    getNodeMetrics: () => {
+        return new Promise(async (resolve) => {
+            const metrics = await metricsClient.getNodeMetrics().catch((e) => {
+                console.error(e);
+                resolve([]);
+            });
+
+            resolve(metrics.items.sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)));
+        });
+    },
+
+    /**
      * Get all kubernetes deployments
      *
      * @param search
