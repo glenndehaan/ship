@@ -73,8 +73,12 @@ const kubernetesModule = {
         return new Promise(async (resolve) => {
             const metrics = await metricsClient.getNodeMetrics().catch((e) => {
                 console.error(e);
-                resolve([]);
             });
+
+            if(typeof metrics === "undefined") {
+                resolve([]);
+                return;
+            }
 
             resolve(metrics.items.sort((a, b) => a.metadata.name.localeCompare(b.metadata.name)));
         });
