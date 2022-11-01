@@ -6,6 +6,7 @@ const fetch = require('node-fetch');
 /**
  * Import own modules
  */
+const shutdown = require('./modules/shutdown');
 const log = require('./modules/logger');
 const docker = require('./modules/docker');
 
@@ -91,10 +92,9 @@ const update = async () => {
 run();
 
 /**
- * Handle SIGTERM for docker
+ * Handle shutdown events
  */
-process.on('SIGTERM', () => {
-    console.log('SIGTERM signal received');
+shutdown(() => {
     clearInterval(updater);
     process.exit(0);
 });

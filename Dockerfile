@@ -76,7 +76,7 @@ FROM alpine:3.15
 #
 
 # Install packages
-RUN apk add --no-cache nodejs
+RUN apk add --no-cache dumb-init nodejs
 
 #
 # Setup app
@@ -96,7 +96,7 @@ HEALTHCHECK --interval=5s --timeout=3s \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/_health || exit 1
 
 # Run app
-CMD ["node", "/app/src/server.js"]
+CMD ["dumb-init", "node", "/app/src/server.js"]
 
 #
 # Bundle app

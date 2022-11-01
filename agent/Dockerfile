@@ -67,7 +67,7 @@ FROM alpine:3.15
 #
 
 # Install packages
-RUN apk add --no-cache nodejs
+RUN apk add --no-cache dumb-init nodejs
 
 #
 # Setup app
@@ -80,7 +80,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Run app
-CMD ["node", "/app/src/server.js"]
+CMD ["dumb-init", "node", "/app/src/server.js"]
 
 #
 # Bundle app

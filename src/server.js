@@ -7,6 +7,7 @@ const multer = require('multer');
 /**
  * Import own modules
  */
+const shutdown = require('./modules/shutdown');
 const log = require('./modules/logger');
 const cron = require('./modules/cron');
 const pageVariables = require('./utils/pageVariables');
@@ -154,11 +155,9 @@ const server = app.listen(3000, '0.0.0.0', async () => {
 cron.start();
 
 /**
- * Handle SIGTERM for docker
+ * Handle shutdown events
  */
-process.on('SIGTERM', () => {
-    console.log('SIGTERM signal received: closing HTTP server');
-
+shutdown(() => {
     server.close(() => {
         console.log('HTTP server closed!');
         cron.stop();
